@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const message = () => {
+const Message = () => {
   return (
     <View>
       <Text>message</Text>
@@ -9,6 +9,6 @@ const message = () => {
   );
 };
 
-export default message;
+export default Message;
 
 const styles = StyleSheet.create({});
