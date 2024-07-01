@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import NavBar from "./app/Navigations/NavBar";
+import Header from './app/screens/Header'
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <View style={styles.container}>
         <Text>HOME MAINTENANCE</Text>
         <NavigationContainer>
+        <Header/>
         <NavBar/>
         </NavigationContainer>
         <StatusBar style="auto" />
