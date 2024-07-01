@@ -3,24 +3,21 @@ import React from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from '../Util/Colors';
 import { FontAwesome } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+
 
 export default function Header() {
   return (
-    <SafeAreaView>
+    <SafeAreaView >
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
-            
-            <View>
-              <Text style={{ color: Colors.white }}>Welcome</Text>
-              <Text
-                style={{
-                  color: Colors.white,
-                  fontSize: 18,
-                }}
-              ></Text>
-            </View>
+            <FontAwesome6 name="house-chimney-crack" size={24} color="white" />
           </View>
+            <View>
+              <Text style={{ color: Colors.white, fontSize:20, fontWeight:'700' }}>Home Maintenance</Text>
+            </View>
+            <FontAwesome name="user-circle-o" size={28} color={"white"} />
         </View>
         <View style={styles.searchBarContainer}>
           <TextInput
