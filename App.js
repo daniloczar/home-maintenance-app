@@ -13,9 +13,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
+        <Header/>
         <Text>HOME MAINTENANCE</Text>
         <NavigationContainer>
-        <Header/>
         <NavBar/>
         </NavigationContainer>
         <StatusBar style="auto" />
