@@ -1,33 +1,51 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from '../Util/Colors';
+import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-
 export default function Header() {
+  const [search, setSearch] = useState ('')
+
+    const onSubmit = ()=>{
+      console.log(search)
+    }
+
   return (
-    <SafeAreaView >
+    <SafeAreaView edges={["top"]}>
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
-            <FontAwesome6 name="house-chimney-crack" size={24} color="white" />
+            <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
           </View>
-            <View>
-              <Text style={{ color: Colors.white, fontSize:20, fontWeight:'700' }}>Home Maintenance</Text>
-            </View>
-            <FontAwesome name="user-circle-o" size={28} color={"white"} />
+          <View>
+            <Text
+              style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}
+            >
+              Home Maintenance
+            </Text>
+          </View>
+          <FontAwesome name="user-circle-o" size={28} color={"white"} />
         </View>
         <View style={styles.searchBarContainer}>
           <TextInput
             placeholder="Search"
+            value={search}
+            onChangeText={(value)=>{setSearch(value)}}
             placeholderTextColor="#909090"
             style={styles.searchBar}
           />
-          <View style={styles.searchButtonContainer}>
+          <TouchableOpacity style={styles.searchButtonContainer} onPress={()=>onSubmit()}>
             <FontAwesome name="search" size={21} color="white" />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -78,4 +96,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.white,
   },
+  logoImage:{
+    width:35,
+    height: 35,
+    borderRadius: 10,
+  },
+
 });
