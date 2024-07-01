@@ -19,7 +19,6 @@ export default function App() {
         </NavigationContainer>
         <StatusBar style="auto" />
       </View>
-
     </SafeAreaProvider>
   );
 }
