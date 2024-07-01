@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import OnboardingScreen from "./app/screens/onboarding/OnboardingScreen";
-import LoginScreen from "./app/screens/auth/LoginScreen";
-import RegistrationScreen from "./app/screens/auth/RegistrationScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import NavBar from "./app/Navigations/NavBar";
+import Header from './app/screens/Header'
+
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,15 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <View style={styles.container}></View>
+      <View style={styles.container}>
+        <Text>HOME MAINTENANCE</Text>
+        <NavigationContainer>
+        <Header/>
+        <NavBar/>
+        </NavigationContainer>
+        <StatusBar style="auto" />
+      </View>
+
     </SafeAreaProvider>
   );
 }
