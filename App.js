@@ -5,7 +5,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import NavBar from "./app/Navigations/NavBar";
 import Header from './app/screens/Header'
 
+
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
@@ -16,6 +20,7 @@ export default function App() {
         </NavigationContainer>
         <StatusBar style="auto" />
       </View>
+
     </SafeAreaProvider>
   );
 }
