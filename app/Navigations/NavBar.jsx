@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Job from "../screens/Job";
+import Jobs from "../screens/Jobs";
 import MyStuff from "../screens/MyStuff";
 import Message from "../screens/Message";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,7 +12,7 @@ export default function NavBar() {
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Jobs"
-        component={Job}
+        component={Jobs}
         options={{
           tabBarLabel: ({ color }) => (
             <Text

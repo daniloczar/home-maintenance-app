@@ -4,8 +4,9 @@ import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -16,23 +17,24 @@ export default function LoginScreen({ navigation }) {
 
   const onLoginPress = () => {
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        // const usersRef = firebase.firestore().collection("users");
-        // usersRef
-        //   .doc(uid)
-        //   .get()
-        //   .then((firestoreDocument) => {
-        //     if (!firestoreDocument.exists) {
-        //       alert("User does not exist anymore.");
-        //       return;
-        //     }
-        //     const user = firestoreDocument.data();
-        //     navigation.navigate("Home", { user });
-        console.log("LOGIN USER", user);
-        //   })
+        const usersRef = collection(db, "users");
+        usersRef
+          .doc(uid)
+          .get()
+          .then((firestoreDocument) => {
+            if (!firestoreDocument.exists) {
+              alert("User does not exist anymore.");
+              return;
+            }
+            const user = firestoreDocument.data();
+            navigation.navigate("Home", { user });
+            console.log("LOGIN USER", user);
+          });
         //   .catch((error) => {
         //     alert(error);
         //     const errorCode = error.code;
@@ -51,7 +53,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <KeyboardAwareScrollView>
-        <Image style={styles.logo} source={require("../../../assets/logo.png")} />
+        <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
         <TextInput
           style={styles.input}
           placeholder="E-mail"

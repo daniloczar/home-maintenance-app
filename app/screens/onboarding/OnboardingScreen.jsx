@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const OnboardingScreen = () => {
-  const onLetsGetStartedPress = () => {};
+const OnboardingScreen = ({ navigation }) => {
+  const onLetsGetStartedPress = () => {
+    navigation.navigate("Login");
+  };
   return (
     <View style={{ paddingTop: 100 }}>
-      <Image style={styles.logo} source={require("../../../assets/logo.png")} />
+      <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
 
       <View style={{ paddingTop: 150, paddingLeft: 100, paddingRight: 100 }}>
         <TouchableOpacity style={styles.button} onPress={() => onLetsGetStartedPress()}>
