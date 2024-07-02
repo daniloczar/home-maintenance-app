@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import styles from "./styles/RegistrationScreenStyles";
 import { app } from "../../../FirebaseConfig";
+import { addDoc, collection, doc, getFirestore, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default function RegistrationScreen({ navigation }) {
@@ -21,10 +22,21 @@ export default function RegistrationScreen({ navigation }) {
       return;
     }
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+      .then((response) => {
+        const uid = response.user.uid;
+        const data = {
+          id: uid,
+          email,
+          fullName,
+        };
+        const usersRef = collection(db, "users");
+        const usersRefData = { data };
+        const newUser = addDoc(usersRef, usersRefData).then(() => {
+          navigation.navigate("Home", { user: data });
+        });
         console.log("SIGN UP USER", user);
       })
       .catch((error) => {
@@ -40,7 +52,7 @@ export default function RegistrationScreen({ navigation }) {
         style={{ flex: 1, width: "100%" }}
         keyboardShouldPersistTaps="always"
       >
-        <Image style={styles.logo} source={require("../../../assets/logo.png")} />
+        <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
         <TextInput
           style={styles.input}
           placeholder="Full Name"

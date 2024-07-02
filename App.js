@@ -1,26 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
+import { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import NavBar from "./app/Navigations/NavBar";
-import Header from './app/screens/Header'
-
+import LoginScreen from "./app/screens/auth/LoginScreen";
+import RegistrationScreen from "./app/screens/auth/RegistrationScreen";
+import OnboardingScreen from "./app/screens/onboarding/OnboardingScreen";
+import Home from "./app/screens/Home";
+import { createStackNavigator } from "@react-navigation/stack";
 
 export default function App() {
   // const [loading, setLoading] = useState(true);
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const Stack = createStackNavigator();
 
-  return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <Header/>
-        <NavigationContainer>
-        <NavBar/>
-        </NavigationContainer>
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaProvider>
-  );
+  if (user) {
+    return <Home />;
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="Login" extraData={setUser} component={LoginScreen} />
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="Home" component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

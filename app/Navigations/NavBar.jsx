@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image } from "react-native";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Job from '../screens/Job'
-import MyStuff from '../screens/MyStuff'
-import Message from '../screens/Message'
+import Jobs from "../screens/Jobs";
+import MyStuff from "../screens/MyStuff";
+import Message from "../screens/Message";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
@@ -12,24 +12,20 @@ export default function NavBar() {
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Jobs"
-        component={Job}
+        component={Jobs}
         options={{
           tabBarLabel: ({ color }) => (
             <Text
               style={{
                 color: color,
-                fontSize: 12
+                fontSize: 12,
               }}
             >
               Jobs
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="toolbox-outline"
-              size={size}
-              color={color}
-            />
+            <MaterialCommunityIcons name="toolbox-outline" size={size} color={color} />
           ),
         }}
       />
@@ -37,9 +33,7 @@ export default function NavBar() {
         name="MyStuffs"
         component={MyStuff}
         options={{
-          tabBarLabel: ({ color }) => (
-            <Text style={{ color: color, fontSize: 12 }}>MyStuffs</Text>
-          ),
+          tabBarLabel: ({ color }) => <Text style={{ color: color, fontSize: 12 }}>MyStuffs</Text>,
           tabBarIcon: ({ color, size }) => (
             <Image
               tintColor={color}
@@ -53,15 +47,9 @@ export default function NavBar() {
         name="Message"
         component={Message}
         options={{
-          tabBarLabel: ({ color }) => (
-            <Text style={{ color: color, fontSize: 12 }}>Message</Text>
-          ),
+          tabBarLabel: ({ color }) => <Text style={{ color: color, fontSize: 12 }}>Message</Text>,
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="message-text-outline"
-              size={size}
-              color={color}
-            />
+            <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
           ),
         }}
       />
@@ -69,6 +57,4 @@ export default function NavBar() {
   );
 }
 
-const styles = StyleSheet.create({
-   
-})
+const styles = StyleSheet.create({});
