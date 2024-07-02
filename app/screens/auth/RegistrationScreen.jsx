@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import styles from "./styles/RegistrationScreenStyles";
+import { app } from "../../../FirebaseConfig";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default function RegistrationScreen({ navigation }) {
   const [fullName, setFullName] = useState("");
@@ -13,7 +15,24 @@ export default function RegistrationScreen({ navigation }) {
     navigation.navigate("Login");
   };
 
-  const onRegisterPress = () => {};
+  const onRegisterPress = () => {
+    if (password !== confirmPassword) {
+      alert("Passwords don't match.");
+      return;
+    }
+    const auth = getAuth(app);
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("SIGN UP USER", user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("ERROR", error);
+      });
+  };
 
   return (
     <View style={styles.container}>
