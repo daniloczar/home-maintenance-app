@@ -7,20 +7,18 @@ import Header from './app/screens/Header'
 
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [user, setUser] = useState(null);
 
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <Text>HOME MAINTENANCE</Text>
-        <NavigationContainer>
         <Header/>
+        <NavigationContainer>
         <NavBar/>
         </NavigationContainer>
         <StatusBar style="auto" />
       </View>
-
     </SafeAreaProvider>
   );
 }
