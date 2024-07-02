@@ -1,11 +1,4 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../Util/Colors";
@@ -13,23 +6,21 @@ import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Header() {
-  const [search, setSearch] = useState ('')
+  const [search, setSearch] = useState("");
 
-    const onSubmit = ()=>{
-      console.log(search)
-    }
+  const onSubmit = () => {
+    console.log(search);
+  };
 
   return (
     <SafeAreaView edges={["top"]}>
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
-            <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
+            <Image source={require("../../assets/Images/logo.png")} style={styles.logoImage} />
           </View>
           <View>
-            <Text
-              style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}
-            >
+            <Text style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}>
               Home Maintenance
             </Text>
           </View>
@@ -39,11 +30,13 @@ export default function Header() {
           <TextInput
             placeholder="Search"
             value={search}
-            onChangeText={(value)=>{setSearch(value)}}
+            onChangeText={(value) => {
+              setSearch(value);
+            }}
             placeholderTextColor="#909090"
             style={styles.searchBar}
           />
-          <TouchableOpacity style={styles.searchButtonContainer} onPress={()=>onSubmit()}>
+          <TouchableOpacity style={styles.searchButtonContainer} onPress={() => onSubmit()}>
             <FontAwesome name="search" size={21} color="white" />
           </TouchableOpacity>
         </View>
@@ -96,10 +89,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.white,
   },
-  logoImage:{
-    width:35,
+  logoImage: {
+    width: 35,
     height: 35,
     borderRadius: 10,
   },
-
 });
