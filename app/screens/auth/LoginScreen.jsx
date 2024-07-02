@@ -2,16 +2,51 @@ import React, { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { app } from "../../../FirebaseConfig";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
   };
 
-  const onLoginPress = () => {};
+  const onLoginPress = () => {
+    const auth = getAuth(app);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // const usersRef = firebase.firestore().collection("users");
+        // usersRef
+        //   .doc(uid)
+        //   .get()
+        //   .then((firestoreDocument) => {
+        //     if (!firestoreDocument.exists) {
+        //       alert("User does not exist anymore.");
+        //       return;
+        //     }
+        //     const user = firestoreDocument.data();
+        //     navigation.navigate("Home", { user });
+        console.log("LOGIN USER", user);
+        //   })
+        //   .catch((error) => {
+        //     alert(error);
+        //     const errorCode = error.code;
+        //     const errorMessage = error.message;
+        //     console.log("ERROR", error);
+        //   });
+      })
+      .catch((error) => {
+        alert(error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("ERROR", error);
+      });
+  };
 
   return (
     <View style={styles.container}>
