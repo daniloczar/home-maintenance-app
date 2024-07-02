@@ -28,7 +28,7 @@ export default function RegistrationScreen({ navigation }) {
       .then((response) => {
         const uid = response.user.uid;
         const data = {
-          id: uid,
+          user_id: uid,
           email,
           fullName,
         };
@@ -42,6 +42,8 @@ export default function RegistrationScreen({ navigation }) {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        alert("Email already in use");
+        a;
         console.log("ERROR", error);
       });
   };
