@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View, Modal } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import styles from "./styles/RegistrationScreenStyles";
 import { app } from "../../../FirebaseConfig";
 import { addDoc, collection, getFirestore, serverTimestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function RegistrationScreen({ navigation }) {
   const [fullName, setFullName] = useState("");
@@ -18,6 +19,7 @@ export default function RegistrationScreen({ navigation }) {
   const [town, setTown] = useState("");
   const [postcode, setPostcode] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { setUser } = useContext(UserContext);
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
@@ -51,10 +53,8 @@ export default function RegistrationScreen({ navigation }) {
         };
         const users = collection(db, "users");
         const userData = { data };
-
         const newUser = addDoc(users, userData).then(({ userData }) => {
           userData = userData;
-          console.log(userData);
           navigation.navigate("Home", { user: userData });
         });
       })

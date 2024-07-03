@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View, StatusBar } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import NavBar from "../Navigations/NavBar";
 import Header from "./Header";
+import { UserContext } from "../contexts/UserContext";
 
 const Home = ({ route }) => {
+  const { user } = useContext(UserContext);
+  console.log(user);
   return (
     <View style={styles.container}>
       <Header />
