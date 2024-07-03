@@ -6,10 +6,12 @@ const OnboardingScreen = ({ navigation }) => {
     navigation.navigate("Login");
   };
   return (
-    <View style={{ paddingTop: 100 }}>
+    <View style={{ paddingTop: 100, backgroundColor: "white" }}>
       <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
 
-      <View style={{ paddingTop: 150, paddingLeft: 100, paddingRight: 100 }}>
+      <View
+        style={{ backgroundColor: "white", paddingTop: 150, paddingLeft: 100, paddingRight: 100 }}
+      >
         <TouchableOpacity style={styles.button} onPress={() => onLetsGetStartedPress()}>
           <Text style={styles.buttonTitle}>Let's get Started</Text>
         </TouchableOpacity>
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   button: {
-    backgroundColor: "#8E3FFF",
+    backgroundColor: "#6759FF",
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,

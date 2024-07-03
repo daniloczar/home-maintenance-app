@@ -4,9 +4,9 @@ import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+import { getFirestore, collection } from "firebase/firestore";
 
-export default function LoginScreen({ navigation, setUser }) {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,16 +31,10 @@ export default function LoginScreen({ navigation, setUser }) {
               alert("User does not exist anymore.");
               return;
             }
-            const user = firestoreDocument.data();
-            navigation.navigate("Home", { user });
-            console.log("LOGIN USER", user);
+            const data = firestoreDocument.data();
+            navigation.navigate("Home", { user: data });
+            console.log(data);
           });
-        //   .catch((error) => {
-        //     alert(error);
-        //     const errorCode = error.code;
-        //     const errorMessage = error.message;
-        //     console.log("ERROR", error);
-        //   });
       })
       .catch((error) => {
         alert(error);
@@ -78,7 +72,7 @@ export default function LoginScreen({ navigation, setUser }) {
         </TouchableOpacity>
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
-            Don't have an account?{" "}
+            Don't have an account?
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
               Sign up
             </Text>
