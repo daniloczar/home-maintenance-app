@@ -3,7 +3,7 @@ import React from "react";
 import NavBar from "../Navigations/NavBar";
 import Header from "./Header";
 
-const Home = () => {
+const Home = ({ route }) => {
   return (
     <View style={styles.container}>
       <Header />
