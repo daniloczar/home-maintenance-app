@@ -6,6 +6,8 @@ import { app } from "../../../FirebaseConfig";
 import { addDoc, collection, getFirestore, serverTimestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { UserContext } from "../../contexts/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function RegistrationScreen({ navigation }) {
   const [fullName, setFullName] = useState("");
@@ -36,7 +38,7 @@ export default function RegistrationScreen({ navigation }) {
     const db = getFirestore(app);
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((response) => {
+      .then(async (response) => {
         userID = response.user.uid;
         const data = {
           user_id: userID,
@@ -52,15 +54,14 @@ export default function RegistrationScreen({ navigation }) {
           user_img_url: "",
         };
         const users = collection(db, "users");
-        const userData = { data };
-        const newUser = addDoc(users, userData).then(({ userData }) => {
-          userData = userData;
-          navigation.navigate("Home", { user: userData });
-        });
+        await addDoc(users, data);
+        await AsyncStorage.setItem("user", JSON.stringify(data));
+        setUser(data);
+        navigation.navigate("Home", { user: data });
+        console.log("SIGN UP USER", data);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        alert("Email already in use");
         console.log("ERROR", error);
       });
   };

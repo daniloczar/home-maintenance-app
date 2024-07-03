@@ -6,6 +6,7 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../contexts/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -20,27 +21,22 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = () => {
     const auth = getAuth(app);
     const db = getFirestore(app);
-    let user_id = "";
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        user_id = userCredential.user.email;
-      })
-      .catch((error) => {
-        alert(error);
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("ERROR", error);
-      });
-    const userRef = doc(db, "users", user_id);
-    const userSnap = getDoc(userRef).then((data) => {
-      console.log(data);
-      if (userSnap.exists()) {
-        const data = response.data();
-        console.log(data);
-        navigation.navigate("Home", { user: data });
-      } else {
-        alert("User does not exist anymore.");
-      }
+      .then(async(userCredential) => {
+        const user = userCredential.user;
+       const usersRef = collection(db, "users");
+       const userDoc = doc(usersRef, user.uid);
+       const firestoreDocument = await getDoc(userDoc);
+
+       if (!firestoreDocument.exists) {
+         alert("User does not exist anymore.");
+         return;
+       }
+       const userData = firestoreDocument.data();
+       await AsyncStorage.setItem("user", JSON.stringify(userData));
+       setUser(userData);
+       navigation.navigate("Home", { user: userData });
+       console.log("LOGIN USER", userData);
     });
   };
 
