@@ -21,22 +21,12 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = () => {
     const auth = getAuth(app);
     const db = getFirestore(app);
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async(userCredential) => {
-        const user = userCredential.user;
-       const usersRef = collection(db, "users");
-       const userDoc = doc(usersRef, user.uid);
-       const firestoreDocument = await getDoc(userDoc);
+    signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
+      const userData = userCredential.user;
 
-       if (!firestoreDocument.exists) {
-         alert("User does not exist anymore.");
-         return;
-       }
-       const userData = firestoreDocument.data();
-       await AsyncStorage.setItem("user", JSON.stringify(userData));
-       setUser(userData);
-       navigation.navigate("Home", { user: userData });
-       console.log("LOGIN USER", userData);
+      await AsyncStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+      navigation.navigate("Home");
     });
   };
 
