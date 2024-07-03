@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
-import { getFirestore, collection } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useContext(UserContext);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
@@ -18,23 +20,10 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = () => {
     const auth = getAuth(app);
     const db = getFirestore(app);
-
+    let user_id = "";
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        const usersRef = collection(db, "users");
-        usersRef
-          .doc(uid)
-          .get()
-          .then((firestoreDocument) => {
-            if (!firestoreDocument.exists) {
-              alert("User does not exist anymore.");
-              return;
-            }
-            const data = firestoreDocument.data();
-            navigation.navigate("Home", { user: data });
-            console.log(data);
-          });
+        user_id = userCredential.user.email;
       })
       .catch((error) => {
         alert(error);
@@ -42,6 +31,17 @@ export default function LoginScreen({ navigation }) {
         const errorMessage = error.message;
         console.log("ERROR", error);
       });
+    const userRef = doc(db, "users", user_id);
+    const userSnap = getDoc(userRef).then((data) => {
+      console.log(data);
+      if (userSnap.exists()) {
+        const data = response.data();
+        console.log(data);
+        navigation.navigate("Home", { user: data });
+      } else {
+        alert("User does not exist anymore.");
+      }
+    });
   };
 
   return (
