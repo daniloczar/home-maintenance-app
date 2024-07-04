@@ -2,7 +2,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Foundation } from "@expo/vector-icons";
 
-
 const JobList = ({item}) => {
   return (
     <View style={styles.container}>
