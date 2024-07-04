@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }) {
       console.log("LOGGED IN USER");
       await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
 
-      // navigation.navigate("Home");
+      navigation.navigate("Home");
     });
   };
 
