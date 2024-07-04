@@ -1,7 +1,10 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import BookingModal from "../BookingModal";
+import { useNavigation } from "@react-navigation/native";
+
 
 const cardData = [
   {
@@ -36,67 +39,102 @@ const cardData = [
 ];
 export default function ProviderCard() {
   const [image, setImage] = useState(0);
+  const navigation = useNavigation();
+  const [showModal, setShowModal]=useState (false)
+    const handleHideModal = () => setShowModal(false);
+
   return (
     <SafeAreaView>
       <View>
-        <View style={styles.imageContainer}>
-          <TouchableOpacity style={styles.backBnt}>
-            <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
-          </TouchableOpacity>
-          <Image
-            source={cardData[image].src}
-            style={{ width: "100%", height: 300 }}
-          />
-        </View>
-        <View style={styles.container}>
-          <View style={styles.textHeader}>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-              {cardData[image].name}
-            </Text>
-            <Text style={{ fontSize: 18 }}>
-              {cardData[image].service_title}
-            </Text>
+        <ScrollView style={{ height: "90%" }}>
+          <View style={styles.imageContainer}>
+            <TouchableOpacity style={styles.backBnt} onPress={()=>navigation.goBack()}>
+              <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
+            </TouchableOpacity>
+            <Image
+              source={cardData[image].src}
+              style={{ width: "100%", height: 300 }}
+            />
           </View>
-
-          <View
-            style={{ borderWidth: 0.6, borderColor: "grey", marginBottom: 15 }}
-          ></View>
-          <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-              Description
-            </Text>
-            <Text style={{ fontSize: 13 }}>
-              {cardData[image].service_description}
-            </Text>
+          <View style={styles.container}>
+            <View style={styles.textHeader}>
+              <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                {cardData[image].name}
+              </Text>
+              <Text style={{ fontSize: 18 }}>
+                {cardData[image].service_title}
+              </Text>
+            </View>
+            <View
+              style={{
+                borderWidth: 0.6,
+                borderColor: "grey",
+                marginBottom: 15,
+              }}
+            ></View>
+            <View style={styles.descriptionBox}>
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                Description
+              </Text>
+              <Text style={{ fontSize: 13 }}>
+                {cardData[image].service_description}
+              </Text>
+            </View>
+            <View
+              style={{
+                borderWidth: 0.7,
+                borderColor: "grey",
+                marginBottom: 15,
+              }}
+            ></View>
+            <View>
+              <Text>Gallery/Pictures</Text>
+              {/* add images from db */}
+            </View>
+            <View
+              style={{
+                borderWidth: 0.7,
+                borderColor: "grey",
+                marginBottom: 15,
+              }}
+            ></View>
+            <View style={styles.descriptionBox}>
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Review</Text>
+              <Text>***</Text>
+              <Text>{cardData[image].review_description}</Text>
+            </View>
           </View>
-          <View
-            style={{ borderWidth: 0.7, borderColor: "grey", marginBottom: 15 }}
-          ></View>
-          <View>
-            <Text>Gallery/Pictures</Text>
-            {/* add images from db */}
-          </View>
-          <View
-            style={{ borderWidth: 0.7, borderColor: "grey", marginBottom: 15 }}
-          ></View>
-          <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>Review</Text>
-            <Text>***</Text>
-            <Text>{cardData[image].review_description}</Text>
-          </View>
-          <View
+        </ScrollView>
+        <View
+          style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
+        >
+          <TouchableOpacity
             style={{
               backgroundColor: "blue",
-              padding: 20,
+              padding: 13,
               alignItems: "center",
-              marginTop: 30,
+              borderRadius: 5,
+              flex: 1,
             }}
           >
-            <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-              Message
-            </Text>
-          </View>
+            <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "blue",
+              padding: 13,
+              alignItems: "center",
+              borderRadius: 5,
+              flex: 1,
+            }}
+            onPress={() => setShowModal(true)}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>Book Now</Text>
+          </TouchableOpacity>
         </View>
+        <Modal animationType="slide" visible={showModal}>
+          <BookingModal handleHideModal={handleHideModal} />
+        </Modal>
       </View>
     </SafeAreaView>
   );
