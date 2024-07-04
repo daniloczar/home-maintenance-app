@@ -6,7 +6,6 @@ import { UserContext } from "../contexts/UserContext";
 
 const Home = ({ route }) => {
   const { user } = useContext(UserContext);
-  console.log(user);
   return (
     <View style={styles.container}>
       <Header />

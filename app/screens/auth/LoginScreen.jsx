@@ -4,7 +4,7 @@ import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDocs, query, collection, where } from "firebase/firestore";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -12,7 +12,7 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { setUser, user } = useContext(UserContext);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
@@ -22,11 +22,20 @@ export default function LoginScreen({ navigation }) {
     const auth = getAuth(app);
     const db = getFirestore(app);
     signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
-      const userData = userCredential.user;
+      const userID = userCredential.user.uid;
 
-      await AsyncStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-      navigation.navigate("Home");
+      const getUser = query(collection(db, "users"), where("user_id", "==", userID));
+      const querySnap = await getDocs(getUser);
+
+      const userSnap = querySnap.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+
+      setUser(userSnap[0]);
+      console.log("LOGGED IN USER");
+      await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
+
+      // navigation.navigate("Home");
     });
   };
 
