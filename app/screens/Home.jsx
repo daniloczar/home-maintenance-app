@@ -4,14 +4,12 @@ import NavBar from "../Navigations/NavBar";
 import Header from "./Header";
 import { UserContext } from "../contexts/UserContext";
 
-const Home = ({ route }) => {
+const Home = ({ route}) => {
   const { user } = useContext(UserContext);
   return (
     <View style={styles.container}>
-      <Header />
-
+      <Header/>
       <NavBar />
-
       <StatusBar style="auto" />
     </View>
   );

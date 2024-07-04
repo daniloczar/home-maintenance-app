@@ -1,12 +1,16 @@
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+
+
 
 export default function Header() {
   const [search, setSearch] = useState("");
+// use useeffect to finish the search bar
+const navigation = useNavigation()
 
   const onSubmit = () => {
     console.log(search);
@@ -17,14 +21,21 @@ export default function Header() {
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
-            <Image source={require("../../assets/Images/logo.png")} style={styles.logoImage} />
+            <Image
+              source={require("../../assets/Images/logo.png")}
+              style={styles.logoImage}
+            />
           </View>
           <View>
-            <Text style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}>
+            <Text
+              style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}
+            >
               Home Maintenance
             </Text>
           </View>
-          <FontAwesome name="user-circle-o" size={28} color={"white"} />
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+            <FontAwesome name="user-circle-o" size={28} color={"white"} />
+          </TouchableOpacity>
         </View>
         <View style={styles.searchBarContainer}>
           <TextInput
@@ -36,7 +47,10 @@ export default function Header() {
             placeholderTextColor="#909090"
             style={styles.searchBar}
           />
-          <TouchableOpacity style={styles.searchButtonContainer} onPress={() => onSubmit()}>
+          <TouchableOpacity
+            style={styles.searchButtonContainer}
+            onPress={() => onSubmit()}
+          >
             <FontAwesome name="search" size={21} color="white" />
           </TouchableOpacity>
         </View>
