@@ -7,9 +7,11 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
-export default function Header({navigation}) {
+export default function Header() {
   const [search, setSearch] = useState("");
 // use useeffect to finish the search bar
+const navigation = useNavigation()
+
   const onSubmit = () => {
     console.log(search);
   };
@@ -31,7 +33,7 @@ export default function Header({navigation}) {
               Home Maintenance
             </Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <FontAwesome name="user-circle-o" size={28} color={"white"} />
           </TouchableOpacity>
         </View>
