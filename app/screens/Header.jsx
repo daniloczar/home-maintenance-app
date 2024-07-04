@@ -1,9 +1,8 @@
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+
 
 export default function Header() {
   const [search, setSearch] = useState("");
@@ -13,7 +12,6 @@ export default function Header() {
   };
 
   return (
-    <SafeAreaView edges={["top"]}>
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
@@ -41,7 +39,6 @@ export default function Header() {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
   );
 }
 
