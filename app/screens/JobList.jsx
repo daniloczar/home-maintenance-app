@@ -17,7 +17,7 @@ const JobList = ({item}) => {
         </View>
         <TouchableOpacity style={styles.detailsButton}>
           <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
-            Details
+            Book Now
           </Text>
         </TouchableOpacity>
       </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   detailsButton: {
     backgroundColor: "#336aea",
     padding: 2,
-    width: 60,
+    width: 70,
     borderRadius: 5,
     marginRight:4,
     marginBottom:7
