@@ -6,7 +6,7 @@ const OnboardingScreen = ({ navigation }) => {
     navigation.navigate("Login");
   };
   return (
-    <View style={{ paddingTop: 100, backgroundColor: "white" }}>
+    <View style={{ paddingTop: 100, backgroundColor: "white", height: "100%" }}>
       <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
 
       <View

@@ -1,3 +1,4 @@
+
 import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import JobList from "./JobList";
@@ -45,10 +46,13 @@ const imagesProvider = [
   },
 ];
 
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useContext } from "react";
+import { Button } from "react-native-paper";
+import styles from "./auth/styles/RegistrationScreenStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../contexts/UserContext";
 
-const Jobs = ({ navigator }) => {
-  return (
-    <View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Categories</Text>
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
@@ -101,12 +105,12 @@ const Jobs = ({ navigator }) => {
 
           <Text style={{ fontSize: 18, color: "blue" }}>Toggle Map</Text>
         </TouchableOpacity>
-      </View>
     </View>
   );
 };
 
 export default Jobs;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -141,3 +145,4 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
 });
+
