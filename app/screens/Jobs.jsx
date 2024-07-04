@@ -1,13 +1,34 @@
-
-import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import JobList from "./JobList";
+
+// house holders
 const imagesCatData = [
-  {key:1, title:'Air Conditioner', src: require('../../assets/Images/air.png')},
-  {key:2, title:'Plumbing', src: require('../../assets/Images/Plumber.png')},
-  {key:3, title:'Laundry', src: require('../../assets/Images/Laundry.png')},
-  {key:4, title:'Electric Work', src: require('../../assets/Images/Multimeter.png')},
-]
+  {
+    key: 1,
+    title: "Air Conditioner",
+    src: require("../../assets/Images/air.png"),
+  },
+  {
+    key: 2,
+    title: "Plumbing",
+    src: require("../../assets/Images/Plumber.png"),
+  },
+  { key: 3, title: "Laundry", src: require("../../assets/Images/Laundry.png") },
+  {
+    key: 4,
+    title: "Electric Work",
+    src: require("../../assets/Images/Multimeter.png"),
+  },
+];
 const imagesProvider = [
   {
     key: 1,
@@ -46,13 +67,9 @@ const imagesProvider = [
   },
 ];
 
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
-import { Button } from "react-native-paper";
-import styles from "./auth/styles/RegistrationScreenStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserContext } from "../contexts/UserContext";
-
+const Jobs = ({ navigator }) => {
+  return (
+    <View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Categories</Text>
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
@@ -65,7 +82,7 @@ import { UserContext } from "../contexts/UserContext";
           renderItem={({ item }) => (
             <View style={styles.container}>
               <Image source={item.src} style={styles.Images} />
-              <Text style={{ fontSize: 13,marginTop:5,}}>{item.title}</Text>
+              <Text style={{ fontSize: 13, marginTop: 5 }}>{item.title}</Text>
             </View>
           )}
         />
@@ -105,12 +122,12 @@ import { UserContext } from "../contexts/UserContext";
 
           <Text style={{ fontSize: 18, color: "blue" }}>Toggle Map</Text>
         </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 export default Jobs;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -128,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop:10,
+    marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
   },
@@ -145,4 +162,3 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
 });
-

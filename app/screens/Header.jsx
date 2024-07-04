@@ -2,6 +2,7 @@ import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "reac
 import React, { useState } from "react";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function Header() {
@@ -12,13 +13,19 @@ export default function Header() {
   };
 
   return (
+    <SafeAreaView >
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
-            <Image source={require("../../assets/Images/logo.png")} style={styles.logoImage} />
+            <Image
+              source={require("../../assets/Images/logo.png")}
+              style={styles.logoImage}
+            />
           </View>
           <View>
-            <Text style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}>
+            <Text
+              style={{ color: Colors.white, fontSize: 20, fontWeight: "700" }}
+            >
               Home Maintenance
             </Text>
           </View>
@@ -34,11 +41,15 @@ export default function Header() {
             placeholderTextColor="#909090"
             style={styles.searchBar}
           />
-          <TouchableOpacity style={styles.searchButtonContainer} onPress={() => onSubmit()}>
+          <TouchableOpacity
+            style={styles.searchButtonContainer}
+            onPress={() => onSubmit()}
+          >
             <FontAwesome name="search" size={21} color="white" />
           </TouchableOpacity>
         </View>
       </View>
+    </SafeAreaView>
   );
 }
 
