@@ -8,7 +8,6 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default function RegistrationScreen({ navigation }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +39,7 @@ export default function RegistrationScreen({ navigation }) {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (response) => {
         userID = response.user.uid;
-        const data = {
+        const newUser = {
           user_id: userID,
           user_type: userType,
           email,
@@ -55,10 +54,10 @@ export default function RegistrationScreen({ navigation }) {
         };
         const users = collection(db, "users");
         await addDoc(users, data);
-        await AsyncStorage.setItem("user", JSON.stringify(data));
-        setUser(data);
-        navigation.navigate("Home", { user: data });
-        console.log("SIGN UP USER", data);
+        await AsyncStorage.setItem("user", JSON.stringify(newUser));
+        setUser(newUser);
+        navigation.navigate("Home");
+        console.log("SIGN UP USER");
       })
       .catch((error) => {
         alert("Email already in use");

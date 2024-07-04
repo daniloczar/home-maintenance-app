@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "latitude": 51.507351,
+    "longitude": -0.127758,
+    "title": "Plumbing Service",
+    "description": "Expert plumbing services for all your needs.",
+    "numberOfStars": 4.5,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 2,
+    "latitude": 51.509865,
+    "longitude": -0.118092,
+    "title": "Electrical Repairs",
+    "description": "Professional electrical repairs and installations.",
+    "numberOfStars": 4.8,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 3,
+    "latitude": 51.511742,
+    "longitude": -0.124436,
+    "title": "House Cleaning",
+    "description": "Reliable and thorough house cleaning services.",
+    "numberOfStars": 4.7,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 4,
+    "latitude": 51.513357,
+    "longitude": -0.134432,
+    "title": "Gardening Service",
+    "description": "Top-notch gardening and landscaping services.",
+    "numberOfStars": 4.6,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 5,
+    "latitude": 51.514953,
+    "longitude": -0.14459,
+    "title": "Appliance Repair",
+    "description": "Quick and efficient appliance repair services.",
+    "numberOfStars": 4.9,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 6,
+    "latitude": 51.516709,
+    "longitude": -0.152278,
+    "title": "Carpet Cleaning",
+    "description": "Deep and effective carpet cleaning solutions.",
+    "numberOfStars": 4.4,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 7,
+    "latitude": 51.518025,
+    "longitude": -0.160867,
+    "title": "Painting and Decorating",
+    "description": "High-quality painting and decorating services.",
+    "numberOfStars": 4.3,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 8,
+    "latitude": 51.519212,
+    "longitude": -0.169453,
+    "title": "Window Cleaning",
+    "description": "Sparkling window cleaning services.",
+    "numberOfStars": 4.6,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 9,
+    "latitude": 51.520485,
+    "longitude": -0.178459,
+    "title": "Pest Control",
+    "description": "Effective pest control solutions for your home.",
+    "numberOfStars": 4.5,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 10,
+    "latitude": 51.521763,
+    "longitude": -0.187469,
+    "title": "Home Renovation",
+    "description": "Comprehensive home renovation and remodeling services.",
+    "numberOfStars": 4.7,
+    "image": "https://via.placeholder.com/150"
+  }
+]

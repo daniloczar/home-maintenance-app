@@ -7,7 +7,11 @@ import Home from "./app/screens/Home";
 import Jobs from "./app/screens/Jobs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserContext, UserProvider } from "./app/contexts/UserContext";
+
+import JobsMap from "./app/components/JobsMap";
+
 import Profile from "./app/screens/Profile";
+
 
 const AppContent = () => {
   const Stack = createStackNavigator();
@@ -44,6 +48,7 @@ const AppContent = () => {
 
 export default function App() {
   return (
+    // <JobsMap />
     <UserProvider>
       <AppContent />
     </UserProvider>
