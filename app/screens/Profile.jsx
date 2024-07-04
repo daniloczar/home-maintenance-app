@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Avatar, IconButton } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
+// import * as ImagePicker from 'expo-image-picker';
 
-export default function Profile() {
+export default function Profile({navigate}) {
   const [isEditable, setIsEditable] = useState(false);
   const [profile, setProfile] = useState({
     name: 'Home Maint',

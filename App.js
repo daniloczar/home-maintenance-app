@@ -7,6 +7,7 @@ import Home from "./app/screens/Home";
 import Jobs from "./app/screens/Jobs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserContext, UserProvider } from "./app/contexts/UserContext";
+import Profile from "./app/screens/Profile"
 
 const AppContent = () => {
   const Stack = createStackNavigator();
@@ -34,6 +35,7 @@ const AppContent = () => {
           <Stack.Screen name="Registration" component={RegistrationScreen} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Jobs" component={Jobs} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

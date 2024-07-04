@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 
-export default function Header() {
+
+export default function Header({navigation}) {
   const [search, setSearch] = useState("");
-
+// use useeffect to finish the search bar
   const onSubmit = () => {
     console.log(search);
   };
 
   return (
-    <SafeAreaView >
+    <SafeAreaView edges={["top"]}>
       <View style={styles.container}>
         <View style={styles.profileMainContainer}>
           <View style={styles.profileContainer}>
@@ -29,7 +31,9 @@ export default function Header() {
               Home Maintenance
             </Text>
           </View>
-          <FontAwesome name="user-circle-o" size={28} color={"white"} />
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <FontAwesome name="user-circle-o" size={28} color={"white"} />
+          </TouchableOpacity>
         </View>
         <View style={styles.searchBarContainer}>
           <TextInput
