@@ -10,6 +10,12 @@ import {
 import React from "react";
 import JobList from "./JobList";
 
+const servicesData = async () => {
+  const servicesRef = collection(db, "users") 
+  const service = query(servicesRef, where("user_type", "==", "service"))
+  const serviceData = await getDocs(service)
+}
+
 // house holders
 const imagesCatData = [
   {
@@ -106,7 +112,7 @@ const Jobs = ({ navigator }) => {
       </View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Service Providers
+          Services
         </Text>
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
