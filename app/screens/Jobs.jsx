@@ -70,6 +70,23 @@ const imagesProvider = [
 const Jobs = ({ navigator }) => {
   return (
     <View>
+      <View>
+        <TouchableOpacity
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Image
+            source={require("../../assets/Images/toggleMap.png")}
+            style={{ width: 30, height: 30 }}
+          />
+
+          <Text style={{ fontSize: 18, color: "blue" }}>Toggle Map</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Categories</Text>
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
@@ -93,11 +110,11 @@ const Jobs = ({ navigator }) => {
         </Text>
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
-      <View style={styles.ImageContainer}>
+      <View style={styles.ImageContainerProviders}>
         <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
           data={imagesProvider}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             // <Image source={item.src} style={styles.ImagesProviders} />
             <View>
@@ -105,23 +122,6 @@ const Jobs = ({ navigator }) => {
             </View>
           )}
         />
-      </View>
-      <View>
-        <TouchableOpacity
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={require("../../assets/Images/toggleMap.png")}
-            style={{ width: 40, height: 40 }}
-          />
-
-          <Text style={{ fontSize: 18, color: "blue" }}>Toggle Map</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -160,5 +160,9 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  ImageContainerProviders: {
+    display: "flex",
+    alignItems: "center",
   },
 });
