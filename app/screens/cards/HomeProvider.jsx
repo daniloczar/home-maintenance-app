@@ -12,7 +12,7 @@ const cardData = [
     name: "Emily Chan",
     title: "Professional Cleaner",
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
     src: require("../../../assets/Images/cleaner1.png"),
     skills: ["Deep Cleaning", "Windows", "Soft clean", "Upholstery"],
 
@@ -65,11 +65,8 @@ export default function ProviderCard() {
                 {cardData[image].name}
               </Text>
               <Text style={{ fontSize: 18 }}>
-                {cardData[image].title}
+                {cardData[image].service_title}
               </Text>
-              <TouchableOpacity>
-                <Text style={{ fontSize: 18, color: "#FFC107" }}>Edit</Text>
-              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -83,7 +80,7 @@ export default function ProviderCard() {
                 Description
               </Text>
               <Text style={{ fontSize: 13 }}>
-                {cardData[image].description}
+                {cardData[image].service_description}
               </Text>
             </View>
             <View

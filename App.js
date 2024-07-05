@@ -28,7 +28,7 @@ const AppContent = () => {
             headerShown: false,
           }}
         >
-          {/* <Stack.Screen name="ProviderCard" component={ProviderCard} /> */}
+          <Stack.Screen name="ProviderCard" component={ProviderCard} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>

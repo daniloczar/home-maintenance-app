@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-native": "0.74.2",
     "react-native-calendar-picker": "^8.0.4",
+    "react-native-gifted-chat": "^2.4.0",
     "react-native-keyboard-aware-scrollview": "^2.1.0",
     "react-native-maps": "1.14.0",
     "react-native-modal": "^13.0.1",
