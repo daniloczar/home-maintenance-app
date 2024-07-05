@@ -1,43 +1,44 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Button } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Avatar, IconButton } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { UserContext } from "../contexts/UserContext";
 import { getAuth, signOut } from "firebase/auth";
 import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { app } from '../../FirebaseConfig'
 import { getFirestore } from "firebase/firestore";
 const db = getFirestore(app)
 
-export default function Profile({navigate}) {
+export default function Profile({navigation}) {
   const [isEditable, setIsEditable] = useState(false);
   const [profile, setProfile] = useState({});
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [docId,setDocId] = useState(null)
-  
-  useEffect(()=>{
-    getUser()
-  },[])
-  const getUser = async () => {
-  try {
-      const userRef = collection(db, "users")
-      const q = query(userRef, where("email", "==", user.email))
-      const querySnapshot = await getDocs(q)
+  console.log(user)
+  // useEffect(()=>{
+  //   getUser()
+  // },[user])
+  // const getUser = async () => {
+  // try {
+  //     const userRef = collection(db, "users")
+  //     const q = query(userRef, where("email", "==", user.email))
+  //     const querySnapshot = await getDocs(q)
       
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0]
-        setDocId(doc.id)
-        setProfile(doc.data());
-      } else {
-        console.log("No such document!")
-      }
-    }
-    catch(err){
-      console.log("Error getting document")
-      return null
-    }
-  }
+  //     if (!querySnapshot.empty) {
+  //       const doc = querySnapshot.docs[0]
+  //       setDocId(doc.id)
+  //       setProfile(doc.data());
+  //     } else {
+  //       console.log("No such document!")
+  //     }
+  //   }
+  //   catch(err){
+  //     console.log("Error getting document")
+  //     return null
+  //   }
+  // }
   const handleEditToggle = async () => {
     console.log(isEditable)
     if(isEditable){
@@ -67,6 +68,13 @@ export default function Profile({navigate}) {
     }
   };
 
+  const hanldeLogout = async () => {
+    const killUser = await AsyncStorage.clear()
+    console.log("<<<",killUser)
+    setUser(null);
+    navigation.navigate("Login");
+  }
+
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
@@ -79,7 +87,7 @@ export default function Profile({navigate}) {
           />
         </View>
         <View style={styles.avatarContainer}>
-          <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
+          <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
           {isEditable && (
             <TouchableOpacity onPress={pickImage}>
               <Text style={styles.changePhotoText}>Change Photo</Text>
@@ -91,7 +99,7 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.full_name}
+            value={user.full_name}
             onChangeText={(text) => handleChange('full_name', text)}
           />
         </View>
@@ -100,7 +108,7 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.telephone}
+            value={user.telephone}
             onChangeText={(text) => handleChange('telephone', text)}
           />
         </View>
@@ -109,7 +117,7 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.house_number}
+            value={user.house_number}
             onChangeText={(text) => handleChange('house_number', text)}
           />
         </View>
@@ -118,7 +126,7 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.street_name}
+            value={user.street_name}
             onChangeText={(text) => handleChange('street_name', text)}
           />
         </View>
@@ -127,7 +135,7 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.postcode}
+            value={user.postcode}
             onChangeText={(text) => handleChange('postcode', text)}
           />
         </View>
@@ -141,6 +149,13 @@ export default function Profile({navigate}) {
             secureTextEntry={true}
           />
         </View> */}
+      </View>
+      <View>
+        <Button
+          onPress={hanldeLogout}
+          title="Signout"
+          accessibilityLabel="Pressing this button will log out from the app"
+        />
       </View>
     </SafeAreaProvider>
   );
