@@ -16,7 +16,7 @@ export default function Profile({navigation}) {
   const [profile, setProfile] = useState({});
   const { user, setUser } = useContext(UserContext);
   const [docId,setDocId] = useState(null)
-  console.log(user)
+  console.log('profile<<<<<',user)
   // useEffect(()=>{
   //   getUser()
   // },[user])
@@ -69,95 +69,99 @@ export default function Profile({navigation}) {
   };
 
   const hanldeLogout = async () => {
-    const killUser = await AsyncStorage.clear()
-    console.log("<<<",killUser)
     setUser(null);
+    await AsyncStorage.removeItem('user')
     navigation.navigate("Login");
   }
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Profile</Text>
-          <IconButton
-            icon={isEditable ? "check" : "pencil"}
-            size={25}
-            onPress={handleEditToggle}
-          />
-        </View>
-        <View style={styles.avatarContainer}>
-          <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
-          {isEditable && (
-            <TouchableOpacity onPress={pickImage}>
-              <Text style={styles.changePhotoText}>Change Photo</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>Name:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={user.full_name}
-            onChangeText={(text) => handleChange('full_name', text)}
-          />
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>Phone:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={user.telephone}
-            onChangeText={(text) => handleChange('telephone', text)}
-          />
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>House No:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={user.house_number}
-            onChangeText={(text) => handleChange('house_number', text)}
-          />
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>Street Name:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={user.street_name}
-            onChangeText={(text) => handleChange('street_name', text)}
-          />
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>Post Code:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={user.postcode}
-            onChangeText={(text) => handleChange('postcode', text)}
-          />
-        </View>
-        {/* <View style={styles.field}>
-          <Text style={styles.label}>Password:</Text>
-          <TextInput
-            style={[styles.input, isEditable && styles.editableInput]}
-            editable={isEditable}
-            value={profile.password}
-            onChangeText={(text) => handleChange('password', text)}
-            secureTextEntry={true}
-          />
-        </View> */}
-      </View>
-      <View>
-        <Button
-          onPress={hanldeLogout}
-          title="Signout"
-          accessibilityLabel="Pressing this button will log out from the app"
-        />
-      </View>
-    </SafeAreaProvider>
+    <>
+      {user ? (
+          <SafeAreaProvider>
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.title}>Profile</Text>
+              <IconButton
+                icon={isEditable ? "check" : "pencil"}
+                size={25}
+                onPress={handleEditToggle}
+              />
+            </View>
+            <View style={styles.avatarContainer}>
+              <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
+              {isEditable && (
+                <TouchableOpacity onPress={pickImage}>
+                  <Text style={styles.changePhotoText}>Change Photo</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>Name:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={user.full_name}
+                onChangeText={(text) => handleChange('full_name', text)}
+              />
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>Phone:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={user.telephone}
+                onChangeText={(text) => handleChange('telephone', text)}
+              />
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>House No:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={user.house_number}
+                onChangeText={(text) => handleChange('house_number', text)}
+              />
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>Street Name:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={user.street_name}
+                onChangeText={(text) => handleChange('street_name', text)}
+              />
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>Post Code:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={user.postcode}
+                onChangeText={(text) => handleChange('postcode', text)}
+              />
+            </View>
+            {/* <View style={styles.field}>
+              <Text style={styles.label}>Password:</Text>
+              <TextInput
+                style={[styles.input, isEditable && styles.editableInput]}
+                editable={isEditable}
+                value={profile.password}
+                onChangeText={(text) => handleChange('password', text)}
+                secureTextEntry={true}
+              />
+            </View> */}
+          </View>
+          <View>
+            <Button
+              onPress={hanldeLogout}
+              title="Signout"
+              accessibilityLabel="Pressing this button will log out from the app"
+            />
+          </View>
+        </SafeAreaProvider>
+        ):null
+      }
+    </>
   );
 }
 

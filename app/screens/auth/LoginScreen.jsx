@@ -12,17 +12,20 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser, user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
   };
 
   const onLoginPress = () => {
+    console.log("LOGGED IN USER!!!!!");
+
     const auth = getAuth(app);
     const db = getFirestore(app);
     signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
       const userID = userCredential.user.uid;
+      console.log(userCredential.user);
 
       const getUser = query(collection(db, "users"), where("email", "==", email));
       const querySnap = await getDocs(getUser);
@@ -31,10 +34,8 @@ export default function LoginScreen({ navigation }) {
         return { id: doc.id, ...doc.data() };
       });
 
-      console.log("LOGGED IN USER");
       await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
-
-      console.log(user);
+      setUser(userSnap[0])
       navigation.navigate("Home");
     });
   };
