@@ -9,6 +9,9 @@ import { collection, query, getDocs, where, doc, setDoc } from "firebase/firesto
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { app } from '../../FirebaseConfig'
 import { getFirestore } from "firebase/firestore";
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons
+import Colors from '../Util/Colors';
+
 const db = getFirestore(app)
 
 export default function Profile({navigation}) {
@@ -17,28 +20,28 @@ export default function Profile({navigation}) {
   const { user, setUser } = useContext(UserContext);
   const [docId,setDocId] = useState(null)
   console.log('profile<<<<<',user)
-  // useEffect(()=>{
-  //   getUser()
-  // },[user])
-  // const getUser = async () => {
-  // try {
-  //     const userRef = collection(db, "users")
-  //     const q = query(userRef, where("email", "==", user.email))
-  //     const querySnapshot = await getDocs(q)
+  useEffect(()=>{
+    getUser()
+  },[user])
+  const getUser = async () => {
+  try {
+      const userRef = collection(db, "users")
+      const q = query(userRef, where("email", "==", user.email))
+      const querySnapshot = await getDocs(q)
       
-  //     if (!querySnapshot.empty) {
-  //       const doc = querySnapshot.docs[0]
-  //       setDocId(doc.id)
-  //       setProfile(doc.data());
-  //     } else {
-  //       console.log("No such document!")
-  //     }
-  //   }
-  //   catch(err){
-  //     console.log("Error getting document")
-  //     return null
-  //   }
-  // }
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0]
+        setDocId(doc.id)
+        setProfile(doc.data());
+      } else {
+        console.log("No such document!")
+      }
+    }
+    catch(err){
+      console.log("Error getting document")
+      return null
+    }
+  }
   const handleEditToggle = async () => {
     console.log(isEditable)
     if(isEditable){
@@ -80,12 +83,20 @@ export default function Profile({navigation}) {
           <SafeAreaProvider>
           <View style={styles.container}>
             <View style={styles.header}>
-              <Text style={styles.title}>Profile</Text>
-              <IconButton
-                icon={isEditable ? "check" : "pencil"}
-                size={25}
-                onPress={handleEditToggle}
+              <Ionicons 
+                name="arrow-back" size={25} 
+                color="white" 
+                onPress={() => navigation.goBack()} 
               />
+              <Text style={styles.title}>Profile</Text>
+              <Ionicons 
+                name={isEditable ? "checkmark" : "pencil"} 
+                size={25} 
+                color="white"
+                borderBottomColor='black'
+                borderBottomWidth='2'
+                onPress={handleEditToggle}
+                />
             </View>
             <View style={styles.avatarContainer}>
               <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
@@ -151,8 +162,8 @@ export default function Profile({navigation}) {
               />
             </View> */}
           </View>
-          <View>
-            <Button
+          <View style={styles.buttonContainer}>
+            <Button style={styles.button}
               onPress={hanldeLogout}
               title="Signout"
               accessibilityLabel="Pressing this button will log out from the app"
@@ -168,21 +179,27 @@ export default function Profile({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
   },
   header: {
+    // marginTop: 55,
+    paddingTop:75,
+    paddingRight: 30,
+    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: Colors.primary,
   },
   title: {
     fontSize: 24,
+    color:'white',
     fontWeight: 'bold',
+    fontFamily: 'Cochin',
+    fontSize:40,
   },
   avatarContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 50,
   },
   changePhotoText: {
     color: 'blue',
@@ -190,6 +207,8 @@ const styles = StyleSheet.create({
   },
   field: {
     flexDirection: 'row',
+    paddingLeft: 20,
+    paddingRight: 20,
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -206,4 +225,13 @@ const styles = StyleSheet.create({
   editableInput: {
     borderBottomColor: 'blue',
   },
+  buttonContainer:{
+    backgroundColor:'#dbdbdb',
+    color:'white',
+    padding:10,
+    height:70,
+  },
+  button:{
+    backgroundColor:'black',
+  }
 });
