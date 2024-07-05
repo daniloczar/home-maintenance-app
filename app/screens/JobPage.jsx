@@ -5,9 +5,10 @@ import Jobs from './Jobs'
 export default function JobPage() {
   return (
     <View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Jobs />
-        </ScrollView>
+      {/* sort out error: VirtualizedLists should never be nested... */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Jobs />
+      </ScrollView>
     </View>
   );
 }
