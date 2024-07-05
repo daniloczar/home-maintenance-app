@@ -4,6 +4,7 @@ import NavBar from "../Navigations/NavBar";
 import Header from "./Header";
 import { UserContext } from "../contexts/UserContext";
 import Jobs from "./Jobs";
+import Colors from "../Util/Colors";
 
 const Home = ({ route}) => {
   const { user } = useContext(UserContext);
@@ -21,6 +22,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.primary,
   },
 });
