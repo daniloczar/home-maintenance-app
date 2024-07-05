@@ -11,6 +11,7 @@ import Jobs from "./app/screens/Jobs";
 import Map from "./app/screens/Map";
 import Profile from "./app/screens/Profile";
 import ProviderCard from "./app/screens/cards/ProviderCard";
+import HomeHolder from "./app/screens/cards/HomeHolder";
 
 const AppContent = () => {
   const Stack = createStackNavigator();
@@ -25,9 +26,10 @@ const AppContent = () => {
             headerShown: false,
           }}
         >
+          {/* <Stack.Screen name="HomeHolder" component={HomeHolder} /> */}
+          {/* <Stack.Screen name="ProviderCard" component={ProviderCard} /> */}
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Map" component={Map} />
-          <Stack.Screen name="ProviderCard" component={ProviderCard} />
           <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       ) : (

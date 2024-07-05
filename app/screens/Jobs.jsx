@@ -106,6 +106,7 @@ const Jobs = () => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={imagesCatData}
+          scrollEnabled={false}
           renderItem={({ item }) => (
             <View style={styles.container}>
               <Image source={item.src} style={styles.Images} />
@@ -115,7 +116,9 @@ const Jobs = () => {
         />
       </View>
       <View style={styles.categoryText}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Service Providers</Text>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          Service Providers
+        </Text>
 
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
 
@@ -125,6 +128,7 @@ const Jobs = () => {
         <FlatList
           data={imagesProvider}
           numColumns={2}
+          scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             // <Image source={item.src} style={styles.ImagesProviders} />
