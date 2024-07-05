@@ -6,6 +6,7 @@ import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { Rating, RatingInput } from "react-native-stock-star-rating";
 
 
 const cardData = [
@@ -43,13 +44,13 @@ export default function ProviderCard() {
   const [image, setImage] = useState(0);
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
-    const handleHideModal = () => setShowModal(false);
-  
+  const handleHideModal = () => setShowModal(false);
+  const [rating, setRating] = useState(0);
 
   return (
     <SafeAreaView>
       <View style={styles.mainContainer}>
-        <ScrollView>
+        <ScrollView style={{ height: "92%" }}>
           <View style={styles.imageContainer}>
             <TouchableOpacity
               style={styles.backBnt}
@@ -70,9 +71,6 @@ export default function ProviderCard() {
                 </Text>
                 <Text style={{ fontSize: 18 }}>{cardData[image].title}</Text>
               </View>
-              <TouchableOpacity>
-                <AntDesign name="edit" size={24} color="black" />
-              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -155,8 +153,70 @@ export default function ProviderCard() {
                 {cardData[image].review_description}
               </Text>
             </View>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 10,
+                marginTop: 15,
+              }}
+            >
+              Leave a Review:
+            </Text>
+            <RatingInput
+              rating={rating}
+              setRating={setRating}
+              size={20}
+              maxStars={5}
+              bordered={false}
+            />
+            <View>
+              <TextInput
+                placeholder="Review"
+                numberOfLines={4}
+                maxLength={40}
+                multiline={true}
+                style={styles.notes}
+                onChange={(text) => setNote(text)}
+              />
+            </View>
+            <View style={{ marginTop: 15 }}>
+              <TouchableOpacity>
+                <Text style={styles.confirmBnt}>Post a review</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
+        <View
+          style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: "blue",
+              padding: 13,
+              alignItems: "center",
+              borderRadius: 5,
+              flex: 1,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity
+            style={{
+              backgroundColor: "blue",
+              padding: 13,
+              alignItems: "center",
+              borderRadius: 5,
+              flex: 1,
+            }}
+            onPress={() => setShowModal(true)}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>Book Now</Text>
+          </TouchableOpacity> */}
+        </View>
+        {/* <Modal animationType="slide" visible={showModal}>
+          <BookingModal handleHideModal={handleHideModal} />
+        </Modal> */}
       </View>
     </SafeAreaView>
   );
@@ -164,7 +224,7 @@ export default function ProviderCard() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    padding: 10,
   },
   backBnt: {
     position: "absolute",
@@ -191,5 +251,20 @@ const styles = StyleSheet.create({
     marginLeft: -3,
     marginRight: -3,
   },
-
+  notes: {
+    borderWidth: 1,
+    textAlignVertical: "top",
+    padding: 15,
+    height: 100,
+    borderRadius: 10,
+  },
+  confirmBnt: {
+    backgroundColor: "blue",
+    textAlign: "center",
+    color: "white",
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 17,
+    elevation: 2,
+  },
 });
