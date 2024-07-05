@@ -13,13 +13,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons
 import Colors from '../Util/Colors';
 
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 export default function Profile({navigation}) {
   const [isEditable, setIsEditable] = useState(false);
   const [profile, setProfile] = useState({});
   const { user, setUser } = useContext(UserContext);
   const [docId,setDocId] = useState(null)
-  console.log('profile<<<<<',user)
+
   useEffect(()=>{
     getUser()
   },[user])
@@ -43,7 +44,6 @@ export default function Profile({navigation}) {
     }
   }
   const handleEditToggle = async () => {
-    console.log(isEditable)
     if(isEditable){
       await setDoc(doc(db, "users", docId), profile);
       Alert.alert('Profile Updated Successfully!')
@@ -72,9 +72,14 @@ export default function Profile({navigation}) {
   };
 
   const hanldeLogout = async () => {
-    setUser(null);
-    await AsyncStorage.removeItem('user')
-    navigation.navigate("Login");
+    try {
+      await signOut(auth)
+      await AsyncStorage.removeItem('user')
+      setUser(null)
+      navigation.navigate("Login")
+    } catch (error) {
+      Alert.alert('Error signing out', error.message)
+    }
   }
 
   return (
