@@ -99,7 +99,6 @@ const Jobs = () => {
       </View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Categories</Text>
-        <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
       <View style={styles.ImageContainer}>
         <FlatList
@@ -117,12 +116,8 @@ const Jobs = () => {
       </View>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Service Providers
+          Services
         </Text>
-
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
-
-        <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
       <View style={styles.ImageContainerProviders}>
         <FlatList
