@@ -1,14 +1,7 @@
-import {
-  Button,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React from "react";
+import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext } from "react";
 import JobList from "./JobList";
+import { UserContext } from "../contexts/UserContext";
 
 const servicesData = async () => {
   const servicesRef = collection(db, "users") 
@@ -74,6 +67,8 @@ const imagesProvider = [
 ];
 
 const Jobs = ({ navigator }) => {
+  const { user } = useContext(UserContext);
+  console.log(user);
   return (
     <View>
       <View>
@@ -111,9 +106,13 @@ const Jobs = ({ navigator }) => {
         />
       </View>
       <View style={styles.categoryText}>
+
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Service Providers</Text>
+
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
           Services
         </Text>
+
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
       <View style={styles.ImageContainerProviders}>

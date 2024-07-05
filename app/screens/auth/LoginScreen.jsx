@@ -24,17 +24,17 @@ export default function LoginScreen({ navigation }) {
     signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
       const userID = userCredential.user.uid;
 
-      const getUser = query(collection(db, "users"), where("user_id", "==", userID));
+      const getUser = query(collection(db, "users"), where("email", "==", email));
       const querySnap = await getDocs(getUser);
 
       const userSnap = querySnap.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
 
-      setUser(userSnap[0]);
       console.log("LOGGED IN USER");
       await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
 
+      console.log(user);
       navigation.navigate("Home");
     });
   };
