@@ -4,16 +4,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 
 const cardData = [
   {
     key: 1,
-    name: "Emily Chan",
-    title: "Professional Cleaner",
+    name: "Paul Chain",
+    title: "Professional Plumber",
     description:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-    src: require("../../../assets/Images/cleaner1.png"),
+    src: require("../../../assets/Images/plumber2.png"),
     skills: ["Deep Cleaning", "Windows", "Soft clean", "Upholstery"],
 
     service_category_name: "Plumbing",
@@ -45,8 +47,8 @@ export default function ProviderCard() {
 
   return (
     <SafeAreaView>
-      <View>
-        <ScrollView style={{ height: "90%" }}>
+      <View style={styles.mainContainer}>
+        <ScrollView style={{ height: "91%" }}>
           <View style={styles.imageContainer}>
             <TouchableOpacity
               style={styles.backBnt}
@@ -60,15 +62,15 @@ export default function ProviderCard() {
             />
           </View>
           <View style={styles.container}>
-            <View style={styles.textHeader}>
-              <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                {cardData[image].name}
-              </Text>
-              <Text style={{ fontSize: 18 }}>
-                {cardData[image].title}
-              </Text>
+            <View style={styles.headerCard}>
+              <View style={styles.textHeader}>
+                <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                  {cardData[image].name}
+                </Text>
+                <Text style={{ fontSize: 18 }}>{cardData[image].title}</Text>
+              </View>
               <TouchableOpacity>
-                <Text style={{ fontSize: 18, color: "#FFC107" }}>Edit</Text>
+                <AntDesign name="edit" size={24} color="black" />
               </TouchableOpacity>
             </View>
             <View
@@ -94,8 +96,32 @@ export default function ProviderCard() {
               }}
             ></View>
             <View>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Galery</Text>
-              {/* add images from db */}
+              <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom:5 }}>Galery</Text>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                <Image
+                  source={{
+                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
+                  }}
+                  style={{
+                    width: 200,
+                    height: 200,
+                    borderRadius: 5,
+                    marginBottom: 8,
+                    marginRight: 8,
+                  }}
+                />
+                <Image
+                  source={{
+                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
+                  }}
+                  style={{
+                    width: 200,
+                    height: 200,
+                    borderRadius: 5,
+                    marginBottom: 8,
+                  }}
+                />
+              </ScrollView>
             </View>
             <View
               style={{
@@ -105,9 +131,21 @@ export default function ProviderCard() {
               }}
             ></View>
             <View style={styles.descriptionBox}>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>Review</Text>
-              <Text>***</Text>
-              <Text>{cardData[image].review_description}</Text>
+              <Text
+                style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}
+              >
+                Review
+              </Text>
+              <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
+                <FontAwesome name="star" size={13} color="#edd902" />
+                <FontAwesome name="star" size={13} color="#edd902" />
+                <FontAwesome name="star" size={13} color="#edd902" />
+                <FontAwesome name="star" size={13} color="#edd902" />
+                <FontAwesome name="star-o" size={13} color="black" />
+              </View>
+              <Text style={{ marginTop: 6 }}>
+                {cardData[image].review_description}
+              </Text>
             </View>
           </View>
         </ScrollView>
@@ -165,4 +203,15 @@ const styles = StyleSheet.create({
   descriptionBox: {
     marginBottom: 10,
   },
+  headerCard:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  mainContainer:{
+    marginLeft:-3,
+    marginRight:-3,
+  },
+ 
 });

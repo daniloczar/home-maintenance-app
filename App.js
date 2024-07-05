@@ -24,7 +24,7 @@ const AppContent = () => {
           screenOptions={{
             headerShown: false,
           }}
-        >
+
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Map" component={Map} />
           <Stack.Screen name="ProviderCard" component={ProviderCard} />
