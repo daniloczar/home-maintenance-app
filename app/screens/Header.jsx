@@ -1,16 +1,45 @@
 import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Avatar } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
-
-
+import { UserContext } from "../contexts/UserContext";
+import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
+import { app } from '../../FirebaseConfig'
+import { getFirestore } from "firebase/firestore";
+const db = getFirestore(app)
 
 export default function Header() {
   const [search, setSearch] = useState("");
-// use useeffect to finish the search bar
-const navigation = useNavigation()
+  const [profile, setProfile] = useState({});
+  const [docId,setDocId] = useState(null)
+  const navigation = useNavigation()
+  const { user } = useContext(UserContext);
+
+  useEffect(()=>{
+    getUser()
+  },[])
+  const getUser = async () => {
+  try {
+      const userRef = collection(db, "users")
+      const q = query(userRef, where("email", "==", user.email))
+      const querySnapshot = await getDocs(q)
+      
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0]
+        setDocId(doc.id)
+        setProfile(doc.data());
+      } else {
+        console.log("No such document!")
+      }
+    }
+    catch(err){
+      console.log("Error getting document")
+      return null
+    }
+  }
 
   const onSubmit = () => {
     console.log(search);
@@ -34,7 +63,7 @@ const navigation = useNavigation()
             </Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-            <FontAwesome name="user-circle-o" size={28} color={"white"} />
+            <Avatar.Image size={40} source={{ uri: profile.user_img_url }} />
           </TouchableOpacity>
         </View>
         <View style={styles.searchBarContainer}>

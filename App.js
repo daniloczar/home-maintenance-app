@@ -42,6 +42,7 @@ const AppContent = () => {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Registration" component={RegistrationScreen} />
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="Jobs" component={Jobs} />
         </Stack.Navigator>
       )}
