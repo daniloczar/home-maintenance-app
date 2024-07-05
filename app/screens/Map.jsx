@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import React from "react";
+import React, { useState } from "react";
 import services from "../../assets/data/servcies.json";
+import CustomMarker from "../components/CustomMarker";
+import MapServiceCard from "../components/MapServiceCard";
 
-const JobsMap = () => {
+const Map = () => {
+  const [selectedService, setSelectedService] = useState(null);
   return (
     <View style={styles.container}>
       <MapView
@@ -14,23 +17,28 @@ const JobsMap = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        onPress={() => {
+          setSelectedService(null);
+        }}
       >
-        {services.map((service) => {
+        {services.map((service, index) => {
           return (
-            <Marker
-              key={service.id}
-              coordinate={{ latitude: service.latitude, longitude: service.longitude }}
-              title={service.title}
-              description={service.description}
+            <CustomMarker
+              key={index}
+              service={service}
+              onPress={() => {
+                setSelectedService(services[index]);
+              }}
             />
           );
         })}
       </MapView>
+      {selectedService && <MapServiceCard service={selectedService} />}
     </View>
   );
 };
 
-export default JobsMap;
+export default Map;
 
 const styles = StyleSheet.create({
   container: { paddingTop: 40 },
