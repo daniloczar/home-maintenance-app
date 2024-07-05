@@ -31,6 +31,7 @@ const AppContent = () => {
           <Stack.Screen name="ProviderCard" component={ProviderCard} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Jobs" component={Jobs} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator
@@ -41,9 +42,7 @@ const AppContent = () => {
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="Jobs" component={Jobs} />
+          
         </Stack.Navigator>
       )}
     </NavigationContainer>
