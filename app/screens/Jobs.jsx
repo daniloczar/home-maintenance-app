@@ -2,12 +2,13 @@ import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } fro
 import React, { useContext } from "react";
 import JobList from "./JobList";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
 const servicesData = async () => {
-  const servicesRef = collection(db, "users") 
-  const service = query(servicesRef, where("user_type", "==", "service"))
-  const serviceData = await getDocs(service)
-}
+  const servicesRef = collection(db, "users");
+  const service = query(servicesRef, where("user_type", "==", "service"));
+  const serviceData = await getDocs(service);
+};
 
 // house holders
 const imagesCatData = [
@@ -66,9 +67,10 @@ const imagesProvider = [
   },
 ];
 
-const Jobs = ({ navigator }) => {
+const Jobs = () => {
   const { user } = useContext(UserContext);
-  console.log(user);
+  const navigation = useNavigation();
+
   return (
     <View>
       <View>
@@ -85,7 +87,14 @@ const Jobs = ({ navigator }) => {
             style={{ width: 30, height: 30 }}
           />
 
-          <Text style={{ fontSize: 18, color: "blue" }}>Toggle Map</Text>
+          <Text
+            style={{ fontSize: 18, color: "blue" }}
+            onPress={() => {
+              navigation.navigate("Map");
+            }}
+          >
+            Toggle Map
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.categoryText}>
@@ -106,12 +115,9 @@ const Jobs = ({ navigator }) => {
         />
       </View>
       <View style={styles.categoryText}>
-
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Service Providers</Text>
 
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Services
-        </Text>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
 
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
