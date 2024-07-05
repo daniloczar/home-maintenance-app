@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Jobs from "../screens/Jobs";
 import MyStuff from "../screens/MyStuff";
 import Message from "../screens/Message";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
