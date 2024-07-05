@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    top: 10,
+    top: 40,
     left: 10,
     zIndex: 10,
     borderWidth: 2,
