@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import NavBar from "../Navigations/NavBar";
 import Header from "./Header";
 import { UserContext } from "../contexts/UserContext";
+import Jobs from "./Jobs";
 
 const Home = ({ route}) => {
   const { user } = useContext(UserContext);

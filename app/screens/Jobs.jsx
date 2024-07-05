@@ -3,6 +3,12 @@ import React, { useContext } from "react";
 import JobList from "./JobList";
 import { UserContext } from "../contexts/UserContext";
 
+const servicesData = async () => {
+  const servicesRef = collection(db, "users") 
+  const service = query(servicesRef, where("user_type", "==", "service"))
+  const serviceData = await getDocs(service)
+}
+
 // house holders
 const imagesCatData = [
   {
@@ -100,7 +106,13 @@ const Jobs = ({ navigator }) => {
         />
       </View>
       <View style={styles.categoryText}>
+
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Service Providers</Text>
+
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          Services
+        </Text>
+
         <Button title="View All" style={{ fontSize: 12, color: "blue" }} />
       </View>
       <View style={styles.ImageContainerProviders}>

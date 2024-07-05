@@ -11,6 +11,7 @@ import { UserContext, UserProvider } from "./app/contexts/UserContext";
 import JobsMap from "./app/components/JobsMap";
 
 import Profile from "./app/screens/Profile";
+import ProviderCard from "./app/screens/cards/ProviderCard";
 
 
 const AppContent = () => {
@@ -19,6 +20,7 @@ const AppContent = () => {
   const { user } = useContext(UserContext);
 
   return (
+    
     <NavigationContainer>
       {user ? (
         <Stack.Navigator
@@ -26,6 +28,7 @@ const AppContent = () => {
             headerShown: false,
           }}
         >
+          {/* <Stack.Screen name="ProviderCard" component={ProviderCard} /> */}
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>

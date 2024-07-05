@@ -1,20 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Avatar, IconButton } from 'react-native-paper';
-// import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { UserContext } from "../contexts/UserContext";
+import { getAuth, signOut } from "firebase/auth";
+import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
+import { app } from '../../FirebaseConfig'
+import { getFirestore } from "firebase/firestore";
+const db = getFirestore(app)
 
 export default function Profile({navigate}) {
   const [isEditable, setIsEditable] = useState(false);
-  const [profile, setProfile] = useState({
-    name: 'Home Maint',
-    phone: '077777777',
-    address: 'Home Maint St, Home Kingdom',
-    password: 'ucantsee',
-    image: 'https://via.placeholder.com/200',
-  });
-
-  const handleEditToggle = () => {
+  const [profile, setProfile] = useState({});
+  const { user } = useContext(UserContext);
+  const [docId,setDocId] = useState(null)
+  
+  useEffect(()=>{
+    getUser()
+  },[])
+  const getUser = async () => {
+  try {
+      const userRef = collection(db, "users")
+      const q = query(userRef, where("email", "==", user.email))
+      const querySnapshot = await getDocs(q)
+      
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0]
+        setDocId(doc.id)
+        setProfile(doc.data());
+      } else {
+        console.log("No such document!")
+      }
+    }
+    catch(err){
+      console.log("Error getting document")
+      return null
+    }
+  }
+  const handleEditToggle = async () => {
+    console.log(isEditable)
+    if(isEditable){
+      await setDoc(doc(db, "users", docId), profile);
+      Alert.alert('Profile Updated Successfully!')
+    }
     setIsEditable(!isEditable);
   };
 
@@ -34,7 +63,7 @@ export default function Profile({navigate}) {
     });
 
     if (!pickerResult.canceled) {
-      setProfile({ ...profile, image: pickerResult.uri });
+      setProfile({ ...profile, user_img_url: pickerResult.assets[0].uri });
     }
   };
 
@@ -45,12 +74,12 @@ export default function Profile({navigate}) {
           <Text style={styles.title}>Profile</Text>
           <IconButton
             icon={isEditable ? "check" : "pencil"}
-            size={20}
+            size={25}
             onPress={handleEditToggle}
           />
         </View>
         <View style={styles.avatarContainer}>
-          <Avatar.Image size={200} source={{ uri: profile.image }} />
+          <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
           {isEditable && (
             <TouchableOpacity onPress={pickImage}>
               <Text style={styles.changePhotoText}>Change Photo</Text>
@@ -62,8 +91,8 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.name}
-            onChangeText={(text) => handleChange('name', text)}
+            value={profile.full_name}
+            onChangeText={(text) => handleChange('full_name', text)}
           />
         </View>
         <View style={styles.field}>
@@ -71,20 +100,38 @@ export default function Profile({navigate}) {
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.phone}
-            onChangeText={(text) => handleChange('phone', text)}
+            value={profile.telephone}
+            onChangeText={(text) => handleChange('telephone', text)}
           />
         </View>
         <View style={styles.field}>
-          <Text style={styles.label}>Address:</Text>
+          <Text style={styles.label}>House No:</Text>
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
             editable={isEditable}
-            value={profile.address}
-            onChangeText={(text) => handleChange('address', text)}
+            value={profile.house_number}
+            onChangeText={(text) => handleChange('house_number', text)}
           />
         </View>
         <View style={styles.field}>
+          <Text style={styles.label}>Street Name:</Text>
+          <TextInput
+            style={[styles.input, isEditable && styles.editableInput]}
+            editable={isEditable}
+            value={profile.street_name}
+            onChangeText={(text) => handleChange('street_name', text)}
+          />
+        </View>
+        <View style={styles.field}>
+          <Text style={styles.label}>Post Code:</Text>
+          <TextInput
+            style={[styles.input, isEditable && styles.editableInput]}
+            editable={isEditable}
+            value={profile.postcode}
+            onChangeText={(text) => handleChange('postcode', text)}
+          />
+        </View>
+        {/* <View style={styles.field}>
           <Text style={styles.label}>Password:</Text>
           <TextInput
             style={[styles.input, isEditable && styles.editableInput]}
@@ -93,7 +140,7 @@ export default function Profile({navigate}) {
             onChangeText={(text) => handleChange('password', text)}
             secureTextEntry={true}
           />
-        </View>
+        </View> */}
       </View>
     </SafeAreaProvider>
   );
