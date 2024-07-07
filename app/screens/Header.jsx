@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Modal } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
@@ -9,14 +9,18 @@ import { UserContext } from "../contexts/UserContext";
 import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
 import { app } from '../../FirebaseConfig'
 import { getFirestore } from "firebase/firestore";
+import Profile from "./Profile"
 const db = getFirestore(app)
 
 export default function Header() {
   const [search, setSearch] = useState("");
   const [profile, setProfile] = useState({});
   const [docId,setDocId] = useState(null)
-  const navigation = useNavigation()
   const { user } = useContext(UserContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleHideModal = () => setModalVisible(false);
+  
+
 
   useEffect(()=>{
     getUser()
@@ -62,7 +66,7 @@ export default function Header() {
               Home Maintenance
             </Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Avatar.Image size={40} source={{ uri: profile.user_img_url }} />
           </TouchableOpacity>
         </View>
@@ -84,6 +88,9 @@ export default function Header() {
           </TouchableOpacity>
         </View>
       </View>
+      <Modal animationType="'slide" visible={modalVisible}>
+        <Profile handleHideModal={handleHideModal} />
+      </Modal>
     </SafeAreaView>
   );
 }
