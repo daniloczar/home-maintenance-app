@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import services from "../../assets/data/servcies.json";
 import CustomMarker from "../components/CustomMarker";
 import MapServiceCard from "../components/MapServiceCard";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 const Map = ({ navigation }) => {
   const [selectedService, setSelectedService] = useState(null);
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.container}>
         <MapView
           style={styles.map}
@@ -39,11 +38,14 @@ const Map = ({ navigation }) => {
         {selectedService && <MapServiceCard service={selectedService} />}
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backBnt}
+          onPress={() => navigation.goBack()}
+        >
           <Ionicons name="arrow-undo-circle" size={28} color="#6759FF" />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    top: 40,
+    top: 10,
     left: 10,
     zIndex: 10,
     borderWidth: 2,
