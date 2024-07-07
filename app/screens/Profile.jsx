@@ -15,7 +15,7 @@ import Colors from '../Util/Colors';
 const db = getFirestore(app)
 const auth = getAuth(app)
 
-export default function Profile({navigation}) {
+export default function Profile({ handleHideModal}) {
   const [isEditable, setIsEditable] = useState(false);
   const [profile, setProfile] = useState({});
   const { user, setUser } = useContext(UserContext);
@@ -91,7 +91,9 @@ export default function Profile({navigation}) {
               <Ionicons 
                 name="arrow-back" size={25} 
                 color="white" 
-                onPress={() => navigation.goBack()} 
+                onPress={
+                  handleHideModal
+                }
               />
               <Text style={styles.title}>Profile</Text>
               <Ionicons 
