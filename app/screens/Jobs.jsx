@@ -105,7 +105,7 @@ const Jobs = () => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={imagesCatData}
-          scrollEnabled={false}
+          scrollEnabled={true}
           renderItem={({ item }) => (
             <View style={styles.container}>
               <Image source={item.src} style={styles.Images} />
