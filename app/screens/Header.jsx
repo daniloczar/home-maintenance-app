@@ -16,6 +16,7 @@ export default function Header() {
   const [search, setSearch] = useState("");
   const [profile, setProfile] = useState({});
   const [docId,setDocId] = useState(null)
+
   const { user } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
   const handleHideModal = () => setModalVisible(false);
@@ -67,7 +68,7 @@ export default function Header() {
             </Text>
           </View>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Avatar.Image size={40} source={{ uri: profile.user_img_url }} />
+            <Avatar.Image size={40} source={{ uri: profile.user_img_url?profile.user_img_url:require("../../assets/Images/user.png") }} />
           </TouchableOpacity>
         </View>
         <View style={styles.searchBarContainer}>
