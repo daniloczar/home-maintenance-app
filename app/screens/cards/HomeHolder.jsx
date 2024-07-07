@@ -48,9 +48,9 @@ export default function ProviderCard() {
   const [rating, setRating] = useState(0);
 
   return (
-    <SafeAreaView>
+    
       <View style={styles.mainContainer}>
-        <ScrollView style={{ height: "92%" }}>
+        <ScrollView style={{ height: "89%" }}>
           <View style={styles.imageContainer}>
             <TouchableOpacity
               style={styles.backBnt}
@@ -201,7 +201,7 @@ export default function ProviderCard() {
           >
             <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={{
               backgroundColor: "blue",
               padding: 13,
@@ -212,13 +212,13 @@ export default function ProviderCard() {
             onPress={() => setShowModal(true)}
           >
             <Text style={{ color: "white", fontSize: 20 }}>Book Now</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
-        {/* <Modal animationType="slide" visible={showModal}>
+        <Modal animationType="slide" visible={showModal}>
           <BookingModal handleHideModal={handleHideModal} />
-        </Modal> */}
+        </Modal>
       </View>
-    </SafeAreaView>
+    
   );
 }
 

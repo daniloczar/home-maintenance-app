@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import JobPage from "../screens/JobPage";
 import Map from "../screens/Map";
 import Profile from "./Profile";
+import HomeHolder from "../screens/cards/HomeHolder";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,7 @@ const MainScreen = () => {
       <Stack.Screen name="JobsPage" component={JobPage} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="HomeHolder" component={HomeHolder} />
     </Stack.Navigator>
   );
 };

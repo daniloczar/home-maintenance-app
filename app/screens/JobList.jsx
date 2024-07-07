@@ -1,21 +1,30 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Foundation } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const JobList = ({item}) => {
+   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={item.src} style={styles.ImagesProviders} />
       <Text style={{ fontSize: 14, fontWeight: "bold", marginLeft: 5 }}>
         {item.name}
       </Text>
-      <Text style={{ fontSize: 12, marginLeft: 5, marginBottom:5, }}>{item.title}</Text>
+      <Text style={{ fontSize: 12, marginLeft: 5, marginBottom: 5 }}>
+        {item.title}
+      </Text>
       <View style={styles.ratingButton}>
         <View style={styles.ratingButton}>
           <Foundation name="star" size={10} color="#336aea" />
           <Text style={{ fontSize: 10, color: "#336aea" }}>{item.rating}</Text>
         </View>
-        <TouchableOpacity style={styles.detailsButton}>
+        <TouchableOpacity
+          style={styles.detailsButton}
+          onPress={() => {
+            navigation.navigate("HomeHolder");
+          }}
+        >
           <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
             Book Now
           </Text>

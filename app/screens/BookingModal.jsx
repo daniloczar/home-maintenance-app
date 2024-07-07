@@ -2,6 +2,7 @@ import { FlatList, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, T
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
+import {firestore} from "firebase/firestore";
 
 export default function BookingModal({ handleHideModal}) {
 
@@ -35,77 +36,102 @@ export default function BookingModal({ handleHideModal}) {
         setTimeList(timeList)
     }
 
+    const handleConfirmBooking = async () => {
+      if (selectedDate && selectedTime) {
+        const booking = {
+          date: selectedDate.toString(),
+          time: selectedTime,
+          note: note,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        };
+
+        try {
+          await firestore().collection("bookings").add(booking);
+          alert("Booking confirmed!");
+          handleHideModal(); // Hide modal after booking is confirmed
+        } catch (error) {
+          console.error("Error adding document: ", error);
+          alert("Error confirming booking. Please try again.");
+        }
+      } else {
+        alert("Please select a date and time.");
+      }
+    };
+
   return (
     <SafeAreaView>
       <ScrollView style={styles.mainContainer}>
         <KeyboardAvoidingView>
-            <View style={{ marginBottom: 60 }}>
-              <TouchableOpacity style={styles.backBnt} onPress={handleHideModal}>
-                <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
-              </TouchableOpacity>
-            </View>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Select Date</Text>
-            <View style={styles.container}>
-              <CalendarPicker onDateChange={setSelectedDate} minDate={Date.now()} />
-            </View>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                marginBottom: 15,
-                marginTop: 15,
-              }}
-            >
-              Select Time Slot
-            </Text>
-            <View>
-              <FlatList
-                data={timeList}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity
-                    style={{ marginRight: 10 }}
-                    onPress={() => setSelectedTime(item.time)}
+          <View style={{ marginBottom: 60 }}>
+            <TouchableOpacity style={styles.backBnt} onPress={handleHideModal}>
+              <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
+            </TouchableOpacity>
+          </View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Select Date</Text>
+          <View style={styles.container}>
+            <CalendarPicker
+              onDateChange={setSelectedDate}
+              minDate={Date.now()}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              marginBottom: 15,
+              marginTop: 15,
+            }}
+          >
+            Select Time Slot
+          </Text>
+          <View>
+            <FlatList
+              data={timeList}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => setSelectedTime(item.time)}
+                >
+                  <Text
+                    style={[
+                      selectedTime == item.time
+                        ? styles.selectedTime
+                        : styles.unSelectedTime,
+                    ]}
                   >
-                    <Text
-                      style={[
-                        selectedTime == item.time
-                          ? styles.selectedTime
-                          : styles.unSelectedTime,
-                      ]}
-                    >
-                      {item.time}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                marginBottom: 15,
-                marginTop: 15,
-              }}
-            >
-              Notes:
-            </Text>
-            <View>
-              <TextInput
-                placeholder="Notes"
-                numberOfLines={4}
-                maxLength={40}
-                multiline={true}
-                style={styles.notes}
-                onChange={(text) => setNote(text)}
-              />
-            </View>
-            <View style={{ marginTop: 15}}>
-              <TouchableOpacity>
-                <Text style={styles.confirmBnt}>Confirm Booking</Text>
-              </TouchableOpacity>
-            </View>
+                    {item.time}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              marginBottom: 15,
+              marginTop: 15,
+            }}
+          >
+            Notes:
+          </Text>
+          <View>
+            <TextInput
+              placeholder="Notes"
+              numberOfLines={4}
+              maxLength={40}
+              multiline={true}
+              style={styles.notes}
+              onChange={(text) => setNote(text)}
+            />
+          </View>
+          <View style={{ marginTop: 15 }}>
+            <TouchableOpacity onPress={handleConfirmBooking}>
+              <Text style={styles.confirmBnt}>Confirm Booking</Text>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
