@@ -6,8 +6,6 @@ import { app } from "../../FirebaseConfig";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import styless from "../screens/auth/styles/RegistrationScreenStyles";
-import { Modal, Portal, PaperProvider } from "react-native-paper";
-import JobPost from "./JobPost";
 const db = getFirestore(app);
 
 const MyStuffHouseholder = () => {
@@ -26,9 +24,6 @@ const MyStuffHouseholder = () => {
         ...doc.data(),
       }));
 
-      console.log(user);
-      console.log(user.uid);
-
       setAllJobs(jobsList);
     } catch (error) {
       console.error("Error fetching jobs: ", error);
@@ -39,20 +34,9 @@ const MyStuffHouseholder = () => {
     fetchAllJobs();
   }, []);
 
-const handleJobForm = () => {
-    setShowForm(true)
-}
-
-const handleCloseModal = () => {
-    setShowForm(false);
-  };
-
-// onPress={() => navigation.goBack()}
-
-
   return (
-    // <PaperProvider>
     <View style={styles.container}>
+        <View style={styles.headerContainer}>
       <Text style={styles.header}>My Jobs</Text>
 
       <TouchableOpacity
@@ -61,14 +45,7 @@ const handleCloseModal = () => {
       >
         <Text style={styless.buttonTitle}>Post a Job</Text>
       </TouchableOpacity>
-
-      {/* {showForm? <JobPost/> : null} */}
-
-      {/* <Portal>
-        <Modal visible={showForm} onDismiss={handleCloseModal} style={styles.modalContainer}>
-          <JobPost onClose={handleCloseModal} />
-        </Modal>
-      </Portal> */}
+      </View>
 
       <FlatList
         data={allJobs}
@@ -97,7 +74,6 @@ const handleCloseModal = () => {
         ListEmptyComponent={<Text>No jobs found.</Text>}
       />
     </View>
-    // </PaperProvider>
   );
 };
 
@@ -114,6 +90,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    paddingTop: 10,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    justifyContent: 'space-between'
   },
   button: {
     backgroundColor: "#007BFF",

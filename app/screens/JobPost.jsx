@@ -1,31 +1,34 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../contexts/UserContext';
-import { db, addDoc, collection } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
+import { app } from '../../FirebaseConfig';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { KeyboardAvoidingView } from 'react-native';
-// import { Platform } from 'react-native';
+import { serverTimestamp } from 'firebase/firestore';
+
+const db = getFirestore(app);
 
 const JobPost = () => {
-    const [jobId, setJobId] = useState(); // can be same as document id
-    // job_id: jobs.length ? jobs[0].job_id + 1 : 1,
-    const [completedAt, setcompletedAt] = useState(null); // default to 'null' serverTimestamp() Date.now()
-    const [createdAt, setCreatedAt] = useState(null); // serverTimestamp() Date.now()
+    const [jobId, setJobId] = useState();
+    const [completedAt, setcompletedAt] = useState(null);
+    const [createdAt, setCreatedAt] = useState(null);
     const [jobTitle, setJobTitle] = useState();
-    const [jobImgUrl, setJobImgUrl] = useState();
+    const [jobImgUrl, setJobImgUrl] = useState(null);
     const [jobDescription, setJobDescription] = useState();
     const [jobServiceCategoryName, setJobServiceCategoryName] = useState();
-    const [jobMaxBudget, setJobMaxBudget] = useState();
-    const [jobStatus, setJobStatus] = useState('Open'); // default to 'Open'
+    const [jobMaxBudget, setJobMaxBudget] = useState(null);
+    const [jobStatus, setJobStatus] = useState('Open');
     const {user, setUser} = useContext(UserContext);
     const navigation = useNavigation()
 
     const newJob = {
         completed_at: completedAt,
-        created_at: createdAt,
+        created_at: serverTimestamp(),
         job_description: jobDescription,
-        job_id: Date.now(),
+        job_id: Date.now().toString(),
         job_img_url: jobImgUrl,
         job_max_budget: jobMaxBudget,
         job_status: jobStatus,
@@ -36,6 +39,8 @@ const JobPost = () => {
 
     const handlePostNewJob = async () => {
         const jobDocRef = await addDoc(collection(db, "jobs"), newJob)
+        alert("Job posted successfully")
+        navigation.navigate("MyStuff")
     }
 
   return (
@@ -93,7 +98,7 @@ const JobPost = () => {
               placeholder="Maximum budget"
               placeholderTextColor="#aaaaaa"
               keyboardType="numeric"
-              onChangeText={(text) => setJobMaxBudget(text)}
+              onChangeText={(text) => setJobMaxBudget(parseFloat(text))}
               value={jobMaxBudget}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
