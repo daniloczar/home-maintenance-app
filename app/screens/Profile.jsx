@@ -106,7 +106,7 @@ export default function Profile({ handleHideModal}) {
                 />
             </View>
             <View style={styles.avatarContainer}>
-              <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
+              <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
               {isEditable && (
                 <TouchableOpacity onPress={pickImage}>
                   <Text style={styles.changePhotoText}>Change Photo</Text>
@@ -118,7 +118,7 @@ export default function Profile({ handleHideModal}) {
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
-                value={user.full_name}
+                value={profile.full_name}
                 onChangeText={(text) => handleChange('full_name', text)}
               />
             </View>
@@ -127,7 +127,7 @@ export default function Profile({ handleHideModal}) {
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
-                value={user.telephone}
+                value={profile.telephone}
                 onChangeText={(text) => handleChange('telephone', text)}
               />
             </View>
@@ -136,7 +136,7 @@ export default function Profile({ handleHideModal}) {
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
-                value={user.house_number}
+                value={profile.house_number}
                 onChangeText={(text) => handleChange('house_number', text)}
               />
             </View>
@@ -145,7 +145,7 @@ export default function Profile({ handleHideModal}) {
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
-                value={user.street_name}
+                value={profile.street_name}
                 onChangeText={(text) => handleChange('street_name', text)}
               />
             </View>
@@ -154,7 +154,7 @@ export default function Profile({ handleHideModal}) {
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
-                value={user.postcode}
+                value={profile.postcode}
                 onChangeText={(text) => handleChange('postcode', text)}
               />
             </View>
@@ -198,11 +198,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   title: {
-    fontSize: 24,
     color:'white',
     fontWeight: 'bold',
-    fontFamily: 'Cochin',
-    fontSize:40,
+    fontSize:35,
   },
   avatarContainer: {
     alignItems: 'center',
