@@ -6,7 +6,7 @@ import { app } from "../../FirebaseConfig";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import styless from "../screens/auth/styles/RegistrationScreenStyles";
-import { Modal } from "react-native-paper";
+import { Modal, Portal, PaperProvider } from "react-native-paper";
 import JobPost from "./JobPost";
 const db = getFirestore(app);
 
@@ -43,23 +43,27 @@ const handleJobForm = () => {
     setShowForm(true)
 }
 
+const handleCloseModal = () => {
+    setShowForm(false);
+  };
+
   return (
+    <PaperProvider>
     <View style={styles.container}>
       <Text style={styles.header}>My Jobs</Text>
 
       <TouchableOpacity
         style={styless.buttonChoice}
-        onPress={
-        //   alert("Post A Job pressed");
-        handleJobForm
-        }
+        onPress={handleJobForm}
       >
         <Text style={styless.buttonTitle}>Post a Job</Text>
       </TouchableOpacity>
 
-        <Modal transparent={true} visible={showForm}>
-            <JobPost/>
+      <Portal>
+        <Modal visible={showForm} onDismiss={handleCloseModal} style={styles.modalContainer}>
+          <JobPost onClose={handleCloseModal} />
         </Modal>
+      </Portal>
 
       <FlatList
         data={allJobs}
@@ -88,6 +92,7 @@ const handleJobForm = () => {
         ListEmptyComponent={<Text>No jobs found.</Text>}
       />
     </View>
+    </PaperProvider>
   );
 };
 
