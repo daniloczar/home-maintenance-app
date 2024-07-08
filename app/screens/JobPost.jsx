@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useContext } from 'react'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import React, { useState, useContext } from 'react'
 import { UserContext } from '../contexts/UserContext';
 import { db, addDoc, collection } from 'firebase/firestore';
 
@@ -7,7 +7,7 @@ const JobPost = () => {
     const [jobId, setJobId] = useState(); // can be same as document id
     // job_id: jobs.length ? jobs[0].job_id + 1 : 1,
     const [completedAt, setcompletedAt] = useState(null); // default to 'null' serverTimestamp() Date.now()
-    const [createdAt, setCreatedAt] = useState(); // serverTimestamp() Date.now()
+    const [createdAt, setCreatedAt] = useState(null); // serverTimestamp() Date.now()
     const [jobTitle, setJobTitle] = useState();
     const [jobImgUrl, setJobImgUrl] = useState();
     const [jobDescription, setJobDescription] = useState();
@@ -18,7 +18,7 @@ const JobPost = () => {
 
     const newJob = {
         completed_at: completedAt,
-        created_at: serverTimestamp(),
+        created_at: createdAt,
         job_description: jobDescription,
         job_id: Date.now(),
         job_img_url: jobImgUrl,

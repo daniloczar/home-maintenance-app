@@ -100,7 +100,7 @@ export default function ProviderCard() {
               <Text
                 style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}
               >
-                Galery
+                Gallery
               </Text>
               <ScrollView
                 horizontal={true}
