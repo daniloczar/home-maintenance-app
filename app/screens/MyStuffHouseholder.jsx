@@ -4,14 +4,17 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
 import styless from "../screens/auth/styles/RegistrationScreenStyles";
+import { Modal } from "react-native-paper";
+import JobPost from "./JobPost";
 const db = getFirestore(app);
-
-console.log("Hello Earth");
 
 const MyStuffHouseholder = () => {
   const [allJobs, setAllJobs] = useState([]);
   const { user } = useContext(UserContext);
+  const navigation = useNavigation();
+  const [showForm, setShowForm] = useState(false);
 
   const fetchAllJobs = async () => {
     try {
@@ -36,34 +39,50 @@ const MyStuffHouseholder = () => {
     fetchAllJobs();
   }, []);
 
+const handleJobForm = () => {
+    setShowForm(true)
+}
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>My Jobs</Text>
 
       <TouchableOpacity
         style={styless.buttonChoice}
-        onPress={() => {
-          alert("Post A Job pressed");
-        }}
+        onPress={
+        //   alert("Post A Job pressed");
+        handleJobForm
+        }
       >
         <Text style={styless.buttonTitle}>Post a Job</Text>
       </TouchableOpacity>
+
+        <Modal transparent={true} visible={showForm}>
+            <JobPost/>
+        </Modal>
 
       <FlatList
         data={allJobs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          console.log(item.job_img_url),
           (
+            <TouchableOpacity
+          style={styles.detailsButton}
+          onPress={() => {
+            navigation.navigate("HomeHolder");
+          }}
+        >
+          <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
+            Book Now
+          </Text>
             <View style={styles.jobContainer}>
               <Image source={{ uri: item.job_img_url }} style={styles.jobImage} />
               <View style={styles.jobDetails}>
                 <Text style={styles.jobTitle}>{item.job_title}</Text>
-                {/* <Text style={styles.jobDescription}>{item.job_description}</Text> */}
-                {/* <Text style={styles.serviceCategory}>{item.service_category_name}</Text> */}
                 <Text style={styles.jobStatus}>Job Status: {item.job_status}</Text>
               </View>
             </View>
+            </TouchableOpacity>
           )
         )}
         ListEmptyComponent={<Text>No jobs found.</Text>}
