@@ -50,10 +50,10 @@ const JobPost = () => {
   return (
     <ScrollView>
         <KeyboardAvoidingView>
-    {/* <KeyboardAwareScrollView
+    <KeyboardAwareScrollView
             style={{ flex: 1, width: "100%" }}
             keyboardShouldPersistTaps="always"
-          > */}
+          >
     <View style={styles.container}>
         <View style={styles.headercancel}>
           <Text style={styles.header}>Post New Job</Text>
@@ -111,7 +111,7 @@ const JobPost = () => {
           <Text style={styles.buttonTitle}>Submit</Text>
         </TouchableOpacity>
     </View>
-        {/* </KeyboardAwareScrollView> */}
+        </KeyboardAwareScrollView>
     </KeyboardAvoidingView>
     </ScrollView>
   )
