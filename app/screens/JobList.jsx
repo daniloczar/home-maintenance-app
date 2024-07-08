@@ -7,17 +7,17 @@ const JobList = ({item}) => {
    const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Image source={item.src} style={styles.ImagesProviders} />
+      <Image source={{uri: item.user_img_url}} style={styles.ImagesProviders} />
       <Text style={{ fontSize: 14, fontWeight: "bold", marginLeft: 5 }}>
-        {item.name}
+        {item.full_name}
       </Text>
       <Text style={{ fontSize: 12, marginLeft: 5, marginBottom: 5 }}>
-        {item.title}
+        {item.service_title}
       </Text>
       <View style={styles.ratingButton}>
         <View style={styles.ratingButton}>
           <Foundation name="star" size={10} color="#336aea" />
-          <Text style={{ fontSize: 10, color: "#336aea" }}>{item.rating}</Text>
+          <Text style={{ fontSize: 10, color: "#336aea" }}>4.3</Text>
         </View>
         <TouchableOpacity
           style={styles.detailsButton}
