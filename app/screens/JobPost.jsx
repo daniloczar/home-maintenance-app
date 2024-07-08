@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView } from 'react-native'
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../contexts/UserContext';
 import { getFirestore } from 'firebase/firestore';
@@ -6,19 +6,18 @@ import { addDoc, collection } from 'firebase/firestore';
 import { app } from '../../FirebaseConfig';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
-import { KeyboardAvoidingView } from 'react-native';
 import { serverTimestamp } from 'firebase/firestore';
 
 const db = getFirestore(app);
 
 const JobPost = () => {
-    const [jobId, setJobId] = useState();
+    const [jobId, setJobId] = useState(null);
     const [completedAt, setcompletedAt] = useState(null);
     const [createdAt, setCreatedAt] = useState(null);
-    const [jobTitle, setJobTitle] = useState();
+    const [jobTitle, setJobTitle] = useState(null);
     const [jobImgUrl, setJobImgUrl] = useState(null);
-    const [jobDescription, setJobDescription] = useState();
-    const [jobServiceCategoryName, setJobServiceCategoryName] = useState();
+    const [jobDescription, setJobDescription] = useState(null);
+    const [jobServiceCategoryName, setJobServiceCategoryName] = useState(null);
     const [jobMaxBudget, setJobMaxBudget] = useState(null);
     const [jobStatus, setJobStatus] = useState('Open');
     const {user, setUser} = useContext(UserContext);
@@ -41,16 +40,21 @@ const JobPost = () => {
         const jobDocRef = await addDoc(collection(db, "jobs"), newJob)
         alert("Job posted successfully")
         navigation.navigate("MyStuff")
+        setJobServiceCategoryName('');
+        setJobTitle('');
+        setJobDescription('');
+        setJobImgUrl('');
+        setJobMaxBudget('');
     }
 
   return (
     <ScrollView>
-    <View style={styles.container}>
-    <KeyboardAwareScrollView
+        <KeyboardAvoidingView>
+    {/* <KeyboardAwareScrollView
             style={{ flex: 1, width: "100%" }}
             keyboardShouldPersistTaps="always"
-          >
-        <KeyboardAvoidingView>
+          > */}
+    <View style={styles.container}>
         <View style={styles.headercancel}>
           <Text style={styles.header}>Post New Job</Text>
           <TouchableOpacity onPress={() => navigation.navigate("MyStuff")}>
@@ -106,9 +110,9 @@ const JobPost = () => {
         <TouchableOpacity style={styles.button} onPress={() => handlePostNewJob()}>
           <Text style={styles.buttonTitle}>Submit</Text>
         </TouchableOpacity>
-        </KeyboardAvoidingView>
-        </KeyboardAwareScrollView>
     </View>
+        {/* </KeyboardAwareScrollView> */}
+    </KeyboardAvoidingView>
     </ScrollView>
   )
 }
