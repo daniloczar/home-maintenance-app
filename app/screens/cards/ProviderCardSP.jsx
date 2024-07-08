@@ -1,53 +1,20 @@
-import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-
-const cardData = [
-  {
-    key: 1,
-    name: "Paul Chain",
-    title: "Professional Plumber",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-    src: require("../../../assets/Images/plumber2.png"),
-    skills: ["Deep Cleaning", "Windows", "Soft clean", "Upholstery"],
-
-    service_category_name: "Plumbing",
-
-    service_cost: 100,
-
-    service_description: "stop leakages with permanent fix",
-
-    service_id: "1",
-
-    service_img_url_after:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
-
-    service_img_url_before:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-
-    service_title: "Plumbing Service",
-
-    user_id: "4",
-    review_rating:3,
-    review_description: "Satisfactory service"
-  },
-];
-export default function ProviderCardSP() {
+export default function ProviderCardSP({route}) {
   const [image, setImage] = useState(0);
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
     const handleHideModal = () => setShowModal(false);
+    const { item } = route.params;
   
 
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.mainContainer}>
         <ScrollView>
           <View style={styles.imageContainer}>
@@ -58,7 +25,7 @@ export default function ProviderCardSP() {
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
             <Image
-              source={cardData[image].src}
+              source={{ uri: item.user_img_url }}
               style={{ width: "100%", height: 300 }}
             />
           </View>
@@ -66,9 +33,9 @@ export default function ProviderCardSP() {
             <View style={styles.headerCard}>
               <View style={styles.textHeader}>
                 <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                  {cardData[image].name}
+                  {item.full_name}
                 </Text>
-                <Text style={{ fontSize: 18 }}>{cardData[image].title}</Text>
+                <Text style={{ fontSize: 18 }}>{item.service_title}</Text>
               </View>
               <TouchableOpacity>
                 <AntDesign name="edit" size={24} color="black" />
@@ -85,9 +52,7 @@ export default function ProviderCardSP() {
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 Description
               </Text>
-              <Text style={{ fontSize: 13 }}>
-                {cardData[image].description}
-              </Text>
+              <Text style={{ fontSize: 13 }}>{item.service_description}</Text>
             </View>
             <View
               style={{
@@ -152,13 +117,13 @@ export default function ProviderCardSP() {
                 <FontAwesome name="star-o" size={13} color="black" />
               </View>
               <Text style={{ marginTop: 6 }}>
-                {cardData[image].review_description}
+                {/* {cardData[image].review_description} */}
               </Text>
             </View>
           </View>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
