@@ -49,7 +49,7 @@ const JobPost = () => {
 
   return (
     <ScrollView>
-        <KeyboardAvoidingView>
+        {/* <KeyboardAvoidingView> */}
     <KeyboardAwareScrollView
             style={{ flex: 1, width: "100%" }}
             keyboardShouldPersistTaps="always"
@@ -112,7 +112,7 @@ const JobPost = () => {
         </TouchableOpacity>
     </View>
         </KeyboardAwareScrollView>
-    </KeyboardAvoidingView>
+    {/* </KeyboardAvoidingView> */}
     </ScrollView>
   )
 }
