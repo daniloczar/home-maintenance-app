@@ -47,23 +47,28 @@ const handleCloseModal = () => {
     setShowForm(false);
   };
 
+// onPress={() => navigation.goBack()}
+
+
   return (
-    <PaperProvider>
+    // <PaperProvider>
     <View style={styles.container}>
       <Text style={styles.header}>My Jobs</Text>
 
       <TouchableOpacity
         style={styless.buttonChoice}
-        onPress={handleJobForm}
+        onPress={() => navigation.navigate("JobPost")}
       >
         <Text style={styless.buttonTitle}>Post a Job</Text>
       </TouchableOpacity>
 
-      <Portal>
+      {/* {showForm? <JobPost/> : null} */}
+
+      {/* <Portal>
         <Modal visible={showForm} onDismiss={handleCloseModal} style={styles.modalContainer}>
           <JobPost onClose={handleCloseModal} />
         </Modal>
-      </Portal>
+      </Portal> */}
 
       <FlatList
         data={allJobs}
@@ -92,7 +97,7 @@ const handleCloseModal = () => {
         ListEmptyComponent={<Text>No jobs found.</Text>}
       />
     </View>
-    </PaperProvider>
+    // </PaperProvider>
   );
 };
 

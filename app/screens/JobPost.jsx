@@ -1,7 +1,11 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useContext } from 'react'
 import { UserContext } from '../contexts/UserContext';
 import { db, addDoc, collection } from 'firebase/firestore';
+import { useNavigation } from "@react-navigation/native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
+import { KeyboardAvoidingView } from 'react-native';
+// import { Platform } from 'react-native';
 
 const JobPost = () => {
     const [jobId, setJobId] = useState(); // can be same as document id
@@ -15,6 +19,7 @@ const JobPost = () => {
     const [jobMaxBudget, setJobMaxBudget] = useState();
     const [jobStatus, setJobStatus] = useState('Open'); // default to 'Open'
     const {user, setUser} = useContext(UserContext);
+    const navigation = useNavigation()
 
     const newJob = {
         completed_at: completedAt,
@@ -33,13 +38,20 @@ const JobPost = () => {
         const jobDocRef = await addDoc(collection(db, "jobs"), newJob)
     }
 
-
-    
-
-
   return (
+    <ScrollView>
     <View style={styles.container}>
-        <Text style={styles.header}>Post New Job</Text>
+    <KeyboardAwareScrollView
+            style={{ flex: 1, width: "100%" }}
+            keyboardShouldPersistTaps="always"
+          >
+        <KeyboardAvoidingView>
+        <View style={styles.headercancel}>
+          <Text style={styles.header}>Post New Job</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("MyStuff")}>
+            <Text style={styles.cancel}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
         <TextInput
               style={styles.input}
               placeholder="Service category"
@@ -89,7 +101,10 @@ const JobPost = () => {
         <TouchableOpacity style={styles.button} onPress={() => handlePostNewJob()}>
           <Text style={styles.buttonTitle}>Submit</Text>
         </TouchableOpacity>
+        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     </View>
+    </ScrollView>
   )
 }
 
@@ -100,12 +115,22 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: "#fff",
+        paddingTop:30,
         height: "100%",
+      },
+      headercancel:{
+        paddingHorizontal:30,
+        flexDirection:'row',
+        justifyContent: 'space-between',
       },
       header: {
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 10,
+      },
+      cancel:{
+        textDecorationLine:'underline',
+        paddingTop:5,
       },
       input: {
         height: 48,
