@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import MyStuffHouseholder from './MyStuffHouseholder'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import MyStuffHouseholder from "./MyStuffHouseholder";
 
 const MyStuff = () => {
   return (
-    <View>
-      <MyStuffHouseholder/>
+    <View style={{ height: "100%" }}>
+      <MyStuffHouseholder />
     </View>
-  )
-}
+  );
+};
 
-export default MyStuff
+export default MyStuff;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
