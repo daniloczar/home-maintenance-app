@@ -7,12 +7,15 @@ import { app } from "../../../FirebaseConfig";
 import { getFirestore, doc, getDocs, query, collection, where } from "firebase/firestore";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
+
+  const navigation = useNavigation();
 
   const onFooterLinkPress = () => {
     navigation.navigate("Registration");
@@ -25,9 +28,8 @@ export default function LoginScreen({ navigation }) {
     const db = getFirestore(app);
     signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
       const userID = userCredential.user.uid;
-      console.log(userCredential.user);
 
-      const getUser = query(collection(db, "users"), where("email", "==", email));
+      const getUser = query(collection(db, "users"), where("user_id", "==", userID));
       const querySnap = await getDocs(getUser);
 
       const userSnap = querySnap.docs.map((doc) => {
@@ -35,8 +37,8 @@ export default function LoginScreen({ navigation }) {
       });
 
       await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
-      setUser(userSnap[0])
-      navigation.navigate("Home");
+      setUser(userSnap[0]);
+      navigation.navigate("JobsPage");
     });
   };
 
