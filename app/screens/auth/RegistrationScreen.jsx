@@ -7,8 +7,9 @@ import { addDoc, collection, getFirestore, serverTimestamp } from "firebase/fire
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-export default function RegistrationScreen({ navigation }) {
+export default function RegistrationScreen() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ export default function RegistrationScreen({ navigation }) {
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
+  const navigation = useNavigation();
   const onFooterLinkPress = () => {
     navigation.navigate("Login");
   };
@@ -53,10 +55,10 @@ export default function RegistrationScreen({ navigation }) {
           user_img_url: "",
         };
         const users = collection(db, "users");
-        await addDoc(users, data);
+        await addDoc(users, newUser);
         await AsyncStorage.setItem("user", JSON.stringify(newUser));
         setUser(newUser);
-        navigation.navigate("Home");
+        navigation.navigate("JobsPage");
         console.log("SIGN UP USER");
       })
       .catch((error) => {
