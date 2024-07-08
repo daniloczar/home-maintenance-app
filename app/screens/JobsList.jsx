@@ -1,40 +1,51 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Foundation } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/UserContext";
 
-const JobList = ({item}) => {
-   const navigation = useNavigation();
+const JobsList = ({ item }) => {
+  const navigation = useNavigation();
+  const { user } = useContext(UserContext);
+
   return (
     <View style={styles.container}>
-      <Image source={{uri: item.user_img_url}} style={styles.ImagesProviders} />
+      <Image
+        source={{ uri: item.job_img_url }}
+        style={styles.ImagesProviders}
+      />
       <Text style={{ fontSize: 14, fontWeight: "bold", marginLeft: 5 }}>
-        {item.full_name}
+        {item.job_title}
       </Text>
       <Text style={{ fontSize: 12, marginLeft: 5, marginBottom: 5 }}>
-        {item.service_title}
+        {item.job_description}
       </Text>
-      <View style={styles.ratingButton}>
-        <View style={styles.ratingButton}>
-          <Foundation name="star" size={10} color="#336aea" />
-          <Text style={{ fontSize: 10, color: "#336aea" }}>4.3</Text>
-        </View>
+
+      <Text>{item.service_category_name}</Text>
+      <Text>£{item.job_max_budget}</Text>
+      
         <TouchableOpacity
           style={styles.detailsButton}
           onPress={() => {
-            navigation.navigate("ProviderCardHH");
+            user.user_type === "householder"
+              ? navigation.navigate("ProviderCardHH", {
+                  item,
+                })
+              : navigation.navigate("ProviderCardSP", {
+                  item: item,
+                });
           }}
         >
-          <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
-            Book Now
-          </Text>
+          
+            <Text>See more</Text>
+          
         </TouchableOpacity>
       </View>
-    </View>
+    
   );
 };
 
-export default JobList;
+export default JobsList;
 
 const styles = StyleSheet.create({
   container: {
@@ -44,7 +55,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   ImagesProviders: {
-    width: 150,
+    width: 500,
     height: 120,
     margin: 5,
     backgroundColor: "white",
@@ -55,14 +66,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 2,
-    marginLeft:4,
+    marginLeft: 4,
   },
   detailsButton: {
     backgroundColor: "#336aea",
     padding: 2,
     width: 70,
     borderRadius: 5,
-    marginRight:4,
-    marginBottom:7
+    marginRight: 4,
+    marginBottom: 7,
   },
 });

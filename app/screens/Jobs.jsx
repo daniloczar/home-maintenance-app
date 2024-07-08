@@ -1,8 +1,9 @@
-import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import JobList from "./JobList";
+import SevicesList from "./ServicesList";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import JobsList from "../screens/JobsList"
 import {
   addDoc,
   collection,
@@ -13,31 +14,14 @@ import {
 } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
 
-// house holders
-const imagesCatData = [
-  {
-    key: 1,
-    title: "Air Conditioner",
-    src: require("../../assets/Images/air.png"),
-  },
-  {
-    key: 2,
-    title: "Plumbing",
-    src: require("../../assets/Images/Plumber.png"),
-  },
-  { key: 3, title: "Laundry", src: require("../../assets/Images/Laundry.png") },
-  {
-    key: 4,
-    title: "Electric Work",
-    src: require("../../assets/Images/Multimeter.png"),
-  },
-];
-
-
 const Jobs = () => {
   const { user } = useContext(UserContext);
   const navigation = useNavigation();
   const [allServicesProviders, setAllServicesProviders] = useState([]);
+  const [allJobsProviders, setAllJobsProviders] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [sortByCategory, setSortByCategory] = useState([]);
 
 const servicesData = async () => {
   const db = getFirestore(app);
@@ -52,12 +36,98 @@ const servicesData = async () => {
     ...doc.data(),
   }));
   setAllServicesProviders(servicesProviderList);
+};
 
+const CategoriesData = async () => {
+  const db = getFirestore(app);
+  const categoriesRef = collection(db, "service_categories");
+  const categoriesData = await getDocs(categoriesRef);
+  const categoriesList = categoriesData.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  setAllCategories(categoriesList);
+};
+
+const jobsData = async () => {
+  const db = getFirestore(app);
+  const jobsRef = collection(db, "jobs");
+  const jobsData = await getDocs(jobsRef);
+  const jobsProviderList = jobsData.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  setAllJobsProviders(jobsProviderList);
 };
 
 useEffect (()=>{
   servicesData()
-},[]) 
+  jobsData()
+  CategoriesData()
+  fetchByCategory();
+},[category]) 
+
+const ServiceProviderJobList = () =>{
+  return(<>
+      <View >
+        <Text >Jobs Available</Text>
+      </View>
+      <View>
+        <FlatList
+
+          data={
+            category?sortByCategory:allJobsProviders
+          }
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View>
+              <JobsList item={item} />
+            </View>
+          )}
+        />
+      </View> </>)
+  
+}
+
+const HomeProviderJobList = () =>{
+  return (
+    <>
+      <View style={styles.categoryText}>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
+      </View>
+      <View style={styles.ImageContainerProviders}>
+        <FlatList
+          data={category ? sortByCategory : allServicesProviders}
+          numColumns={2}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View>
+              <SevicesList item={item} />
+            </View>
+          )}
+        />
+      </View>
+    </>
+  );
+}
+
+const fetchByCategory = async () => {
+  const db = getFirestore(app);
+  const categoryRef = collection(db, "jobs");
+  const categoryQuery = query(
+    categoryRef,
+    where("service_category_name", "==", category)
+  );
+  const categoryData = await getDocs(categoryQuery);
+  const categoryList = categoryData.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  setSortByCategory(categoryList)
+};
+
 
   return (
     <View>
@@ -92,33 +162,30 @@ useEffect (()=>{
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          data={imagesCatData}
+          data={allCategories}
           scrollEnabled={true}
           renderItem={({ item }) => (
-            <View style={styles.container}>
-              <Image source={item.src} style={styles.Images} />
-              <Text style={{ fontSize: 13, marginTop: 5 }}>{item.title}</Text>
-            </View>
+            <TouchableOpacity
+              style={styles.container}
+              onPress={() => {
+                setCategory(item.service_category_name);
+              }}
+            >
+              <Image source={{uri: item.service_category_img}} style={styles.Images} />
+              <Text style={{ fontSize: 13, marginTop: 5 }}>
+                {item.service_category_name}
+              </Text>
+            </TouchableOpacity>
           )}
         />
       </View>
-      <View style={styles.categoryText}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
-      </View>
-      <View style={styles.ImageContainerProviders}>
-        <FlatList
-          data={allServicesProviders}
-          numColumns={2}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            // <Image source={item.src} style={styles.ImagesProviders} />
-            <View>
-              <JobList item={item} />
-            </View>
-          )}
-        />
-      </View>
+      <Text>
+        {user.user_type === "service_provider" ? (
+          <ServiceProviderJobList />
+        ) : (
+          <HomeProviderJobList />
+        )}
+      </Text>
     </View>
   );
 };
@@ -157,8 +224,5 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
   },
-  ImageContainerProviders: {
-    display: "flex",
-    alignItems: "center",
-  },
+
 });
