@@ -4,7 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import JobPage from "../screens/JobPage";
 import Map from "../screens/Map";
 import Profile from "./Profile";
-import HomeHolder from "../screens/cards/HomeHolder";
+import JobCardHH from "./cards/JobCardHH";
+import JobCardSP from "./cards/JobCardHH";
+import ProviderCardHH from "./cards/ProviderCardHH";
+import ProviderCardSP from "./cards/ProviderCardSP";
 import Message from "./Message";
 import Messages from "./Messages";
 
@@ -16,7 +19,10 @@ const MainScreen = () => {
       <Stack.Screen name="JobsPage" component={JobPage} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="HomeHolder" component={HomeHolder} />
+      <Stack.Screen name="JobCardHH" component={JobCardHH} />
+      <Stack.Screen name="JobCardSP" component={JobCardSP} />
+      <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
+      <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
       <Stack.Screen name="Message" component={Message} />
       <Stack.Screen name="Messages" component={Messages} />
     </Stack.Navigator>

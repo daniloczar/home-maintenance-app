@@ -1,4 +1,4 @@
-import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,7 +11,7 @@ import { FontAwesome } from "@expo/vector-icons";
 const cardData = [
   {
     key: 1,
-    name: "Paul Chain",
+    name: "Emily Chan",
     title: "Professional Plumber",
     description:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
@@ -39,17 +39,16 @@ const cardData = [
     review_description: "Satisfactory service"
   },
 ];
-export default function ProviderCard() {
+export default function JobCardHH() {
   const [image, setImage] = useState(0);
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
     const handleHideModal = () => setShowModal(false);
-  
 
   return (
     <SafeAreaView>
-      <View style={styles.mainContainer}>
-        <ScrollView>
+      <View>
+        <ScrollView style={{ height: "90%" }}>
           <View style={styles.imageContainer}>
             <TouchableOpacity
               style={styles.backBnt}
@@ -97,15 +96,8 @@ export default function ProviderCard() {
               }}
             ></View>
             <View>
-              <Text
-                style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}
-              >
-                Gallery
-              </Text>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
+              <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom:5 }}>Galery</Text>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <Image
                   source={{
                     uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
@@ -157,6 +149,36 @@ export default function ProviderCard() {
             </View>
           </View>
         </ScrollView>
+        <View
+          style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: "blue",
+              padding: 13,
+              alignItems: "center",
+              borderRadius: 5,
+              flex: 1,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "blue",
+              padding: 13,
+              alignItems: "center",
+              borderRadius: 5,
+              flex: 1,
+            }}
+            onPress={() => setShowModal(true)}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>Book Now</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal animationType="slide" visible={showModal}>
+          <BookingModal handleHideModal={handleHideModal} />
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -164,7 +186,7 @@ export default function ProviderCard() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    padding: 20,
   },
   backBnt: {
     position: "absolute",
@@ -181,15 +203,11 @@ const styles = StyleSheet.create({
   descriptionBox: {
     marginBottom: 10,
   },
-  headerCard: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  headerCard:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  mainContainer: {
-    marginLeft: -3,
-    marginRight: -3,
-  },
-
+ 
 });

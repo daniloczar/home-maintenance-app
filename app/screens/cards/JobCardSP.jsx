@@ -39,7 +39,7 @@ const cardData = [
     review_description: "Satisfactory service"
   },
 ];
-export default function ProviderCard() {
+export default function JobCardSP() {
   const [image, setImage] = useState(0);
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
