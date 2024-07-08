@@ -33,8 +33,13 @@ const JobPost = () => {
         const jobDocRef = await addDoc(collection(db, "jobs"), newJob)
     }
 
+
+    
+
+
   return (
-    <View>
+    <View style={styles.container}>
+        <Text style={styles.header}>Post New Job</Text>
         <TextInput
               style={styles.input}
               placeholder="Service category"
@@ -84,7 +89,6 @@ const JobPost = () => {
         <TouchableOpacity style={styles.button} onPress={() => handlePostNewJob()}>
           <Text style={styles.buttonTitle}>Submit</Text>
         </TouchableOpacity>
-      <Text>Post new Job</Text>
     </View>
   )
 }
@@ -92,7 +96,18 @@ const JobPost = () => {
 export default JobPost
 
 const styles = StyleSheet.create({
-    input: {
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: "#fff",
+        height: "100%",
+      },
+      header: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 10,
+      },
+      input: {
         height: 48,
         borderRadius: 5,
         borderWidth: 1,
