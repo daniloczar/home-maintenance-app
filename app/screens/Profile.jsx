@@ -106,7 +106,7 @@ export default function Profile({ handleHideModal}) {
                 />
             </View>
             <View style={styles.avatarContainer}>
-              <Avatar.Image size={200} source={{ uri: user.user_img_url?user.user_img_url:require("../../assets/Images/user.png") }} />
+              <Avatar.Image size={200} source={{ uri: user.user_img_url }} />
               {isEditable && (
                 <TouchableOpacity onPress={pickImage}>
                   <Text style={styles.changePhotoText}>Change Photo</Text>

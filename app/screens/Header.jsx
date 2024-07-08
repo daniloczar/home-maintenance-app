@@ -68,7 +68,7 @@ export default function Header() {
             </Text>
           </View>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Avatar.Image size={40} source={{ uri: profile.user_img_url?profile.user_img_url:require("../../assets/Images/user.png") }} />
+            <Avatar.Image size={40} source={{ uri: profile.user_img_ur }} />
           </TouchableOpacity>
         </View>
         <View style={styles.searchBarContainer}>
