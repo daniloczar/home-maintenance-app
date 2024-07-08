@@ -1,14 +1,17 @@
 import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import JobList from "./JobList";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
-
-const servicesData = async () => {
-  const servicesRef = collection(db, "users");
-  const service = query(servicesRef, where("user_type", "==", "service"));
-  const serviceData = await getDocs(service);
-};
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
+import { app } from "../../FirebaseConfig";
 
 // house holders
 const imagesCatData = [
@@ -29,47 +32,32 @@ const imagesCatData = [
     src: require("../../assets/Images/Multimeter.png"),
   },
 ];
-const imagesProvider = [
-  {
-    key: 1,
-    name: "Harper",
-    title: "Cleaner",
-    rating: 3.9,
-    src: require("../../assets/Images/cleaner1.png"),
-  },
-  {
-    key: 2,
-    name: "Jackson",
-    title: "Electrician",
-    rating: 4.1,
-    src: require("../../assets/Images/electrician1.png"),
-  },
-  {
-    key: 3,
-    name: "Ethan",
-    title: "Painter",
-    rating: 4.5,
-    src: require("../../assets/Images/painter1.png"),
-  },
-  {
-    key: 4,
-    name: "Aiden",
-    title: "Carpenter",
-    rating: 3.7,
-    src: require("../../assets/Images/carpenter1.png"),
-  },
-  {
-    key: 5,
-    name: "Lucas",
-    title: "Plumber",
-    rating: 4.8,
-    src: require("../../assets/Images/plumber2.png"),
-  },
-];
+
 
 const Jobs = () => {
   const { user } = useContext(UserContext);
   const navigation = useNavigation();
+  const [allServicesProviders, setAllServicesProviders] = useState([]);
+
+const servicesData = async () => {
+  const db = getFirestore(app);
+  const servicesRef = collection(db, "users");
+  const service = query(
+    servicesRef,
+    where("user_type", "==", "service_provider")
+  );
+  const serviceData = await getDocs(service);
+  const servicesProviderList = serviceData.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  setAllServicesProviders(servicesProviderList);
+
+};
+
+useEffect (()=>{
+  servicesData()
+},[]) 
 
   return (
     <View>
@@ -115,13 +103,11 @@ const Jobs = () => {
         />
       </View>
       <View style={styles.categoryText}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Services
-        </Text>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
       </View>
       <View style={styles.ImageContainerProviders}>
         <FlatList
-          data={imagesProvider}
+          data={allServicesProviders}
           numColumns={2}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}

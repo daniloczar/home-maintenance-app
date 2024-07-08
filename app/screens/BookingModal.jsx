@@ -2,14 +2,16 @@ import { FlatList, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, T
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
-import {firestore} from "firebase/firestore";
+import {addDoc, collection, getFirestore, serverTimestamp} from "firebase/firestore";
+import { app } from "../../FirebaseConfig";
 
 export default function BookingModal({ handleHideModal}) {
 
     const [timeList, setTimeList] = useState()
     const [selectedTime, setSelectedTime] = useState()
     const [selectedDate, setSelectedDate] = useState()
-    const [note, setNote] = useState()
+    const [note, setNote] = useState('')
+  
 
     useEffect(()=>{
         getTime()
@@ -37,18 +39,22 @@ export default function BookingModal({ handleHideModal}) {
     }
 
     const handleConfirmBooking = async () => {
+      const db = getFirestore(app);
+
       if (selectedDate && selectedTime) {
         const booking = {
           date: selectedDate.toString(),
           time: selectedTime,
           note: note,
-          createdAt: firestore.FieldValue.serverTimestamp(),
+          createdAt: serverTimestamp(),
         };
 
         try {
-          await firestore().collection("bookings").add(booking);
+          const bookings = await collection(db,"bookings");
+          await addDoc(bookings, booking);
           alert("Booking confirmed!");
-          handleHideModal(); // Hide modal after booking is confirmed
+          handleHideModal();
+          //add navigate to jobs page
         } catch (error) {
           console.error("Error adding document: ", error);
           alert("Error confirming booking. Please try again.");
@@ -124,7 +130,7 @@ export default function BookingModal({ handleHideModal}) {
               maxLength={40}
               multiline={true}
               style={styles.notes}
-              onChange={(text) => setNote(text)}
+              onChangeText={(text) => setNote(text)}
             />
           </View>
           <View style={{ marginTop: 15 }}>
