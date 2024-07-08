@@ -40,7 +40,7 @@ const cardData = [
     review_description: "Satisfactory service"
   },
 ];
-export default function ProviderCard() {
+export default function ProviderCardHH() {
   const [image, setImage] = useState(0);
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
@@ -98,7 +98,7 @@ export default function ProviderCard() {
               <Text
                 style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}
               >
-                Galery
+                Gallery
               </Text>
               <ScrollView
                 horizontal={true}

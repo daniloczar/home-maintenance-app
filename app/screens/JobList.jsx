@@ -22,7 +22,7 @@ const JobList = ({item}) => {
         <TouchableOpacity
           style={styles.detailsButton}
           onPress={() => {
-            navigation.navigate("HomeHolder");
+            navigation.navigate("ProviderCardHH");
           }}
         >
           <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>

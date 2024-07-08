@@ -5,7 +5,6 @@ import { UserContext, UserProvider } from "./app/contexts/UserContext";
 import OnboardingScreen from "./app/screens/onboarding/OnboardingScreen";
 import LoginScreen from "./app/screens/auth/LoginScreen";
 import RegistrationScreen from "./app/screens/auth/RegistrationScreen";
-import ProviderCard from "./app/screens/cards/ProviderCard";
 import NavBar from "./app/Navigations/NavBar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
