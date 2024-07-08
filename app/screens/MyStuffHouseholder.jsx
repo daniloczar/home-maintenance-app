@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Pressable, StyleSheet, Text, View, FlatList, Image } from "react-native";
+import { Pressable, StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from "react-native";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
 import { UserContext } from "../contexts/UserContext";
+import styless from "../screens/auth/styles/RegistrationScreenStyles";
 const db = getFirestore(app);
 
 console.log("Hello Earth");
@@ -35,37 +36,39 @@ const MyStuffHouseholder = () => {
     fetchAllJobs();
   }, []);
 
-  
-
   return (
     <View style={styles.container}>
       <Text style={styles.header}>My Jobs</Text>
 
-      <Pressable style={styles.button} onPress={() => console.log("Post A Job pressed")}>
-        <Text style={styles.buttonText}>Post A Job</Text>
-      </Pressable>
+      <TouchableOpacity
+        style={styless.buttonChoice}
+        onPress={() => {
+          alert("Post A Job pressed");
+        }}
+      >
+        <Text style={styless.buttonTitle}>Post a Job</Text>
+      </TouchableOpacity>
 
       <FlatList
         data={allJobs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-         console.log(item.job_img_url),
-
-          <View style={styles.jobContainer}>
-            <Image source={{ uri: item.job_img_url }} style={styles.jobImage} />
-            <View style={styles.jobDetails}>
-              <Text style={styles.jobTitle}>{item.job_title}</Text>
-              {/* <Text style={styles.jobDescription}>{item.job_description}</Text> */}
-              {/* <Text style={styles.serviceCategory}>{item.service_category_name}</Text> */}
-              <Text style={styles.jobStatus}>Job Status: {item.job_status}</Text>
+          console.log(item.job_img_url),
+          (
+            <View style={styles.jobContainer}>
+              <Image source={{ uri: item.job_img_url }} style={styles.jobImage} />
+              <View style={styles.jobDetails}>
+                <Text style={styles.jobTitle}>{item.job_title}</Text>
+                {/* <Text style={styles.jobDescription}>{item.job_description}</Text> */}
+                {/* <Text style={styles.serviceCategory}>{item.service_category_name}</Text> */}
+                <Text style={styles.jobStatus}>Job Status: {item.job_status}</Text>
+              </View>
             </View>
-          </View>
+          )
         )}
         ListEmptyComponent={<Text>No jobs found.</Text>}
       />
-      
     </View>
-    
   );
 };
 
@@ -76,6 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    height: "100%",
   },
   header: {
     fontSize: 20,
