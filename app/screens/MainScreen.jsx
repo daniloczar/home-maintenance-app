@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 const MainScreen = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="JobsPage" component={JobPage} />
+      <Stack.Screen name="JobPage" component={JobPage} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="JobCardHH" component={JobCardHH} />

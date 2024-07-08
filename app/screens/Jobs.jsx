@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, Dimensions, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import SevicesList from "./ServicesList";
 import { UserContext } from "../contexts/UserContext";
@@ -68,16 +68,14 @@ useEffect (()=>{
 },[category]) 
 
 const ServiceProviderJobList = () =>{
-  return(<>
-      <View >
-        <Text >Jobs Available</Text>
+  return (
+    <View>
+      <View style={styles.categoryText}>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Jobs Avaliable</Text>
       </View>
-      <View>
+      <View style={styles.flatList}>
         <FlatList
-
-          data={
-            category?sortByCategory:allJobsProviders
-          }
+          data={category ? sortByCategory : allJobsProviders}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
@@ -86,13 +84,15 @@ const ServiceProviderJobList = () =>{
             </View>
           )}
         />
-      </View> </>)
+      </View>
+    </View>
+  );
   
 }
 
 const HomeProviderJobList = () =>{
   return (
-    <>
+    <View styles={{display:'flex'}}>
       <View style={styles.categoryText}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
       </View>
@@ -109,7 +109,7 @@ const HomeProviderJobList = () =>{
           )}
         />
       </View>
-    </>
+    </View>
   );
 }
 
@@ -127,7 +127,6 @@ const fetchByCategory = async () => {
   }));
   setSortByCategory(categoryList)
 };
-
 
   return (
     <View>
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   Images: {
-    width: 60,
+    width: 80,
     height: 50,
     margin: 2,
     backgroundColor: "white",
@@ -224,5 +223,14 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
   },
-
+  flatList: {
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollTopButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
 });

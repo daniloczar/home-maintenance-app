@@ -11,6 +11,7 @@ import { app } from '../../FirebaseConfig'
 import { getFirestore } from "firebase/firestore";
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons
 import Colors from '../Util/Colors';
+import { useNavigation } from "@react-navigation/native";
 
 const db = getFirestore(app)
 const auth = getAuth(app)
@@ -20,6 +21,7 @@ export default function Profile({ handleHideModal}) {
   const [profile, setProfile] = useState({});
   const { user, setUser } = useContext(UserContext);
   const [docId,setDocId] = useState(null)
+  const navigation = useNavigation();
 
   useEffect(()=>{
     getUser()

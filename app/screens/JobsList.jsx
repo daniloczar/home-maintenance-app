@@ -1,6 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
-import { Foundation } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 
@@ -14,16 +13,34 @@ const JobsList = ({ item }) => {
         source={{ uri: item.job_img_url }}
         style={styles.ImagesProviders}
       />
-      <Text style={{ fontSize: 14, fontWeight: "bold", marginLeft: 5 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: "bold",
+          marginLeft: 5,
+        }}
+      >
         {item.job_title}
       </Text>
       <Text style={{ fontSize: 12, marginLeft: 5, marginBottom: 5 }}>
         {item.job_description}
       </Text>
 
-      <Text>{item.service_category_name}</Text>
-      <Text>£{item.job_max_budget}</Text>
-      
+      <Text style={{ fontSize: 12, marginLeft: 5, marginBottom: 5 }}>
+        {item.service_category_name}
+      </Text>
+      <View style={styles.ratingButton}>
+        <Text
+          style={{
+            fontSize: 14,
+            marginLeft: 5,
+            marginBottom: 5,
+            fontWeight: "bold",
+          }}
+        >
+          £ {item.job_max_budget}
+        </Text>
+
         <TouchableOpacity
           style={styles.detailsButton}
           onPress={() => {
@@ -36,12 +53,20 @@ const JobsList = ({ item }) => {
                 });
           }}
         >
-          
-            <Text>See more</Text>
-          
+          <Text
+            style={{
+              fontSize: 12,
+              color: "white",
+              textAlign: "center",
+              padding: 4,
+              fontWeight: "bold",
+            }}
+          >
+            See More
+          </Text>
         </TouchableOpacity>
       </View>
-    
+    </View>
   );
 };
 
@@ -51,22 +76,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     borderRadius: 10,
-    padding: 5,
+    padding: 8,
     margin: 10,
+    width: 350,
   },
   ImagesProviders: {
-    width: 500,
+    alignSelf: "center",
+    width: "97%",
     height: 120,
-    margin: 5,
+    marginTop: 3,
+    marginBottom: 5,
     backgroundColor: "white",
     borderRadius: 5,
-  },
-  ratingButton: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 2,
-    marginLeft: 4,
   },
   detailsButton: {
     backgroundColor: "#336aea",
@@ -75,5 +96,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 4,
     marginBottom: 7,
+  },
+  ratingButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginRight: 4,
   },
 });
