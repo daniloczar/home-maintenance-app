@@ -11,6 +11,7 @@ import ProviderCardSP from "./cards/ProviderCardSP";
 import JobPost from "./JobPost";
 import Message from "./Message";
 import Messages from "./Messages";
+import MyStuff from "./MyStuff";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const MainScreen = () => {
       <Stack.Screen name="JobCardSP" component={JobCardSP} />
       <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
       <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
+      <Stack.Screen name="MyStuff" component={MyStuff} />
       <Stack.Screen name="Message" component={Message} />
       <Stack.Screen name="Messages" component={Messages} />
       <Stack.Screen name="JobPost" component={JobPost} />
