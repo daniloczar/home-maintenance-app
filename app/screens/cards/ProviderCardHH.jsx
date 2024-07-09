@@ -13,7 +13,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from "@expo/vector-icons";
 import { Rating, RatingInput } from "react-native-stock-star-rating";
 import {
   addDoc,
@@ -27,6 +26,7 @@ import {
 import { app } from "../../../FirebaseConfig";
 import { UserContext } from "../../contexts/UserContext";
 import StarRating from "./StarRating";
+import Colors from "../../Util/Colors";
 
 const cardData = [
   {
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   confirmBnt: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.primary,
     textAlign: "center",
     color: "white",
     padding: 10,

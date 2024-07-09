@@ -331,10 +331,10 @@ export default function RegistrationScreen() {
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
             Already got an account?
+          </Text>
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
               Log in
             </Text>
-          </Text>
         </View>
       </KeyboardAwareScrollView>
     </View>

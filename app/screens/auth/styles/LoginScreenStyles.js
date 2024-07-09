@@ -43,8 +43,11 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   footerView: {
-    flex: 1,
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'center',
     alignItems: "center",
+    gap:5,
     marginTop: 20,
   },
   footerText: {
