@@ -43,6 +43,10 @@ export default function JobCardHH({ route }) {
   const [categoryName, setCategoryName] = useState(job.service_category_name);
   const [description, setDescription] = useState(job.job_description);
   const [title, setTitle] = useState(job.job_title);
+  const [serviceNames, setServiceNames] = useState([]);
+  const [bidderUserId, setBidderUserId] = useState("");
+  const [serviceTitle, setServiceTitle] = useState([])
+
 
   const fetchAllBids = async () => {
     try {
@@ -58,6 +62,33 @@ export default function JobCardHH({ route }) {
       }));
       console.log(bidList, "<<<<<<<<<<<<<<<<<<");
       setAllBids(bidList);
+      const bidListPromise = bidList.map(async (bid) => {
+        
+        let bidStatus = bid.bid_status
+        let bidAmount = bid.bid_amount
+        let serviceImgUrl;
+        let serviceTitle;
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("user_id", "==", bid.user_id));
+        const userSnapShot = await getDocs(q);
+        console.log(userSnapShot.docs[0].data().service_title, "00000000");
+
+         serviceTitle = userSnapShot.docs[0].data().service_title
+         const userId = userSnapShot.docs[0].data().user_id
+         const serviceRef = collection(db, "services");
+         const q2 = query(serviceRef, where("user_id", "==", userId));
+         const serviceSnapShot = await getDocs(q2);
+         console.log(serviceSnapShot.docs[0].data().service_img_url,"yyyyyyyyyyyy")
+         serviceImgUrl = serviceSnapShot.docs[0].data().service_img_url
+
+
+        return {serviceTitle,bidStatus,bidAmount,serviceImgUrl};
+      });
+      
+      const resolvedPromise = await Promise.all(bidListPromise);
+     
+      setServiceTitle(resolvedPromise)
+       console.log(serviceTitle[0],"////////////////")
     } catch (error) {
       console.error("Error fetching jobs: ", error);
     }
@@ -65,6 +96,29 @@ export default function JobCardHH({ route }) {
 
   useEffect(() => {
     fetchAllBids();
+  }, []);
+
+  const fetchAllNames = async () => {
+    try {
+      const q = query(
+        collection(db, "users"),
+        where("service_title", "==", true)
+      );
+      const querySnapshot = await getDocs(q);
+
+      const serviceNameList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(serviceNameList, "<<<<");
+      setServiceNames(serviceNameList);
+    } catch (error) {
+      console.error("Error fetching jobs: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllNames();
   }, []);
   console.log(allBids, "+++++++++++++");
 
@@ -189,7 +243,7 @@ export default function JobCardHH({ route }) {
           ></View>
           <Text>Bids</Text>
           <FlatList
-            data={allBids}
+            data={serviceTitle}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -199,14 +253,19 @@ export default function JobCardHH({ route }) {
                 }}
               >
                 <View style={styles.jobContainer}>
+                  <View style={styles.jobDetails}>
                   <Image
-                    source={{ uri: item.job_img_url }}
+                    source={{ uri: item.serviceImgUrl }}
                     style={styles.jobImage}
                   />
-                  <View style={styles.jobDetails}>
-                    <Text style={styles.jobTitle}>{item.bid_amount}</Text>
+                  <Text style={styles.jobTitle}>
+                       {item.serviceTitle}
+                    </Text>
+                    <Text style={styles.jobTitle}>
+                      Bid Amount: £{item.bidAmount}
+                    </Text>
                     <Text style={styles.jobStatus}>
-                      Bid Status: {item.bid_status}
+                      Bid Status: {item.bidStatus}
                     </Text>
                   </View>
                 </View>
@@ -289,5 +348,12 @@ const styles = StyleSheet.create({
   jobStatus: {
     fontSize: 14,
     color: "#777",
+  },
+  jobImage: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    borderRadius: 5,
+    backgroundColor: "#ddd",
   },
 });
