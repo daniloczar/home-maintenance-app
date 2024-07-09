@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { UserContext } from "../contexts/UserContext";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
@@ -14,11 +14,11 @@ const MyStuffServiceProvider = () => {
     const [bids,setBids] = useState([])
     const [clickedBid,setClickedBid] = useState(null)
     const navigation = useNavigation()
-
+    
     useEffect(()=>{
         getJobsBiddedBySP()
     },[])
-
+    
     const getJobsBiddedBySP = async () => {
         try {
             const bidsRef = collection(db, "bids")
@@ -30,6 +30,7 @@ const MyStuffServiceProvider = () => {
                 const bidsPromise = (bidsArray.map(async (bid) => {
                     let bidStatus = bid.bid_status;         // from bids table
                     let bidCreatedAt = bid.created_at;      // from bids table
+                    let bidAmount = bid.bid_amount;      // from bids table
                     let jobCreatedAt;                       // from jobs table
                     let jobDescription;                     // from jobs table
                     let serviceCategoryName;                // from jobs table
@@ -75,6 +76,7 @@ const MyStuffServiceProvider = () => {
                     return {
                         bidStatus,
                         bidCreatedAt,
+                        bidAmount,
                         jobCreatedAt,
                         jobDescription,
                         serviceCategoryName,
@@ -99,8 +101,8 @@ const MyStuffServiceProvider = () => {
         catch(err){
             console.log("Error getting Bids Document!")
         }
-    }//FYR9OWNI7tYOtDDQeusj68SxPwQ2
-    console.log(bids)
+    }
+    
     return (
         <ScrollView>
             {
@@ -123,10 +125,11 @@ const MyStuffServiceProvider = () => {
                                 onPressOut={() => {setClickedBid(null)}}
                                 onPressIn={() => {
                                     setClickedBid(index)
-                                    // navigation.navigate("JobCardSP")
+                                    navigation.navigate("JobCardSP",{
+                                        jobDetails:bid
+                                    })
                                 }}
                             > 
-{/* FOR EDIT ProviderCardSP */}
                                 <Image source={{uri: bid.jobImgURL}} style={{
                                     width: 70,
                                     height: 70,
@@ -145,7 +148,9 @@ const MyStuffServiceProvider = () => {
                     ))}
                 </View>
                 :
-                <Text>No bids available.</Text>
+                <View style={[styles.loadingContainer, styles.horizontal]}>
+                    <ActivityIndicator size="large" color="#0d7002" />
+                </View>
             }
         </ScrollView>
     );
@@ -154,6 +159,14 @@ const MyStuffServiceProvider = () => {
 export default MyStuffServiceProvider;
 
 const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 50,
+    },
     container:{
         maxHeight:'auto',
     },  
