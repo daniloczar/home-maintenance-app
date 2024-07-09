@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import Colors from '../../Util/Colors'
 
 const OnboardingScreen = ({ navigation }) => {
   const onLetsGetStartedPress = () => {
@@ -29,9 +30,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   button: {
-    backgroundColor: "#6759FF",
-    marginLeft: 30,
-    marginRight: 30,
+    backgroundColor: Colors.primary,
+    marginLeft:20,
+    marginRight: 20,
     marginTop: 20,
     height: 48,
     borderRadius: 5,

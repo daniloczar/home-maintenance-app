@@ -6,10 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function ProviderCardSP({route}) {
-  const [image, setImage] = useState(0);
   const navigation = useNavigation();
-  const [showModal, setShowModal]=useState (false)
-    const handleHideModal = () => setShowModal(false);
     const { item } = route.params;
   
 

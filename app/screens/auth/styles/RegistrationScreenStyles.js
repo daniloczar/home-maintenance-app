@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Colors from "../../../Util/Colors";
 
 export default StyleSheet.create({
   container: {
@@ -9,8 +10,8 @@ export default StyleSheet.create({
   title: {},
   logo: {
     flex: 1,
-    height: 320,
-    width: 320,
+    height: 300,
+    width: 300,
     alignSelf: "center",
     margin: 30,
   },
@@ -28,7 +29,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
   },
   button: {
-    backgroundColor: "#6759FF",
+    backgroundColor: Colors.primary,
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
@@ -38,7 +39,7 @@ export default StyleSheet.create({
     justifyContent: "center",
   },
   buttonFinal: {
-    backgroundColor: "#6759FF",
+    backgroundColor: Colors.primary,
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
@@ -49,15 +50,16 @@ export default StyleSheet.create({
     justifyContent: "center",
   },
   buttonChoice: {
-    backgroundColor: "#6759FF",
+    backgroundColor: Colors.primary,
     marginLeft: 30,
     marginRight: 30,
     marginBottom: 15,
     height: 48,
-    width: 100,
+    width: 120,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
+    padding: 8,
   },
   buttonTitle: {
     color: "white",
@@ -65,8 +67,11 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   footerView: {
-    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
+    gap: 5,
     marginTop: 20,
   },
   footerText: {
@@ -77,5 +82,8 @@ export default StyleSheet.create({
     color: "#788eec",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  selectedButton: {
+    backgroundColor: "gray",
   },
 });

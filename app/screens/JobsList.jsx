@@ -2,6 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
+import Colors from '../Util/Colors'
 
 const JobsList = ({ item }) => {
   const navigation = useNavigation();
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   detailsButton: {
-    backgroundColor: "#336aea",
+    backgroundColor: Colors.primary,
     padding: 2,
     width: 70,
     borderRadius: 5,
