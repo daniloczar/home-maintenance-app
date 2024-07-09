@@ -72,8 +72,13 @@ const JobPost = () => {
     });
 
     if (!pickerResult.canceled) {
-      setJobImgUrl(pickerResult.assets[0].uri);
+      const uri = pickerResult.assets[0].uri;
+      setJobImgUrl(uri);
     }
+  };
+
+  const getFileName = (uri) => {
+    return uri.split('/').pop();
   };
 
   const handlePostNewJob = async () => {
@@ -92,6 +97,14 @@ const JobPost = () => {
     setJobMaxBudget("");
   };
 
+  const resetForm = () => {
+    setJobServiceCategoryName(null);
+    setJobTitle("");
+    setJobDescription("");
+    setJobImgUrl("");
+    setJobMaxBudget("");
+  };
+
   return (
     <ScrollView>
       <KeyboardAwareScrollView
@@ -99,9 +112,9 @@ const JobPost = () => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.container}>
-          <View style={styles.headercancel}>
+        <View style={styles.headercancel}>
             <Text style={styles.header}>Post New Job</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("MyStuff")}>
+            <TouchableOpacity onPress={() => { resetForm(); navigation.navigate("MyStuff"); }}>
               <Text style={styles.cancel}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -144,7 +157,9 @@ const JobPost = () => {
           />
 
           <TouchableOpacity style={[styles.input, styles.imagePicker]} onPress={pickImage}>
-            <Text style={styles.imagePickerPlaceholder}>Upload Job Image</Text>
+            <Text style={jobImgUrl ? styles.jobImgUrlPlaceholder : styles.imagePickerPlaceholder}>
+              {jobImgUrl ? getFileName(jobImgUrl) : 'Upload Job Image'}
+            </Text>
           </TouchableOpacity>
 
           <TextInput
@@ -231,6 +246,15 @@ const styles = StyleSheet.create({
     marginTop: 7,
     marginBottom: 7,
     marginLeft: -167,
+    paddingLeft: 16,
+  },
+  jobImgUrlPlaceholder: {
+    fontSize: 13.5,
+    color: "#000",
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: -15,
+    marginRight: 15,
     paddingLeft: 16,
   },
   image: {
