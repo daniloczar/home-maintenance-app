@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Button } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Avatar, IconButton } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
@@ -87,6 +88,11 @@ export default function Profile({ handleHideModal}) {
   return (
     <>
       {user ? (
+          <ScrollView>
+          <KeyboardAwareScrollView
+          style={{ flex: 1, width: "100%" }}
+          keyboardShouldPersistTaps="always"
+          >
           <SafeAreaProvider>
           <View style={styles.container}>
             <View style={styles.header}>
@@ -179,6 +185,8 @@ export default function Profile({ handleHideModal}) {
             />
           </View>
         </SafeAreaProvider>
+        </KeyboardAwareScrollView>
+        </ScrollView>
         ):null
       }
     </>
