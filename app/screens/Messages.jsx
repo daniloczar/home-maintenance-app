@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useCallback } from 'react';
 import { GiftedChat, Send, Bubble } from 'react-native-gifted-chat';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { getFirestore, onSnapshot, query, collection, where, orderBy } from "firebase/firestore";
+import { addDoc, getFirestore, onSnapshot, query, collection, where, orderBy } from "firebase/firestore";
 import { app } from '../../FirebaseConfig';
 import { IconButton } from 'react-native-paper';
 import { Ionicons } from "@expo/vector-icons";
@@ -11,6 +11,7 @@ const db = getFirestore(app);
 const Messages = ({ route, navigation }) => {
 
   const { chatId, sentTo, sent_by_user_id, sent_to_user_id } = route.params;
+
   const [messages, setMessages] = useState([]);
 
   useLayoutEffect(() => {
@@ -68,8 +69,23 @@ const Messages = ({ route, navigation }) => {
   };
 
   const onSend = useCallback((messages = []) => {
+    setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+  
+    const newMessage = messages[0]; 
 
-  }, []);
+    const messagesRef = collection(db, 'messages');
+    addDoc(messagesRef, {
+      chat_id: chatId,
+      created_at: newMessage.createdAt,
+      message_text: newMessage.text,
+      sent_by_user_id: newMessage.user._id,
+      sent_to_user_id: sent_to_user_id,
+    }).catch(error => {
+      console.error("Error adding message: ", error);
+    });
+  
+  }, [chatId, sent_to_user_id]);
+  
 
   return (
     <View style={styles.container}>
