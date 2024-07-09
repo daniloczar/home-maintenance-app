@@ -58,7 +58,7 @@ export default function RegistrationScreen() {
         await addDoc(users, newUser);
         await AsyncStorage.setItem("user", JSON.stringify(newUser));
         setUser(newUser);
-        navigation.navigate("JobsPage");
+        navigation.navigate("JobPage");
         console.log("SIGN UP USER");
       })
       .catch((error) => {

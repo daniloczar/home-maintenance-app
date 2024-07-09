@@ -1,17 +1,18 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, Dimensions, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  View,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import SevicesList from "./ServicesList";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
-import JobsList from "../screens/JobsList"
-import {
-  addDoc,
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
+import JobsList from "../screens/JobsList";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
 
 const Jobs = () => {
@@ -20,113 +21,121 @@ const Jobs = () => {
   const [allServicesProviders, setAllServicesProviders] = useState([]);
   const [allJobsProviders, setAllJobsProviders] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
-  const [category, setCategory] = useState(null);
-  const [sortByCategory, setSortByCategory] = useState([]);
+  const [category, setCategory] = useState("Show all");
+  const [jobsSortedByCategory, setJobsSortedByCategory] = useState([]);
+  const [servicesSortedByCategory, setServicesSortedByCategory] = useState([]);
 
-const servicesData = async () => {
-  const db = getFirestore(app);
-  const servicesRef = collection(db, "users");
-  const service = query(
-    servicesRef,
-    where("user_type", "==", "service_provider")
-  );
-  const serviceData = await getDocs(service);
-  const servicesProviderList = serviceData.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  setAllServicesProviders(servicesProviderList);
-};
+  const servicesData = async () => {
+    const db = getFirestore(app);
+    const servicesRef = collection(db, "users");
+    const service = query(servicesRef, where("user_type", "==", "service_provider"));
+    const serviceData = await getDocs(service);
+    const servicesProviderList = serviceData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setAllServicesProviders(servicesProviderList);
+  };
 
-const CategoriesData = async () => {
-  const db = getFirestore(app);
-  const categoriesRef = collection(db, "service_categories");
-  const categoriesData = await getDocs(categoriesRef);
-  const categoriesList = categoriesData.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  setAllCategories(categoriesList);
-};
+  const CategoriesData = async () => {
+    const db = getFirestore(app);
+    const categoriesRef = collection(db, "service_categories");
+    const categoriesData = await getDocs(categoriesRef);
+    const categoriesList = categoriesData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setAllCategories(categoriesList);
+    jobsSortedByCategory;
+  };
 
-const jobsData = async () => {
-  const db = getFirestore(app);
-  const jobsRef = collection(db, "jobs");
-  const jobsData = await getDocs(jobsRef);
-  const jobsProviderList = jobsData.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  setAllJobsProviders(jobsProviderList);
-};
+  const jobsData = async () => {
+    const db = getFirestore(app);
+    const jobsRef = collection(db, "jobs");
+    const jobsData = await getDocs(jobsRef);
+    const jobsProviderList = jobsData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setAllJobsProviders(jobsProviderList);
+  };
 
-useEffect (()=>{
-  servicesData()
-  jobsData()
-  CategoriesData()
-  fetchByCategory();
-},[category]) 
+  useEffect(() => {
+    servicesData();
+    jobsData();
+    CategoriesData();
+    fetchJobsByCategory();
+    fetchServicesByCategory();
+  }, [category]);
 
-const ServiceProviderJobList = () =>{
-  return (
-    <View>
-      <View style={styles.categoryText}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Jobs Avaliable</Text>
+  const ServiceProviderJobList = () => {
+    return (
+      <View>
+        <View style={styles.categoryText}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Available Jobs</Text>
+        </View>
+        <View style={styles.flatList}>
+          <FlatList
+            data={category === "Show all" ? allJobsProviders : jobsSortedByCategory}
+            scrollEnabled={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View>
+                <JobsList item={item} />
+              </View>
+            )}
+          />
+        </View>
       </View>
-      <View style={styles.flatList}>
-        <FlatList
-          data={category ? sortByCategory : allJobsProviders}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View>
-              <JobsList item={item} />
-            </View>
-          )}
-        />
-      </View>
-    </View>
-  );
-  
-}
+    );
+  };
 
-const HomeProviderJobList = () =>{
-  return (
-    <View styles={{display:'flex'}}>
-      <View style={styles.categoryText}>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Services</Text>
+  const HomeProviderJobList = () => {
+    return (
+      <View styles={{ display: "flex" }}>
+        <View style={styles.categoryText}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Available Services</Text>
+        </View>
+        <View style={styles.flatList}>
+          <FlatList
+            data={category === "Show all" ? allServicesProviders : servicesSortedByCategory}
+            numColumns={2}
+            scrollEnabled={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View>
+                <SevicesList item={item} />
+              </View>
+            )}
+          />
+        </View>
       </View>
-      <View style={styles.ImageContainerProviders}>
-        <FlatList
-          data={category ? sortByCategory : allServicesProviders}
-          numColumns={2}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View>
-              <SevicesList item={item} />
-            </View>
-          )}
-        />
-      </View>
-    </View>
-  );
-}
+    );
+  };
 
-const fetchByCategory = async () => {
-  const db = getFirestore(app);
-  const categoryRef = collection(db, "jobs");
-  const categoryQuery = query(
-    categoryRef,
-    where("service_category_name", "==", category)
-  );
-  const categoryData = await getDocs(categoryQuery);
-  const categoryList = categoryData.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  setSortByCategory(categoryList)
-};
+  const fetchServicesByCategory = async () => {
+    const db = getFirestore(app);
+    const categoryRef = collection(db, "users");
+    const categoryQuery = query(categoryRef, where("service_category_name", "==", category));
+    const categoryData = await getDocs(categoryQuery);
+    const categoryList = categoryData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setServicesSortedByCategory(categoryList);
+  };
+
+  const fetchJobsByCategory = async () => {
+    const db = getFirestore(app);
+    const categoryRef = collection(db, "jobs");
+    const categoryQuery = query(categoryRef, where("service_category_name", "==", category));
+    const categoryData = await getDocs(categoryQuery);
+    const categoryList = categoryData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setJobsSortedByCategory(categoryList);
+  };
 
   return (
     <View>
@@ -170,10 +179,8 @@ const fetchByCategory = async () => {
                 setCategory(item.service_category_name);
               }}
             >
-              <Image source={{uri: item.service_category_img}} style={styles.Images} />
-              <Text style={{ fontSize: 13, marginTop: 5 }}>
-                {item.service_category_name}
-              </Text>
+              <Image source={{ uri: item.service_category_img }} style={styles.Images} />
+              <Text style={{ fontSize: 13, marginTop: 5 }}>{item.service_category_name}</Text>
             </TouchableOpacity>
           )}
         />

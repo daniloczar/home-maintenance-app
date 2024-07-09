@@ -7,6 +7,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Rating, RatingInput } from "react-native-stock-star-rating";
 
 
+
 const cardData = [
   {
     key: 1,
@@ -43,6 +44,7 @@ export default function ProviderCardHH({route}) {
   const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
   const handleHideModal = () => setShowModal(false);
+  const [note, setNote] = useState("");
   const [rating, setRating] = useState(0);
   const {item}=route.params
   console.log(item)
@@ -169,7 +171,7 @@ export default function ProviderCardHH({route}) {
               maxLength={40}
               multiline={true}
               style={styles.notes}
-              onChange={(text) => setNote(text)}
+              onChangeText={(text) => setNote(text)}
             />
           </View>
           <View style={{ marginTop: 15 }}>

@@ -4,7 +4,7 @@ import styles from "./styles/LoginScreenStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "../../../FirebaseConfig";
-import { getFirestore, doc, getDocs, query, collection, where } from "firebase/firestore";
+import { getFirestore, getDocs, query, collection, where } from "firebase/firestore";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -38,7 +38,7 @@ export default function LoginScreen() {
 
       await AsyncStorage.setItem("user", JSON.stringify(userSnap[0]));
       setUser(userSnap[0]);
-      navigation.navigate("JobsPage");
+      navigation.navigate("JobPage");
     });
   };
 

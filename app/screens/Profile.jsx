@@ -8,48 +8,47 @@ import { UserContext } from "../contexts/UserContext";
 import { getAuth, signOut } from "firebase/auth";
 import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { app } from '../../FirebaseConfig'
+import { app } from "../../FirebaseConfig";
 import { getFirestore } from "firebase/firestore";
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Import Ionicons
-import Colors from '../Util/Colors';
+import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
+import Colors from "../Util/Colors";
 import { useNavigation } from "@react-navigation/native";
 
-const db = getFirestore(app)
-const auth = getAuth(app)
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-export default function Profile({ handleHideModal}) {
+export default function Profile({ handleHideModal }) {
   const [isEditable, setIsEditable] = useState(false);
   const [profile, setProfile] = useState({});
   const { user, setUser } = useContext(UserContext);
-  const [docId,setDocId] = useState(null)
+  const [docId, setDocId] = useState(null);
   const navigation = useNavigation();
 
-  useEffect(()=>{
-    getUser()
-  },[user])
+  useEffect(() => {
+    getUser();
+  }, [user]);
   const getUser = async () => {
-  try {
-      const userRef = collection(db, "users")
-      const q = query(userRef, where("email", "==", user.email))
-      const querySnapshot = await getDocs(q)
-      
+    try {
+      const userRef = collection(db, "users");
+      const q = query(userRef, where("email", "==", user.email));
+      const querySnapshot = await getDocs(q);
+
       if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0]
-        setDocId(doc.id)
+        const doc = querySnapshot.docs[0];
+        setDocId(doc.id);
         setProfile(doc.data());
       } else {
-        console.log("No such document!")
+        console.log("No such document!");
       }
+    } catch (err) {
+      console.log("Error getting document");
+      return null;
     }
-    catch(err){
-      console.log("Error getting document")
-      return null
-    }
-  }
+  };
   const handleEditToggle = async () => {
-    if(isEditable){
+    if (isEditable) {
       await setDoc(doc(db, "users", docId), profile);
-      Alert.alert('Profile Updated Successfully!')
+      Alert.alert("Profile Updated Successfully!");
     }
     setIsEditable(!isEditable);
   };
@@ -76,14 +75,14 @@ export default function Profile({ handleHideModal}) {
 
   const hanldeLogout = async () => {
     try {
-      await signOut(auth)
-      await AsyncStorage.removeItem('user')
-      setUser(null)
-      navigation.navigate("Login")
+      await signOut(auth);
+      await AsyncStorage.removeItem("user");
+      setUser(null);
+      navigation.navigate("Login");
     } catch (error) {
-      Alert.alert('Error signing out', error.message)
+      Alert.alert("Error signing out", error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -96,22 +95,15 @@ export default function Profile({ handleHideModal}) {
           <SafeAreaProvider>
           <View style={styles.container}>
             <View style={styles.header}>
-              <Ionicons 
-                name="arrow-back" size={25} 
-                color="white" 
-                onPress={
-                  handleHideModal
-                }
-              />
+              <Ionicons name="arrow-back" size={25} color="white" onPress={handleHideModal} />
               <Text style={styles.title}>Profile</Text>
-              <Ionicons 
-                name={isEditable ? "checkmark" : "pencil"} 
-                size={25} 
+              <Ionicons
+                name={isEditable ? "checkmark" : "pencil"}
+                size={25}
                 color="white"
-                borderBottomColor='black'
-                borderBottomWidth='2'
+                borderBottomColor="black"
                 onPress={handleEditToggle}
-                />
+              />
             </View>
             <View style={styles.avatarContainer}>
               <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
@@ -127,7 +119,7 @@ export default function Profile({ handleHideModal}) {
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
                 value={profile.full_name}
-                onChangeText={(text) => handleChange('full_name', text)}
+                onChangeText={(text) => handleChange("full_name", text)}
               />
             </View>
             <View style={styles.field}>
@@ -136,7 +128,7 @@ export default function Profile({ handleHideModal}) {
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
                 value={profile.telephone}
-                onChangeText={(text) => handleChange('telephone', text)}
+                onChangeText={(text) => handleChange("telephone", text)}
               />
             </View>
             <View style={styles.field}>
@@ -145,7 +137,7 @@ export default function Profile({ handleHideModal}) {
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
                 value={profile.house_number}
-                onChangeText={(text) => handleChange('house_number', text)}
+                onChangeText={(text) => handleChange("house_number", text)}
               />
             </View>
             <View style={styles.field}>
@@ -154,7 +146,7 @@ export default function Profile({ handleHideModal}) {
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
                 value={profile.street_name}
-                onChangeText={(text) => handleChange('street_name', text)}
+                onChangeText={(text) => handleChange("street_name", text)}
               />
             </View>
             <View style={styles.field}>
@@ -163,7 +155,7 @@ export default function Profile({ handleHideModal}) {
                 style={[styles.input, isEditable && styles.editableInput]}
                 editable={isEditable}
                 value={profile.postcode}
-                onChangeText={(text) => handleChange('postcode', text)}
+                onChangeText={(text) => handleChange("postcode", text)}
               />
             </View>
             {/* <View style={styles.field}>
@@ -178,7 +170,8 @@ export default function Profile({ handleHideModal}) {
             </View> */}
           </View>
           <View style={styles.buttonContainer}>
-            <Button style={styles.button}
+            <Button
+              style={styles.button}
               onPress={hanldeLogout}
               title="Signout"
               accessibilityLabel="Pressing this button will log out from the app"
@@ -199,32 +192,32 @@ const styles = StyleSheet.create({
   },
   header: {
     // marginTop: 55,
-    paddingTop:75,
+    paddingTop: 75,
     paddingRight: 30,
     padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: Colors.primary,
   },
   title: {
-    color:'white',
-    fontWeight: 'bold',
-    fontSize:35,
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 35,
   },
   avatarContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 50,
   },
   changePhotoText: {
-    color: 'blue',
+    color: "blue",
     marginTop: 10,
   },
   field: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingLeft: 20,
     paddingRight: 20,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   label: {
@@ -235,18 +228,18 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   editableInput: {
-    borderBottomColor: 'blue',
+    borderBottomColor: "blue",
   },
-  buttonContainer:{
-    backgroundColor:'#dbdbdb',
-    color:'white',
-    padding:10,
-    height:70,
+  buttonContainer: {
+    backgroundColor: "#dbdbdb",
+    color: "white",
+    padding: 10,
+    height: 70,
   },
-  button:{
-    backgroundColor:'black',
-  }
+  button: {
+    backgroundColor: "black",
+  },
 });
