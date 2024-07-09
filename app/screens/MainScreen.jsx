@@ -9,7 +9,7 @@ import JobCardSP from "./cards/JobCardHH";
 import ProviderCardHH from "./cards/ProviderCardHH";
 import ProviderCardSP from "./cards/ProviderCardSP";
 import JobPost from "./JobPost";
-import Message from "./Message";
+import Chats from "./Chats";
 import Messages from "./Messages";
 import MyStuff from "./MyStuff";
 
@@ -26,7 +26,7 @@ const MainScreen = () => {
       <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
       <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
       <Stack.Screen name="MyStuff" component={MyStuff} />
-      <Stack.Screen name="Message" component={Message} />
+      <Stack.Screen name="Chats" component={Chats} />
       <Stack.Screen name="Messages" component={Messages} />
       <Stack.Screen name="JobPost" component={JobPost} />
     </Stack.Navigator>
