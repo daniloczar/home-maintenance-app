@@ -1,26 +1,59 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
-const MapServiceCard = ({ service }) => {
-  return (
-    <View style={[styles.card, styles.shadowProp, styles.elevation]}>
-      <Image style={styles.image} source={require("../../assets/Images/plumberCartoon.png")} />
-      <View style={styles.rightContainer}>
-        <Text style={styles.title}>{service.title}</Text>
-        <Text style={styles.description}>{service.description}</Text>
-        <View style={styles.footer}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
-              <Text style={styles.buttonTitle}>Book now</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rating}>
-            <Text>★{service.numberOfStars}</Text>
+const MapServiceCard = ({ service, job }) => {
+  const { user } = useContext(UserContext);
+  const navigation = useNavigation();
+
+  if (user.user_type === "householder") {
+    return (
+      <View style={[styles.card, styles.shadowProp, styles.elevation]}>
+        <Image style={styles.image} source={{ uri: service.user_img_url }} />
+        <View style={styles.rightContainer}>
+          <Text style={styles.title}>{service.service_title}</Text>
+          <Text style={styles.description}>{service.service_description}</Text>
+          <View style={styles.footer}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate("ProviderCardHH", { item: service })}
+              >
+                <Text style={styles.buttonTitle}>Book now</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.rating}>
+              <Text>★ 4.6</Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={[styles.card, styles.shadowProp, styles.elevation]}>
+        <Image style={styles.image} source={{ uri: job.job_img_url }} />
+        <View style={styles.rightContainer}>
+          <Text style={styles.title}>{job.job_title}</Text>
+          <Text style={styles.description}>{job.job_description}</Text>
+          <View style={styles.footer}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate("ProviderCardSP", { item: job })}
+              >
+                <Text style={styles.buttonTitle}>Book now</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.rating}>
+              <Text>★ 4.6</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
 };
 
 export default MapServiceCard;

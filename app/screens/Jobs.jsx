@@ -156,7 +156,7 @@ const Jobs = () => {
           <Text
             style={{ fontSize: 18, color: "blue" }}
             onPress={() => {
-              navigation.navigate("Map");
+              navigation.navigate("Map", { allServicesProviders, allJobsProviders });
             }}
           >
             Toggle Map
