@@ -55,7 +55,7 @@ const MyStuffHouseholder = () => {
             <TouchableOpacity
           style={styles.detailsButton}
           onPress={() => {
-            navigation.navigate("ProviderCardHH");
+            navigation.navigate("JobCardHH");
           }}
         >
           <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
