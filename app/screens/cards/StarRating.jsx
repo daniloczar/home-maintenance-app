@@ -4,7 +4,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 export default function StarRating({item}) {
-    console.log(item)
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     let starName = i <= item.review_rating ? "star" : "star-o";
