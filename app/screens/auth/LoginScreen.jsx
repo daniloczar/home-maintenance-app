@@ -17,7 +17,12 @@ export default function LoginScreen() {
 
   const navigation = useNavigation();
 
+  const clearLogin = () => {
+    setEmail("");
+    setPassword("");
+  };
   const onFooterLinkPress = () => {
+    clearLogin();
     navigation.navigate("Registration");
   };
 

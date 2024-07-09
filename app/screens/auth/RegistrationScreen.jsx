@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View, Modal } from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View, Modal, Pressable } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import styles from "./styles/RegistrationScreenStyles";
 import { app } from "../../../FirebaseConfig";
@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { onBackgroundMessage } from "firebase/messaging/sw";
 
 export default function RegistrationScreen() {
   const [fullName, setFullName] = useState("");
@@ -20,23 +21,48 @@ export default function RegistrationScreen() {
   const [houseNumber, setHouseNumber] = useState("");
   const [town, setTown] = useState("");
   const [postcode, setPostcode] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [serviceCategory, setServiceCategory] = useState("");
+  const [serviceTitle, setServiceTitle] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
+  const [isFirstModalVisible, setIsFirstModalVisible] = useState(false);
+  const [isSecondModalVisible, setIsSecondModalVisible] = useState(false);
   const { setUser } = useContext(UserContext);
 
-  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+  const clearService = () => {
+    setServiceCategory("");
+    setServiceTitle("");
+    setServiceDescription("");
+  };
+
+  clearRegistration = () => {
+    setFullName("");
+    setEmail("");
+    setPassword("");
+    setUserType("");
+    setTelephone("");
+    setAddress("");
+    setHouseNumber("");
+    setTown("");
+    setPostcode("");
+    clearService();
+  };
+
+  const handleFirstModal = () => setIsFirstModalVisible(() => !isFirstModalVisible);
+  const handleSecondModal = () => setIsSecondModalVisible(() => !isSecondModalVisible);
 
   const navigation = useNavigation();
   const onFooterLinkPress = () => {
+    clearRegistration();
     navigation.navigate("Login");
   };
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
   const onRegisterPress = () => {
     if (password !== confirmPassword) {
       alert("Passwords don't match.");
       return;
     }
-    const auth = getAuth(app);
-    const db = getFirestore(app);
 
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (response) => {
@@ -53,6 +79,9 @@ export default function RegistrationScreen() {
           postcode,
           timestamp: serverTimestamp(),
           user_img_url: "",
+          service_title: serviceTitle,
+          service_description: serviceDescription,
+          service_category: serviceCategory,
         };
         const users = collection(db, "users");
         await addDoc(users, newUser);
@@ -69,7 +98,113 @@ export default function RegistrationScreen() {
 
   return (
     <View style={styles.container}>
-      <Modal visible={isModalVisible}>
+      <Modal visible={isSecondModalVisible}>
+        <View style={styles.container}>
+          <KeyboardAwareScrollView
+            style={{ flex: 1, width: "100%" }}
+            keyboardShouldPersistTaps="always"
+          >
+            <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+              <TouchableOpacity
+                style={styles.buttonChoice}
+                onPress={() => {
+                  setUserType("householder");
+                  clearService();
+                  handleSecondModal();
+                }}
+              >
+                <Text style={styles.buttonTitle}>Householder</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonChoice}
+                onPress={() => {
+                  setUserType("service");
+                }}
+              >
+                <Text style={styles.buttonTitle}>Service</Text>
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Telephone number"
+              placeholderTextColor="#aaaaaa"
+              keyboardType="numeric"
+              onChangeText={(text) => setTelephone(text)}
+              value={telephone}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Street"
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(text) => setAddress(text)}
+              value={address}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="House number"
+              onChangeText={(text) => setHouseNumber(text)}
+              value={houseNumber}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="Town"
+              onChangeText={(text) => setTown(text)}
+              value={town}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="Postcode"
+              onChangeText={(text) => setPostcode(text)}
+              value={postcode}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="Service provided"
+              onChangeText={(text) => setServiceCategory(text)}
+              value={serviceCategory}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="Service title"
+              onChangeText={(text) => setServiceTitle(text)}
+              value={serviceTitle}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="Service description"
+              onChangeText={(text) => setServiceDescription(text)}
+              value={serviceDescription}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TouchableOpacity style={styles.buttonFinal} onPress={() => onRegisterPress()}>
+              <Text style={styles.buttonTitle}>Complete registration</Text>
+            </TouchableOpacity>
+          </KeyboardAwareScrollView>
+        </View>
+      </Modal>
+      <Modal visible={isFirstModalVisible}>
         <View style={styles.container}>
           <KeyboardAwareScrollView
             style={{ flex: 1, width: "100%" }}
@@ -89,6 +224,7 @@ export default function RegistrationScreen() {
                 style={styles.buttonChoice}
                 onPress={() => {
                   setUserType("service");
+                  handleSecondModal();
                 }}
               >
                 <Text style={styles.buttonTitle}>Service</Text>
@@ -189,7 +325,7 @@ export default function RegistrationScreen() {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={() => handleModal()}>
+        <TouchableOpacity style={styles.button} onPress={() => handleFirstModal()}>
           <Text style={styles.buttonTitle}>Next</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
