@@ -1,13 +1,18 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import React, { useState } from "react";
-import services from "../../assets/data/servcies.json";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import MapView from "react-native-maps";
+import React, { useContext, useState } from "react";
+
 import CustomMarker from "../components/CustomMarker";
 import MapServiceCard from "../components/MapServiceCard";
 import { Ionicons } from "@expo/vector-icons";
+import { UserContext } from "../contexts/UserContext";
 
-const Map = ({ navigation }) => {
+const Map = ({ navigation, route }) => {
   const [selectedService, setSelectedService] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const { allServicesProviders, allJobsProviders } = route.params;
+  const { user } = useContext(UserContext);
+
   return (
     <View>
       <View style={styles.container}>
@@ -21,27 +26,39 @@ const Map = ({ navigation }) => {
           }}
           onPress={() => {
             setSelectedService(null);
+            setSelectedJob(null);
           }}
         >
-          {services.map((service, index) => {
-            return (
-              <CustomMarker
-                key={index}
-                service={service}
-                onPress={() => {
-                  setSelectedService(services[index]);
-                }}
-              />
-            );
-          })}
+          {user.user_type === "service_provider"
+            ? allJobsProviders.map((jobProvider, index) => {
+                return (
+                  <CustomMarker
+                    key={index}
+                    jobProvider={jobProvider}
+                    onPress={() => {
+                      setSelectedJob(allJobsProviders[index]);
+                    }}
+                  />
+                );
+              })
+            : allServicesProviders.map((serviceProvider, index) => {
+                return (
+                  <CustomMarker
+                    key={index}
+                    serviceProvider={serviceProvider}
+                    onPress={() => {
+                      setSelectedService(allServicesProviders[index]);
+                    }}
+                  />
+                );
+              })}
         </MapView>
-        {selectedService && <MapServiceCard service={selectedService} />}
+        {(selectedService || selectedJob) && (
+          <MapServiceCard service={selectedService} job={selectedJob} />
+        )}
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.backBnt}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-undo-circle" size={28} color="#6759FF" />
         </TouchableOpacity>
       </View>
