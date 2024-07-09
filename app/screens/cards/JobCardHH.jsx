@@ -1,49 +1,91 @@
-import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import {
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  FlatList,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import { getFirestore } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  query,
+  where,
+  collection,
+  getDocs,
+} from "firebase/firestore";
+import { app } from "../../../FirebaseConfig";
+import styless from "../../screens/auth/styles/RegistrationScreenStyles";
+import { UserContext } from "../../contexts/UserContext";
 
+const db = getFirestore(app);
 
-const cardData = [
-  {
-    key: 1,
-    name: "Emily Chan",
-    title: "Professional Plumber",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-    src: require("../../../assets/Images/plumber2.png"),
-    skills: ["Deep Cleaning", "Windows", "Soft clean", "Upholstery"],
-
-    service_category_name: "Plumbing",
-
-    service_cost: 100,
-
-    service_description: "stop leakages with permanent fix",
-
-    service_id: "1",
-
-    service_img_url_after:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
-
-    service_img_url_before:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-
-    service_title: "Plumbing Service",
-
-    user_id: "4",
-    review_rating:3,
-    review_description: "Satisfactory service"
-  },
-];
-export default function JobCardHH() {
-  const [image, setImage] = useState(0);
+export default function JobCardHH({ route }) {
+  const { job } = route.params;
   const navigation = useNavigation();
-  const [showModal, setShowModal]=useState (false)
-    const handleHideModal = () => setShowModal(false);
+  const [showModal, setShowModal] = useState(false);
+  const handleHideModal = () => setShowModal(false);
+  const [allBids, setAllBids] = useState([]);
+  const { user } = useContext(UserContext);
+
+  const [editable, setEditable] = useState(false);
+  const [maxBudget, setMaxBudget] = useState(job.job_max_budget);
+  const [categoryName, setCategoryName] = useState(job.service_category_name);
+  const [description, setDescription] = useState(job.job_description);
+  const [title, setTitle] = useState(job.job_title);
+
+  const fetchAllBids = async () => {
+    try {
+      const q = query(
+        collection(db, "bids"),
+        where("job_id", "==", job.job_id)
+      );
+      const querySnapshot = await getDocs(q);
+
+      const bidList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(bidList, "<<<<<<<<<<<<<<<<<<");
+      setAllBids(bidList);
+    } catch (error) {
+      console.error("Error fetching jobs: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBids();
+  }, []);
+  console.log(allBids, "+++++++++++++");
+
+  const handleSave = async () => {
+    const updatedCard = {
+      ...job,
+      maximum_budget: maxBudget,
+      service_category_name: categoryName,
+      description: description,
+      title: title,
+    };
+
+    await setDoc(doc(db, "jobs", job.id), updatedCard);
+
+    setMaxBudget(updatedCard.maximum_budget);
+    setCategoryName(updatedCard.service_category_name);
+    setDescription(updatedCard.description);
+    setTitle(updatedCard.title);
+
+    setEditable(false);
+  };
 
   return (
     <SafeAreaView>
@@ -57,19 +99,53 @@ export default function JobCardHH() {
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
             <Image
-              source={cardData[image].src}
+              source={{ uri: job.job_img_url }}
               style={{ width: "100%", height: 300 }}
             />
           </View>
           <View style={styles.container}>
             <View style={styles.headerCard}>
               <View style={styles.textHeader}>
-                <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                  {cardData[image].name}
-                </Text>
-                <Text style={{ fontSize: 18 }}>{cardData[image].title}</Text>
+                {editable ? (
+                  <>
+                    <View>
+                      <Text>Title:</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={null}
+                        onChangeText={setTitle}
+                      />
+                    </View>
+                    <View>
+                      <Text>Service Type: </Text>
+                      <TextInput
+                        style={styles.input}
+                        value={null}
+                        onChangeText={setCategoryName}
+                      />
+                    </View>
+                    <View tyle={styles.inputContainer}>
+                      <Text>Max Budget:</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={null}
+                        onChangeText={setMaxBudget}
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                      {title}
+                    </Text>
+                    <Text style={{ fontSize: 18 }}>{categoryName}</Text>
+                    <Text style={{ fontSize: 18 }}>
+                      Max Budget: £{maxBudget}
+                    </Text>
+                  </>
+                )}
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setEditable(!editable)}>
                 <AntDesign name="edit" size={24} color="black" />
               </TouchableOpacity>
             </View>
@@ -84,98 +160,64 @@ export default function JobCardHH() {
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 Description
               </Text>
-              <Text style={{ fontSize: 13 }}>
-                {cardData[image].description}
-              </Text>
-            </View>
-            <View
-              style={{
-                borderWidth: 0.7,
-                borderColor: "grey",
-                marginBottom: 15,
-              }}
-            ></View>
-            <View>
-              <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom:5 }}>Galery</Text>
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <Image
-                  source={{
-                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
-                  }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    borderRadius: 5,
-                    marginBottom: 8,
-                    marginRight: 8,
-                  }}
+              {editable ? (
+                <TextInput
+                  style={[styles.input, { height: 100 }]}
+                  value={description}
+                  onChangeText={setDescription}
+                  multiline
                 />
-                <Image
-                  source={{
-                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-                  }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    borderRadius: 5,
-                    marginBottom: 8,
-                  }}
-                />
-              </ScrollView>
-            </View>
-            <View
-              style={{
-                borderWidth: 0.7,
-                borderColor: "grey",
-                marginBottom: 15,
-              }}
-            ></View>
-            <View style={styles.descriptionBox}>
-              <Text
-                style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}
-              >
-                Review
-              </Text>
-              <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
-                <FontAwesome name="star" size={13} color="#edd902" />
-                <FontAwesome name="star" size={13} color="#edd902" />
-                <FontAwesome name="star" size={13} color="#edd902" />
-                <FontAwesome name="star" size={13} color="#edd902" />
-                <FontAwesome name="star-o" size={13} color="black" />
-              </View>
-              <Text style={{ marginTop: 6 }}>
-                {cardData[image].review_description}
-              </Text>
+              ) : (
+                <Text style={{ fontSize: 13 }}>{description}</Text>
+              )}
+              {editable && (
+                <TouchableOpacity
+                  style={styless.buttonChoice}
+                  onPress={handleSave}
+                >
+                  <Text style={styless.buttonTitle}>Save</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
+          <View
+            style={{
+              borderWidth: 0.6,
+              borderColor: "grey",
+              marginBottom: 15,
+            }}
+          ></View>
+          <Text>Bids</Text>
+          <FlatList
+            data={allBids}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.detailsButton}
+                onPress={() => {
+                  navigation.navigate("JobCardHH", { job: item });
+                }}
+              >
+                <View style={styles.jobContainer}>
+                  <Image
+                    source={{ uri: item.job_img_url }}
+                    style={styles.jobImage}
+                  />
+                  <View style={styles.jobDetails}>
+                    <Text style={styles.jobTitle}>{item.bid_amount}</Text>
+                    <Text style={styles.jobStatus}>
+                      Bid Status: {item.bid_status}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+            ListEmptyComponent={<Text>No Bids found.</Text>}
+          />
         </ScrollView>
         <View
           style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: "blue",
-              padding: 13,
-              alignItems: "center",
-              borderRadius: 5,
-              flex: 1,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "blue",
-              padding: 13,
-              alignItems: "center",
-              borderRadius: 5,
-              flex: 1,
-            }}
-            onPress={() => setShowModal(true)}
-          >
-            <Text style={{ color: "white", fontSize: 20 }}>Book Now</Text>
-          </TouchableOpacity>
-        </View>
+        ></View>
         <Modal animationType="slide" visible={showModal}>
           <BookingModal handleHideModal={handleHideModal} />
         </Modal>
@@ -203,11 +245,49 @@ const styles = StyleSheet.create({
   descriptionBox: {
     marginBottom: 10,
   },
-  headerCard:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  headerCard: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
- 
+  input: {
+    borderWidth: 1,
+    borderColor: "grey",
+    padding: 5,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  saveButton: {
+    backgroundColor: "blue",
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  saveButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  jobDetails: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  jobContainer: {
+    flexDirection: "row",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+  jobStatus: {
+    fontSize: 14,
+    color: "#777",
+  },
 });
