@@ -137,7 +137,7 @@ const Chats = ({ navigation, route }) => {
                   onLongPress={() => setClickedChat(null)}
                   onPress={() => {
                     setClickedChat(chat.chat_id);
-                    navigation.navigate('Messages')
+                    navigation.navigate('Messages', {chatId : chat.chat_id, sentTo : chat.sent_to_user_name, sent_by_user_id : chat.sent_by_user_id, sent_to_user_id : chat.sent_by_user_id})
                   }}
                 >
                   <Avatar.Image style={styles.avatar} size={50} source={{ uri: chat.sent_to_user_img_url }} />
