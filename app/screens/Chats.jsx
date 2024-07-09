@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { getFirestore, collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
@@ -9,7 +9,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const db = getFirestore(app);
 
-const Message = ({ navigation, route }) => {
+const Chats = ({ navigation, route }) => {
   const [chats, setChats] = useState([]);
   const [clickedChat, setClickedChat] = useState([]);
   const { user } = useContext(UserContext);
@@ -121,7 +121,9 @@ const Message = ({ navigation, route }) => {
     <View>
       {
         chats.length === 0
-          ? <Text>LOADING!!!</Text>
+          ? <View style={[styles.container, styles.horizontal]}>
+              <ActivityIndicator size="large" color="#0d7002" />
+            </View>
           : <View style={styles.container}>
               {chats.map((chat, index) => (
                 <Pressable 
@@ -157,12 +159,17 @@ const Message = ({ navigation, route }) => {
   );
 };
 
-export default Message;
+export default Chats;
 
 const styles = StyleSheet.create({
   container: {
-    // marginHorizontal: 10,
-    // marginVertical: 5,
+    // flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 50,
   },
   chatContainer: {
     flexDirection: 'row',
