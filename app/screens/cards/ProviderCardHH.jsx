@@ -1,53 +1,88 @@
-import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { FlatList, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Rating, RatingInput } from "react-native-stock-star-rating";
-
-
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+  query,
+  where,
+  getDocs
+} from "firebase/firestore";
+import { app } from "../../../FirebaseConfig";
+import { UserContext } from "../../contexts/UserContext";
+import StarRating from "./StarRating";
 
 const cardData = [
   {
     key: 1,
-    name: "Paul Chain",
-    title: "Professional Plumber",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. ",
-    src: require("../../../assets/Images/cleaner1.png"),
-    skills: ["Deep Cleaning", "Windows", "Soft clean", "Upholstery"],
-
-    service_category_name: "Plumbing",
-
-    service_cost: 100,
-
-    service_description: "stop leakages with permanent fix",
-
-    service_id: "1",
-
     service_img_url_after:
       "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
 
     service_img_url_before:
       "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-
-    service_title: "Plumbing Service",
-
-    user_id: "4",
-    review_rating:3,
-    review_description: "Satisfactory service"
   },
 ];
 export default function ProviderCardHH({route}) {
   const [image, setImage] = useState(0);
-  const navigation = useNavigation();
   const [showModal, setShowModal]=useState (false)
   const handleHideModal = () => setShowModal(false);
   const [note, setNote] = useState("");
   const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const navigation = useNavigation();
   const {item}=route.params
-  console.log(item)
+  const {user} = useContext(UserContext)
+
+const handleConfirmRating = async () => {
+  const db = getFirestore(app);
+  
+  if (note) {
+    const review = {
+      user_id: user.full_name,
+      review_rating: rating,
+      review_description: note,
+      created_at: serverTimestamp(),
+      service_id: item.service_id,
+    };
+
+    try {
+      const reviews = await collection(db, "reviews");
+      await addDoc(reviews, review);
+      alert("Review confirmed!");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Error confirming review. Please try again.");
+    } finally {
+      navigation.navigate("JobPage");
+    }
+  } else {
+    alert("Please leave your review.");
+  }
+};
+  
+const getReviews = async ()=>{
+  const db = getFirestore(app);
+    const reviewRef = collection(db, "reviews");
+    const reviewsQuery = query(reviewRef, where("service_id", "==", item.service_id));
+    const reviewData = await getDocs(reviewsQuery);
+    const reviewList = reviewData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setReviews(reviewList);
+}
+
+  useEffect (()=>{
+    getReviews()
+  },[])
+
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView style={{ height: "89%" }}>
@@ -59,7 +94,7 @@ export default function ProviderCardHH({route}) {
             <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
           </TouchableOpacity>
           <Image
-            source={{ uri: item.user_img_url}}
+            source={{ uri: item.user_img_url }}
             style={{ width: "100%", height: 300 }}
           />
         </View>
@@ -136,16 +171,46 @@ export default function ProviderCardHH({route}) {
             <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>
               Review
             </Text>
-            <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
-              <FontAwesome name="star" size={13} color="#edd902" />
-              <FontAwesome name="star" size={13} color="#edd902" />
-              <FontAwesome name="star" size={13} color="#edd902" />
-              <FontAwesome name="star" size={13} color="#edd902" />
-              <FontAwesome name="star-o" size={13} color="black" />
+            <View>
+              <FlatList
+                data={reviews}
+                renderItem={({ item }) => (
+                  <View
+                    style={{
+                      marginTop: 13,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <View
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <StarRating item={item} />
+                      <Text>
+                        {new Date(item.created_at.toDate()).toDateString()}
+                      </Text>
+                    </View>
+                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+                      {user.full_name}
+                    </Text>
+                    <Text>{item.review_description}</Text>
+                    <View
+                      style={{
+                        borderWidth: 0.7,
+                        borderColor: "#cecece",
+                        marginBottom: 2,
+                        marginTop: 10,
+                      }}
+                    ></View>
+                  </View>
+                )}
+                keyExtractor={(item) => item.id}
+              />
             </View>
-            <Text style={{ marginTop: 6 }}>
-              {cardData[image].review_description}
-            </Text>
           </View>
           <Text
             style={{
@@ -175,7 +240,7 @@ export default function ProviderCardHH({route}) {
             />
           </View>
           <View style={{ marginTop: 15 }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleConfirmRating}>
               <Text style={styles.confirmBnt}>Post a review</Text>
             </TouchableOpacity>
           </View>

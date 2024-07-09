@@ -7,7 +7,7 @@ import { app } from "../../FirebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 
 
-export default function BookingModal({ handleHideModal, navigate}) {
+export default function BookingModal({ handleHideModal}) {
 
     const [timeList, setTimeList] = useState()
     const [selectedTime, setSelectedTime] = useState()
