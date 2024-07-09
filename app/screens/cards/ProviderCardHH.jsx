@@ -47,6 +47,7 @@ export default function ProviderCardHH({ route }) {
   const navigation = useNavigation();
   const { item } = route.params;
   const { user } = useContext(UserContext);
+  console.log(user)
 
   const handleConfirmRating = async () => {
     const db = getFirestore(app);
@@ -84,7 +85,9 @@ export default function ProviderCardHH({ route }) {
     const reviewList = reviewData.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
+      created_at: doc.data().created_at.toDate(),
     }));
+    reviewList.sort((a, b) => b.created_at - a.created_at);
     setReviews(reviewList);
   };
 
@@ -182,7 +185,7 @@ export default function ProviderCardHH({ route }) {
                       }}
                     >
                       <StarRating item={item} />
-                      <Text>{new Date(item.created_at.toDate()).toDateString()}</Text>
+                      <Text>{item.created_at.toDateString()}</Text>
                     </View>
                     <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.fullName}</Text>
                     <Text>{item.review_description}</Text>
