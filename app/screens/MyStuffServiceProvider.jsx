@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { UserContext } from "../contexts/UserContext";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
@@ -37,17 +37,11 @@ const MyStuffServiceProvider = () => {
                     let jobOwnerImgURL;                     // from users table
                     let jobLocation                         // from users table
 
-                    console.log('++++++++++++++++++++++++++++++++++++++++++++++')
-                    console.log('BID = ',bid)
-                    console.log()
                     const jobsRef = collection(db, 'jobs')
                     const jobsQuery = query(jobsRef,where('job_id','==',bid.job_id))
                     const jobsSnapshot = await getDocs(jobsQuery)
                     if (!jobsSnapshot.empty) {
                         const jobsObj = jobsSnapshot.docs[0].data()
-                        console.log('JOBS = ',jobsObj)
-                        console.log()
-                        console.log('===========================================')
                         jobCreatedAt = jobsObj.created_at
                         jobDescription = jobsObj.job_description
                         serviceCategoryName = jobsObj.service_category_name
@@ -66,9 +60,6 @@ const MyStuffServiceProvider = () => {
                     const usersSnapshot = await getDocs(usersQuery)
                     if (!usersSnapshot.empty) {
                         const usersObj = usersSnapshot.docs[0].data()
-                        console.log('USERS = ',usersObj)
-                        console.log()
-                        console.log('===========================================')
                         jobOwnerName = usersObj.full_name
                         jobOwnerImgURL = usersObj.user_img_url
                         jobLocation = usersObj.town
@@ -93,7 +84,6 @@ const MyStuffServiceProvider = () => {
                     }
                 }))
                 const resolveBidsPromises = await Promise.all(bidsPromise)
-                console.log('All jobs: ', resolveBidsPromises)
 
                 setBids(resolveBidsPromises)
             }
@@ -107,10 +97,21 @@ const MyStuffServiceProvider = () => {
     }//FYR9OWNI7tYOtDDQeusj68SxPwQ2
 
     return (
-        <View>
-            <Text>{bids[0].jobOwnerName}</Text>
-            <Text>{bids[1].jobOwnerName}</Text>
-        </View>
+        <ScrollView>
+            {
+                bids.length>0
+                ?
+                <View>
+                    {bids.map((bid, index) => (
+                        <View key={index}>
+                            <Text>{bid.jobOwnerName}</Text>
+                        </View>
+                    ))}
+                </View>
+                :
+                <Text>No bids available.</Text>
+            }
+        </ScrollView>
     );
 };
 
