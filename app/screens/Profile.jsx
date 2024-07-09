@@ -1,9 +1,18 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Button } from 'react-native';
+import React, { useState, useContext, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Button,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Avatar, IconButton } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Avatar, IconButton } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
 import { UserContext } from "../contexts/UserContext";
 import { getAuth, signOut } from "firebase/auth";
 import { collection, query, getDocs, where, doc, setDoc } from "firebase/firestore";
@@ -13,6 +22,7 @@ import { getFirestore } from "firebase/firestore";
 import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
 import Colors from "../Util/Colors";
 import { useNavigation } from "@react-navigation/native";
+import styless from "../screens/auth/styles/LoginScreenStyles";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -87,78 +97,78 @@ export default function Profile({ handleHideModal }) {
   return (
     <>
       {user ? (
-          <ScrollView>
+        <ScrollView>
           <KeyboardAwareScrollView
-          style={{ flex: 1, width: "100%" }}
-          keyboardShouldPersistTaps="always"
+            style={{ flex: 1, width: "100%" }}
+            keyboardShouldPersistTaps="always"
           >
-          <SafeAreaProvider>
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <Ionicons name="arrow-back" size={25} color="white" onPress={handleHideModal} />
-              <Text style={styles.title}>Profile</Text>
-              <Ionicons
-                name={isEditable ? "checkmark" : "pencil"}
-                size={25}
-                color="white"
-                borderBottomColor="black"
-                onPress={handleEditToggle}
-              />
-            </View>
-            <View style={styles.avatarContainer}>
-              <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
-              {isEditable && (
-                <TouchableOpacity onPress={pickImage}>
-                  <Text style={styles.changePhotoText}>Change Photo</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Name:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.full_name}
-                onChangeText={(text) => handleChange("full_name", text)}
-              />
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Phone:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.telephone}
-                onChangeText={(text) => handleChange("telephone", text)}
-              />
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>House No:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.house_number}
-                onChangeText={(text) => handleChange("house_number", text)}
-              />
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Street Name:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.street_name}
-                onChangeText={(text) => handleChange("street_name", text)}
-              />
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Post Code:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.postcode}
-                onChangeText={(text) => handleChange("postcode", text)}
-              />
-            </View>
-            {/* <View style={styles.field}>
+            <SafeAreaProvider>
+              <View style={styles.container}>
+                <View style={styles.header}>
+                  <Ionicons name="arrow-back" size={25} color="white" onPress={handleHideModal} />
+                  <Text style={styles.title}>Profile</Text>
+                  <Ionicons
+                    name={isEditable ? "checkmark" : "pencil"}
+                    size={25}
+                    color="white"
+                    borderBottomColor="black"
+                    onPress={handleEditToggle}
+                  />
+                </View>
+                <View style={styles.avatarContainer}>
+                  <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
+                  {isEditable && (
+                    <TouchableOpacity onPress={pickImage}>
+                      <Text style={styles.changePhotoText}>Change Photo</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Name:</Text>
+                  <TextInput
+                    style={[styles.input, isEditable && styles.editableInput]}
+                    editable={isEditable}
+                    value={profile.full_name}
+                    onChangeText={(text) => handleChange("full_name", text)}
+                  />
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Phone:</Text>
+                  <TextInput
+                    style={[styles.input, isEditable && styles.editableInput]}
+                    editable={isEditable}
+                    value={profile.telephone}
+                    onChangeText={(text) => handleChange("telephone", text)}
+                  />
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>House No:</Text>
+                  <TextInput
+                    style={[styles.input, isEditable && styles.editableInput]}
+                    editable={isEditable}
+                    value={profile.house_number}
+                    onChangeText={(text) => handleChange("house_number", text)}
+                  />
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Street Name:</Text>
+                  <TextInput
+                    style={[styles.input, isEditable && styles.editableInput]}
+                    editable={isEditable}
+                    value={profile.street_name}
+                    onChangeText={(text) => handleChange("street_name", text)}
+                  />
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Post Code:</Text>
+                  <TextInput
+                    style={[styles.input, isEditable && styles.editableInput]}
+                    editable={isEditable}
+                    value={profile.postcode}
+                    onChangeText={(text) => handleChange("postcode", text)}
+                  />
+                </View>
+                {/* <View style={styles.field}>
               <Text style={styles.label}>Password:</Text>
               <TextInput
                 style={[styles.input, isEditable && styles.editableInput]}
@@ -168,20 +178,16 @@ export default function Profile({ handleHideModal }) {
                 secureTextEntry={true}
               />
             </View> */}
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              style={styles.button}
-              onPress={hanldeLogout}
-              title="Signout"
-              accessibilityLabel="Pressing this button will log out from the app"
-            />
-          </View>
-        </SafeAreaProvider>
-        </KeyboardAwareScrollView>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styless.button} onPress={hanldeLogout}>
+                  <Text style={styless.buttonTitle}>Sign Out</Text>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaProvider>
+          </KeyboardAwareScrollView>
         </ScrollView>
-        ):null
-      }
+      ) : null}
     </>
   );
 }
@@ -189,6 +195,7 @@ export default function Profile({ handleHideModal }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: "100%",
   },
   header: {
     // marginTop: 55,
@@ -236,8 +243,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "#dbdbdb",
     color: "white",
-    padding: 10,
-    height: 70,
   },
   button: {
     backgroundColor: "black",
