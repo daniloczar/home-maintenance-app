@@ -4,7 +4,7 @@ import { app } from "../../FirebaseConfig";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
-// import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import RNPickerSelect from "react-native-picker-select";
@@ -58,8 +58,31 @@ const JobPost = () => {
     user_id: user.user_id,
   };
 
+  const pickImage = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (result.granted === false) {
+      Alert.alert("Permission to access the camera roll is required!");
+      return;
+    }
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!pickerResult.canceled) {
+      setJobImgUrl(pickerResult.assets[0].uri);
+    }
+  };
+
   const handlePostNewJob = async () => {
-    const jobDocRef = await addDoc(collection(db, "jobs"), newJob);
+    const updatedJob = {
+      ...newJob,
+      job_img_url: jobImgUrl || "https://placehold.co/700x700?text=Awaiting\nImage"
+    };
+
+    const jobDocRef = await addDoc(collection(db, "jobs"), updatedJob);
     alert("Job posted successfully");
     navigation.navigate("MyStuff");
     setJobServiceCategoryName(null);
@@ -119,15 +142,11 @@ const JobPost = () => {
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Job image"
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => setJobImgUrl(text)}
-            value={jobImgUrl}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
+
+          <TouchableOpacity style={[styles.input, styles.imagePicker]} onPress={pickImage}>
+            <Text style={styles.imagePickerPlaceholder}>Upload Job Image</Text>
+          </TouchableOpacity>
+
           <TextInput
             style={styles.input}
             placeholder="Maximum budget"
@@ -201,6 +220,23 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  imagePicker: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imagePickerPlaceholder: {
+    fontSize: 13.5,
+    color: "#aaaaaa",
+    marginTop: 7,
+    marginBottom: 7,
+    marginLeft: -167,
+    paddingLeft: 16,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 });
 
