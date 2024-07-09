@@ -4,13 +4,16 @@ import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
 import {addDoc, collection, getFirestore, serverTimestamp} from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
+import { useNavigation } from "@react-navigation/native";
 
-export default function BookingModal({ handleHideModal}) {
+
+export default function BookingModal({ handleHideModal, navigate}) {
 
     const [timeList, setTimeList] = useState()
     const [selectedTime, setSelectedTime] = useState()
     const [selectedDate, setSelectedDate] = useState()
     const [note, setNote] = useState('')
+    const navigation = useNavigation();
   
 
     useEffect(()=>{
@@ -54,14 +57,16 @@ export default function BookingModal({ handleHideModal}) {
           await addDoc(bookings, booking);
           alert("Booking confirmed!");
           handleHideModal();
-          //add navigate to jobs page
         } catch (error) {
           console.error("Error adding document: ", error);
           alert("Error confirming booking. Please try again.");
+        } finally {
+          navigation.navigate("JobPage");
         }
       } else {
         alert("Please select a date and time.");
       }
+      
     };
 
   return (
