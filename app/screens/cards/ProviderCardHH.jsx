@@ -1,4 +1,14 @@
-import { FlatList, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
@@ -12,7 +22,7 @@ import {
   serverTimestamp,
   query,
   where,
-  getDocs
+  getDocs,
 } from "firebase/firestore";
 import { app } from "../../../FirebaseConfig";
 import { UserContext } from "../../contexts/UserContext";
@@ -28,46 +38,46 @@ const cardData = [
       "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
   },
 ];
-export default function ProviderCardHH({route}) {
-  const [image, setImage] = useState(0);
-  const [showModal, setShowModal]=useState (false)
+export default function ProviderCardHH({ route }) {
+  const [showModal, setShowModal] = useState(false);
   const handleHideModal = () => setShowModal(false);
   const [note, setNote] = useState("");
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const navigation = useNavigation();
-  const {item}=route.params
-  const {user} = useContext(UserContext)
+  const { item } = route.params;
+  const { user } = useContext(UserContext);
 
-const handleConfirmRating = async () => {
-  const db = getFirestore(app);
-  
-  if (note) {
-    const review = {
-      user_id: user.full_name,
-      review_rating: rating,
-      review_description: note,
-      created_at: serverTimestamp(),
-      service_id: item.service_id,
-    };
+  const handleConfirmRating = async () => {
+    const db = getFirestore(app);
 
-    try {
-      const reviews = await collection(db, "reviews");
-      await addDoc(reviews, review);
-      alert("Review confirmed!");
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("Error confirming review. Please try again.");
-    } finally {
-      navigation.navigate("JobPage");
+    if (note) {
+      const review = {
+        fullName: user.full_name,
+        user_id: user.user_id,
+        review_rating: rating,
+        review_description: note,
+        created_at: serverTimestamp(),
+        service_id: item.service_id,
+      };
+
+      try {
+        const reviews = await collection(db, "reviews");
+        await addDoc(reviews, review);
+        alert("Review confirmed!");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("Error confirming review. Please try again.");
+      } finally {
+        navigation.navigate("JobPage");
+      }
+    } else {
+      alert("Please leave your review.");
     }
-  } else {
-    alert("Please leave your review.");
-  }
-};
-  
-const getReviews = async ()=>{
-  const db = getFirestore(app);
+  };
+
+  const getReviews = async () => {
+    const db = getFirestore(app);
     const reviewRef = collection(db, "reviews");
     const reviewsQuery = query(reviewRef, where("service_id", "==", item.service_id));
     const reviewData = await getDocs(reviewsQuery);
@@ -76,34 +86,25 @@ const getReviews = async ()=>{
       ...doc.data(),
     }));
     setReviews(reviewList);
-}
+  };
 
-  useEffect (()=>{
-    getReviews()
-  },[])
-
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   return (
     <View style={styles.mainContainer}>
       <ScrollView style={{ height: "89%" }}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity
-            style={styles.backBnt}
-            onPress={() => navigation.goBack()}
-          >
+          <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
           </TouchableOpacity>
-          <Image
-            source={{ uri: item.user_img_url }}
-            style={{ width: "100%", height: 300 }}
-          />
+          <Image source={{ uri: item.user_img_url }} style={{ width: "100%", height: 300 }} />
         </View>
         <View style={styles.container}>
           <View style={styles.headerCard}>
             <View style={styles.textHeader}>
-              <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                {item.full_name}
-              </Text>
+              <Text style={{ fontSize: 22, fontWeight: "bold" }}>{item.full_name}</Text>
               <Text style={{ fontSize: 18 }}>{item.service_title}</Text>
             </View>
           </View>
@@ -115,9 +116,7 @@ const getReviews = async ()=>{
             }}
           ></View>
           <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-              Description
-            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "bold" }}>Description</Text>
             <Text style={{ fontSize: 13 }}>{item.service_description}</Text>
           </View>
           <View
@@ -128,13 +127,8 @@ const getReviews = async ()=>{
             }}
           ></View>
           <View>
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}>
-              Gallery
-            </Text>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
+            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}>Gallery</Text>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <Image
                 source={{
                   uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
@@ -168,9 +162,7 @@ const getReviews = async ()=>{
             }}
           ></View>
           <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>
-              Review
-            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>Review</Text>
             <View>
               <FlatList
                 data={reviews}
@@ -190,13 +182,9 @@ const getReviews = async ()=>{
                       }}
                     >
                       <StarRating item={item} />
-                      <Text>
-                        {new Date(item.created_at.toDate()).toDateString()}
-                      </Text>
+                      <Text>{new Date(item.created_at.toDate()).toDateString()}</Text>
                     </View>
-                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>
-                      {user.full_name}
-                    </Text>
+                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.fullName}</Text>
                     <Text>{item.review_description}</Text>
                     <View
                       style={{
@@ -246,9 +234,7 @@ const getReviews = async ()=>{
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
-      >
+      <View style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}>
         <TouchableOpacity
           style={{
             backgroundColor: "blue",
