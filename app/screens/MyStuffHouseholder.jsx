@@ -36,31 +36,28 @@ const MyStuffHouseholder = () => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.headerContainer}>
-      <Text style={styles.header}>My Jobs</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>My Jobs</Text>
 
-      <TouchableOpacity
-        style={styless.buttonChoice}
-        onPress={() => navigation.navigate("JobPost")}
-      >
-        <Text style={styless.buttonTitle}>Post a Job</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styless.buttonChoice}
+          onPress={() => navigation.navigate("JobPost", { setAllJobs, allJobs })}
+        >
+          <Text style={styless.buttonTitle}>Post a Job</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
         data={allJobs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          (
-            <TouchableOpacity
-          style={styles.detailsButton}
-          onPress={() => {
-            navigation.navigate("JobCardHH", {job: item});
-          }}
-        >
-          <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>
-            Book Now
-          </Text>
+          <TouchableOpacity
+            style={styles.detailsButton}
+            onPress={() => {
+              navigation.navigate("JobCardHH", { job: item });
+            }}
+          >
+            <Text style={{ fontSize: 12, color: "white", textAlign: "center" }}>Book Now</Text>
             <View style={styles.jobContainer}>
               <Image source={{ uri: item.job_img_url }} style={styles.jobImage} />
               <View style={styles.jobDetails}>
@@ -68,8 +65,7 @@ const MyStuffHouseholder = () => {
                 <Text style={styles.jobStatus}>Job Status: {item.job_status}</Text>
               </View>
             </View>
-            </TouchableOpacity>
-          )
+          </TouchableOpacity>
         )}
         ListEmptyComponent={<Text>No jobs found.</Text>}
       />
@@ -93,11 +89,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   headerContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
   button: {
     backgroundColor: "#007BFF",
