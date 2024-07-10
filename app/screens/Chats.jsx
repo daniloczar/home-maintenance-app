@@ -45,6 +45,7 @@ const Chats = ({ navigation, route }) => {
           const userSnapshot = await getDocs(userQuery)
 
           let sentToUserImgUrl = ''
+          let sentByUserImgUrl = ''
           let sentToUserName = ''
           if (!userSnapshot.empty) {
             sentToUserImgUrl = userSnapshot.docs[0].data().user_img_url
@@ -69,9 +70,10 @@ const Chats = ({ navigation, route }) => {
             ...chat,
             last_msg: lastMsg,
             last_sent: lastSent,
-            sent_to_user_img_url: sentToUserImgUrl,
+            sentToUserImgUrl,
             sent_to_user_name: sentToUserName,
-            last_msg_sent_by_user_id: lastMsgSentByUserId
+            last_msg_sent_by_user_id: lastMsgSentByUserId,
+            sentByUserImgUrl:user.user_img_url,
           }
         }))
 
@@ -137,10 +139,20 @@ const Chats = ({ navigation, route }) => {
                   onLongPress={() => setClickedChat(null)}
                   onPress={() => {
                     setClickedChat(chat.chat_id);
-                    navigation.navigate('Messages', {chatId : chat.chat_id, sentTo : chat.sent_to_user_name, sent_by_user_id : chat.sent_by_user_id, sent_to_user_id : chat.sent_to_user_id})
+                    // console.log(chat.sentByUserImgUrl)
+                    // console.log(chat.sentToUserImgUrl)
+                    console.log(chat)
+                    navigation.navigate('Messages', {
+                      chatId : chat.chat_id, 
+                      sentTo : chat.sent_to_user_name, 
+                      sent_by_user_id : chat.sent_by_user_id, 
+                      sent_to_user_id : chat.sent_to_user_id,
+                      sentByUserImgUrl:chat.sentByUserImgUrl,
+                      sentToUserImgUrl:chat.sentToUserImgUrl,
+                      })
                   }}
                 >
-                  <Avatar.Image style={styles.avatar} size={50} source={{ uri: chat.sent_to_user_img_url }} />
+                  <Avatar.Image style={styles.avatar} size={50} source={{ uri: chat.sentToUserImgUrl }} />
                   <View style={styles.chatContent}>
                     <View style={styles.chatHeader}>
                       <Text style={styles.userName}>{chat.sent_to_user_name}</Text>
@@ -153,7 +165,7 @@ const Chats = ({ navigation, route }) => {
                   </View>
                 </Pressable>
               ))}
-          </View>
+          </View>//sentByUserImgUrl //sentByUserImgUrl
       }
     </View>
   );

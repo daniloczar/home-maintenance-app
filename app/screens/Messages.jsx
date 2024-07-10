@@ -9,8 +9,10 @@ import { Ionicons } from "@expo/vector-icons";
 const db = getFirestore(app);
 
 const Messages = ({ route, navigation }) => {
-
-  const { chatId, sentTo, sent_by_user_id, sent_to_user_id } = route.params;
+  const { chatId, sentTo, sent_by_user_id, sent_to_user_id, sentByUserImgUrl, sentToUserImgUrl } = route.params;
+  // console.log()
+  // console.log(route.params.sentToUserImgUrl)
+  // console.log(route.params.sentByUserImgUrl)
 
   const [messages, setMessages] = useState([]);
 
@@ -36,6 +38,7 @@ const Messages = ({ route, navigation }) => {
             sent_to_user_id: data.sent_to_user_id,
             user: {
               _id: data.sent_by_user_id,
+              avatar: data.sent_by_user_id===sent_by_user_id?sentByUserImgUrl:sentToUserImgUrl,
             },
           };
         }));
@@ -107,6 +110,8 @@ const Messages = ({ route, navigation }) => {
           _id: sent_by_user_id,
         }}
         renderBubble={renderBubble}
+        alwaysShowSend
+        showUserAvatar
         renderSend={(props) => (
           <Send {...props}>
             <View style={styles.sendingContainer}>
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderColor: 'black',
-    borderWidth: 2,
+    borderWidth: 0.2,
     color: 'black',
   },
   chat: {
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
-    marginBottom: 10,
+    marginTop: 5,
   },
   backButton: {
     marginLeft: 10,
