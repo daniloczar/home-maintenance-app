@@ -1,31 +1,59 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { collection, getDocs, getFirestore, where, query } from "@firebase/firestore";
+import { collection, doc, getDocs, getFirestore, setDoc, where, query } from "@firebase/firestore";
 import { app } from "../../../FirebaseConfig";
 const db = getFirestore(app);
 
-export default function ProviderCardSP({route}) {
+export default function ProviderCardSP({ route }) {
   const navigation = useNavigation();
   const { userId } = route.params;
   const [item, setItem] = useState({});
-  
-  useEffect(() => {
-    getServiceByUserId()
-  }, []);
+  const [editable, setEditable] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [serviceTitle, setServiceTitle] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
 
-  const getServiceByUserId = async() => {
+  
+
+  const getServiceByUserId = async () => {
     try {
-      const serviceRef = collection(db, "services")
-      const q = query(serviceRef, where('user_id', '==', userId))
-      const serviceSnapShot = await getDocs(q)
-      setItem(serviceSnapShot.docs[0].data())
+      const serviceRef = collection(db, "services");
+      const q = query(serviceRef, where('user_id', '==', userId));
+      const serviceSnapShot = await getDocs(q);
+      const serviceData = serviceSnapShot.docs[0].data();
+      setItem(serviceData);
+      setFullName(serviceData.full_name);
+      setServiceTitle(serviceData.service_title);
+      setServiceDescription(serviceData.service_description);
     } catch (error) {
+      console.error("Error fetching service: ", error);
     }
-  }
+  };
+useEffect(() => {
+    getServiceByUserId();
+  }, []);
+  console.log(item)
+  const handleSave = async () => {
+    const updatedItem = {
+      ...item,
+      full_name: fullName,
+      service_title: serviceTitle,
+      service_description: serviceDescription,
+    };
+
+    try {
+      await setDoc(doc(db, "services", item.service_id), updatedItem);
+      setItem(updatedItem);
+      setEditable(false);
+      Alert.alert("Success", "Service updated successfully!");
+    } catch (error) {
+      console.error("Error updating service: ", error);
+    }
+  };
 
   return (
     <View>
@@ -46,12 +74,35 @@ export default function ProviderCardSP({route}) {
           <View style={styles.container}>
             <View style={styles.headerCard}>
               <View style={styles.textHeader}>
-                <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                  {item.full_name}
-                </Text>
-                <Text style={{ fontSize: 18 }}>{item.service_title}</Text>
+                {editable ? (
+                  <>
+                    <View>
+                      <Text>Full Name:</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={fullName}
+                        onChangeText={setFullName}
+                      />
+                    </View>
+                    <View>
+                      <Text>Service Title:</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={serviceTitle}
+                        onChangeText={setServiceTitle}
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                      {fullName}
+                    </Text>
+                    <Text style={{ fontSize: 18 }}>{serviceTitle}</Text>
+                  </>
+                )}
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setEditable(!editable)}>
                 <AntDesign name="edit" size={24} color="black" />
               </TouchableOpacity>
             </View>
@@ -66,7 +117,24 @@ export default function ProviderCardSP({route}) {
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 Description
               </Text>
-              <Text style={{ fontSize: 13 }}>{item.service_description}</Text>
+              {editable ? (
+                <TextInput
+                  style={[styles.input, { height: 100 }]}
+                  value={serviceDescription}
+                  onChangeText={setServiceDescription}
+                  multiline
+                />
+              ) : (
+                <Text style={{ fontSize: 13 }}>{serviceDescription}</Text>
+              )}
+              {editable && (
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={handleSave}
+                >
+                  <Text style={styles.saveButtonText}>Save</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View
               style={{
@@ -170,5 +238,22 @@ const styles = StyleSheet.create({
     marginLeft: -3,
     marginRight: -3,
   },
-
+  input: {
+    borderWidth: 1,
+    borderColor: "grey",
+    padding: 5,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  saveButton: {
+    backgroundColor: "blue",
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  saveButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
 });
+
