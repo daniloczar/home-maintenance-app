@@ -28,16 +28,6 @@ import { UserContext } from "../../contexts/UserContext";
 import StarRating from "./StarRating";
 import Colors from "../../Util/Colors";
 
-const cardData = [
-  {
-    key: 1,
-    service_img_url_after:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
-
-    service_img_url_before:
-      "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-  },
-];
 export default function ProviderCardHH({ route }) {
   const [showModal, setShowModal] = useState(false);
   const handleHideModal = () => setShowModal(false);
