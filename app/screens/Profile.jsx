@@ -180,8 +180,8 @@ export default function Profile({ handleHideModal }) {
             </View> */}
               </View>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styless.button} onPress={hanldeLogout}>
-                  <Text style={styless.buttonTitle}>Sign Out</Text>
+                <TouchableOpacity style={styles.button} onPress={hanldeLogout}>
+                  <Text style={styles.buttonTitle}>Sign Out</Text>
                 </TouchableOpacity>
               </View>
             </SafeAreaProvider>
@@ -241,10 +241,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "blue",
   },
   buttonContainer: {
-    backgroundColor: "#dbdbdb",
-    color: "white",
+    backgroundColor: Colors.primary,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
   },
-  button: {
-    backgroundColor: "black",
-  },
+  
 });
