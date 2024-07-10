@@ -83,7 +83,7 @@ export default StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  selected: {
+  selectedButton: {
     backgroundColor: "gray",
   },
 });
