@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Alert
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,14 +17,7 @@ import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { getFirestore } from "firebase/firestore";
-import {
-  doc,
-  setDoc,
-  query,
-  where,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { doc, setDoc, query, where, collection, getDocs } from "firebase/firestore";
 import { app } from "../../../FirebaseConfig";
 import styless from "../../screens/auth/styles/RegistrationScreenStyles";
 import { UserContext } from "../../contexts/UserContext";
@@ -49,10 +42,7 @@ export default function JobCardHH({ route }) {
 
   const fetchAllBids = async () => {
     try {
-      const q = query(
-        collection(db, "bids"),
-        where("job_id", "==", job.job_id)
-      );
+      const q = query(collection(db, "bids"), where("job_id", "==", job.job_id));
       const querySnapshot = await getDocs(q);
 
       const bidList = querySnapshot.docs.map((doc) => ({
@@ -65,12 +55,10 @@ export default function JobCardHH({ route }) {
         let bidAmount = bid.bid_amount;
         let serviceImgUrl;
         let serviceTitle;
-        let bidId = bid.bid_id
+        let bidId = bid.bid_id;
         const userRef = collection(db, "users");
         const q = query(userRef, where("user_id", "==", bid.user_id));
         const userSnapShot = await getDocs(q);
-
-        
 
         serviceTitle = userSnapShot.docs[0].data().service_title;
         const userId = userSnapShot.docs[0].data().user_id;
@@ -78,11 +66,9 @@ export default function JobCardHH({ route }) {
         const q2 = query(serviceRef, where("user_id", "==", userId));
         const serviceSnapShot = await getDocs(q2);
         serviceImgUrl = serviceSnapShot.docs[0].data().service_img_url;
-        console.log(serviceImgUrl)
 
-        return { serviceTitle, bidStatus, bidAmount, serviceImgUrl, bidId};
+        return { serviceTitle, bidStatus, bidAmount, serviceImgUrl, bidId };
       });
-
 
       const resolvedPromise = await Promise.all(bidListPromise);
       setServiceTitle(resolvedPromise);
@@ -115,12 +101,11 @@ export default function JobCardHH({ route }) {
   };
 
   const handleAcceptBid = async (bidId) => {
-    
     try {
       const bidRef = doc(db, "bids", bidId);
       await setDoc(bidRef, { bid_status: "Accepted" }, { merge: true });
-      fetchAllBids(); 
-      Alert.alert(`Bid Accepted`)
+      fetchAllBids();
+      Alert.alert(`Bid Accepted`);
     } catch (error) {
       console.error("Error accepting bid: ", error);
     }
@@ -130,31 +115,22 @@ export default function JobCardHH({ route }) {
     try {
       const bidRef = doc(db, "bids", bidId);
       await setDoc(bidRef, { bid_status: "Declined" }, { merge: true });
-      fetchAllBids(); 
-      Alert.alert(`Bid Declined`)
-
-
+      fetchAllBids();
+      Alert.alert(`Bid Declined`);
     } catch (error) {
       console.error("Error declining bid: ", error);
     }
-
   };
 
   return (
     <SafeAreaView>
       <View>
-        <ScrollView style={{ height: "90%" }}>
+        <View style={{ height: "100%" }}>
           <View style={styles.imageContainer}>
-            <TouchableOpacity
-              style={styles.backBnt}
-              onPress={() => navigation.goBack()}
-            >
+            <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
-            <Image
-              source={{ uri: job.job_img_url }}
-              style={{ width: "100%", height: 300 }}
-            />
+            <Image source={{ uri: job.job_img_url }} style={{ width: "100%", height: 300 }} />
           </View>
           <View style={styles.container}>
             <View style={styles.headerCard}>
@@ -163,11 +139,7 @@ export default function JobCardHH({ route }) {
                   <>
                     <View>
                       <Text>Title:</Text>
-                      <TextInput
-                        style={styles.input}
-                        value={title}
-                        onChangeText={setTitle}
-                      />
+                      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
                     </View>
                     <View>
                       <Text>Service Type: </Text>
@@ -188,13 +160,9 @@ export default function JobCardHH({ route }) {
                   </>
                 ) : (
                   <>
-                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                      {title}
-                    </Text>
+                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>{title}</Text>
                     <Text style={{ fontSize: 18 }}>{categoryName}</Text>
-                    <Text style={{ fontSize: 18 }}>
-                      Max Budget: £{maxBudget}
-                    </Text>
+                    <Text style={{ fontSize: 18 }}>Max Budget: £{maxBudget}</Text>
                   </>
                 )}
               </View>
@@ -210,9 +178,7 @@ export default function JobCardHH({ route }) {
               }}
             ></View>
             <View style={styles.descriptionBox}>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                Description
-              </Text>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Description</Text>
               {editable ? (
                 <TextInput
                   style={[styles.input, { height: 100 }]}
@@ -224,10 +190,7 @@ export default function JobCardHH({ route }) {
                 <Text style={{ fontSize: 13 }}>{description}</Text>
               )}
               {editable && (
-                <TouchableOpacity
-                  style={styless.buttonChoice}
-                  onPress={handleSave}
-                >
+                <TouchableOpacity style={styless.buttonChoice} onPress={handleSave}>
                   <Text style={styless.buttonTitle}>Save</Text>
                 </TouchableOpacity>
               )}
@@ -252,14 +215,9 @@ export default function JobCardHH({ route }) {
                 }}
               >
                 <View style={styles.bidBox}>
-                  <Image
-                    source={{ uri: item.serviceImgUrl }}
-                    style={styles.jobImage}
-                  />
+                  <Image source={{ uri: item.serviceImgUrl }} style={styles.jobImage} />
                   <Text style={styles.jobTitle}>{item.serviceTitle}</Text>
-                  <Text style={styles.bidText}>
-                    Bid Amount: £{item.bidAmount}
-                  </Text>
+                  <Text style={styles.bidText}>Bid Amount: £{item.bidAmount}</Text>
                   <Text style={styles.bidText}>Bid Status: {item.bidStatus}</Text>
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
@@ -284,17 +242,15 @@ export default function JobCardHH({ route }) {
               </View>
             }
           />
-        </ScrollView>
-        <View
-          style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
-        ></View>
+        </View>
+        <View style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}></View>
         <Modal animationType="slide" visible={showModal}>
           <BookingModal handleHideModal={handleHideModal} />
         </Modal>
       </View>
     </SafeAreaView>
   );
-}//
+} //
 
 const styles = StyleSheet.create({
   container: {
