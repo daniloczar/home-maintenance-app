@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Alert
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -44,9 +45,7 @@ export default function JobCardHH({ route }) {
   const [description, setDescription] = useState(job.job_description);
   const [title, setTitle] = useState(job.job_title);
   const [serviceNames, setServiceNames] = useState([]);
-  const [bidderUserId, setBidderUserId] = useState("");
-  const [serviceTitle, setServiceTitle] = useState([])
-
+  const [serviceTitle, setServiceTitle] = useState([]);
 
   const fetchAllBids = async () => {
     try {
@@ -60,37 +59,35 @@ export default function JobCardHH({ route }) {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(bidList, "<<<<<<<<<<<<<<<<<<");
-      setAllBids(bidList);
+
       const bidListPromise = bidList.map(async (bid) => {
-        
-        let bidStatus = bid.bid_status
-        let bidAmount = bid.bid_amount
+        let bidStatus = bid.bid_status;
+        let bidAmount = bid.bid_amount;
         let serviceImgUrl;
         let serviceTitle;
+        let bidId = bid.bid_id
         const userRef = collection(db, "users");
         const q = query(userRef, where("user_id", "==", bid.user_id));
         const userSnapShot = await getDocs(q);
-        console.log(userSnapShot.docs[0].data().service_title, "00000000");
 
-         serviceTitle = userSnapShot.docs[0].data().service_title
-         const userId = userSnapShot.docs[0].data().user_id
-         const serviceRef = collection(db, "services");
-         const q2 = query(serviceRef, where("user_id", "==", userId));
-         const serviceSnapShot = await getDocs(q2);
-         console.log(serviceSnapShot.docs[0].data().service_img_url,"yyyyyyyyyyyy")
-         serviceImgUrl = serviceSnapShot.docs[0].data().service_img_url
+        
 
+        serviceTitle = userSnapShot.docs[0].data().service_title;
+        const userId = userSnapShot.docs[0].data().user_id;
+        const serviceRef = collection(db, "services");
+        const q2 = query(serviceRef, where("user_id", "==", userId));
+        const serviceSnapShot = await getDocs(q2);
+        serviceImgUrl = serviceSnapShot.docs[0].data().service_img_url;
+        console.log(serviceImgUrl)
 
-        return {serviceTitle,bidStatus,bidAmount,serviceImgUrl};
+        return { serviceTitle, bidStatus, bidAmount, serviceImgUrl, bidId};
       });
-      
+
+
       const resolvedPromise = await Promise.all(bidListPromise);
-     
-      setServiceTitle(resolvedPromise)
-       console.log(serviceTitle[0],"////////////////")
+      setServiceTitle(resolvedPromise);
     } catch (error) {
-      console.error("Error fetching jobs: ", error);
+      console.error("Error fetching bids: ", error);
     }
   };
 
@@ -98,47 +95,49 @@ export default function JobCardHH({ route }) {
     fetchAllBids();
   }, []);
 
-  const fetchAllNames = async () => {
-    try {
-      const q = query(
-        collection(db, "users"),
-        where("service_title", "==", true)
-      );
-      const querySnapshot = await getDocs(q);
-
-      const serviceNameList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log(serviceNameList, "<<<<");
-      setServiceNames(serviceNameList);
-    } catch (error) {
-      console.error("Error fetching jobs: ", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllNames();
-  }, []);
-  console.log(allBids, "+++++++++++++");
-
   const handleSave = async () => {
     const updatedCard = {
       ...job,
-      maximum_budget: maxBudget,
+      job_max_budget: maxBudget,
       service_category_name: categoryName,
-      description: description,
-      title: title,
+      job_description: description,
+      job_title: title,
     };
 
     await setDoc(doc(db, "jobs", job.id), updatedCard);
 
-    setMaxBudget(updatedCard.maximum_budget);
+    setMaxBudget(updatedCard.job_max_budget);
     setCategoryName(updatedCard.service_category_name);
-    setDescription(updatedCard.description);
-    setTitle(updatedCard.title);
+    setDescription(updatedCard.job_description);
+    setTitle(updatedCard.job_title);
 
     setEditable(false);
+  };
+
+  const handleAcceptBid = async (bidId) => {
+    
+    try {
+      const bidRef = doc(db, "bids", bidId);
+      await setDoc(bidRef, { bid_status: "Accepted" }, { merge: true });
+      fetchAllBids(); 
+      Alert.alert(`Bid Accepted`)
+    } catch (error) {
+      console.error("Error accepting bid: ", error);
+    }
+  };
+
+  const handleDeclineBid = async (bidId) => {
+    try {
+      const bidRef = doc(db, "bids", bidId);
+      await setDoc(bidRef, { bid_status: "Declined" }, { merge: true });
+      fetchAllBids(); 
+      Alert.alert(`Bid Declined`)
+
+
+    } catch (error) {
+      console.error("Error declining bid: ", error);
+    }
+
   };
 
   return (
@@ -166,7 +165,7 @@ export default function JobCardHH({ route }) {
                       <Text>Title:</Text>
                       <TextInput
                         style={styles.input}
-                        value={null}
+                        value={title}
                         onChangeText={setTitle}
                       />
                     </View>
@@ -174,15 +173,15 @@ export default function JobCardHH({ route }) {
                       <Text>Service Type: </Text>
                       <TextInput
                         style={styles.input}
-                        value={null}
+                        value={categoryName}
                         onChangeText={setCategoryName}
                       />
                     </View>
-                    <View tyle={styles.inputContainer}>
+                    <View style={styles.inputContainer}>
                       <Text>Max Budget:</Text>
                       <TextInput
                         style={styles.input}
-                        value={null}
+                        value={maxBudget}
                         onChangeText={setMaxBudget}
                       />
                     </View>
@@ -211,7 +210,7 @@ export default function JobCardHH({ route }) {
               }}
             ></View>
             <View style={styles.descriptionBox}>
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                 Description
               </Text>
               {editable ? (
@@ -241,7 +240,7 @@ export default function JobCardHH({ route }) {
               marginBottom: 15,
             }}
           ></View>
-          <Text>Bids</Text>
+          <Text style={styles.bid}>Bids</Text>
           <FlatList
             data={serviceTitle}
             keyExtractor={(item) => item.id}
@@ -252,26 +251,38 @@ export default function JobCardHH({ route }) {
                   navigation.navigate("JobCardHH", { job: item });
                 }}
               >
-                <View style={styles.jobContainer}>
-                  <View style={styles.jobDetails}>
+                <View style={styles.bidBox}>
                   <Image
                     source={{ uri: item.serviceImgUrl }}
                     style={styles.jobImage}
                   />
-                  <Text style={styles.jobTitle}>
-                       {item.serviceTitle}
-                    </Text>
-                    <Text style={styles.jobTitle}>
-                      Bid Amount: £{item.bidAmount}
-                    </Text>
-                    <Text style={styles.jobStatus}>
-                      Bid Status: {item.bidStatus}
-                    </Text>
+                  <Text style={styles.jobTitle}>{item.serviceTitle}</Text>
+                  <Text style={styles.bidText}>
+                    Bid Amount: £{item.bidAmount}
+                  </Text>
+                  <Text style={styles.bidText}>Bid Status: {item.bidStatus}</Text>
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      style={[styles.button, styles.acceptButton]}
+                      onPress={() => handleAcceptBid(item.bidId)}
+                    >
+                      <Text style={styles.buttonText}>Accept</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, styles.declineButton]}
+                      onPress={() => handleDeclineBid(item.bidId)}
+                    >
+                      <Text style={styles.buttonText}>Decline</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </TouchableOpacity>
             )}
-            ListEmptyComponent={<Text>No Bids found.</Text>}
+            ListEmptyComponent={
+              <View style={styles.bidBox}>
+                <Text>No Bids found.</Text>
+              </View>
+            }
           />
         </ScrollView>
         <View
@@ -283,7 +294,7 @@ export default function JobCardHH({ route }) {
       </View>
     </SafeAreaView>
   );
-}
+}//
 
 const styles = StyleSheet.create({
   container: {
@@ -355,5 +366,55 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 5,
     backgroundColor: "#ddd",
+  },
+  bidBox: {
+    backgroundColor: "#F2F2F2",
+    padding: 15,
+    margin: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 3,
+  },
+  bidTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  bidText: {
+    fontSize: 14,
+  },
+  bid: {
+    marginLeft: 20,
+    padding: 1,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  acceptButton: {
+    backgroundColor: "#4CAF50",
+  },
+  declineButton: {
+    backgroundColor: "#F44336",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
