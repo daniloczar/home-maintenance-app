@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View
 import { UserContext } from "../contexts/UserContext";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { Button } from "react-native-paper";
 import Colors from "../Util/Colors";
 
@@ -15,7 +15,7 @@ const MyStuffServiceProvider = () => {
     const [clickedBid,setClickedBid] = useState(null)
     const navigation = useNavigation()
     
-    useEffect(()=>{
+    useFocusEffect(()=>{
         getJobsBiddedBySP()
     },[])
     
@@ -30,7 +30,8 @@ const MyStuffServiceProvider = () => {
                 const bidsPromise = (bidsArray.map(async (bid) => {
                     let bidStatus = bid.bid_status;         // from bids table
                     let bidCreatedAt = bid.created_at;      // from bids table
-                    let bidAmount = bid.bid_amount;      // from bids table
+                    let bidAmount = bid.bid_amount;         // from bids table
+                    let bidId = bid.bid_id;         // from bids table
                     let jobCreatedAt;                       // from jobs table
                     let jobDescription;                     // from jobs table
                     let serviceCategoryName;                // from jobs table
@@ -74,6 +75,7 @@ const MyStuffServiceProvider = () => {
                         console.log('No Job Found!')
                     }
                     return {
+                        bidId,
                         bidStatus,
                         bidCreatedAt,
                         bidAmount,
