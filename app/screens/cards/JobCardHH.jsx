@@ -127,7 +127,7 @@ export default function JobCardHH({ route }) {
       <View>
         <View style={{ height: "100%" }}>
           <View style={styles.imageContainer}>
-            <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.backBnt} onPress={() => navigation.navigate("MyStuff")}>
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
             <Image source={{ uri: job.job_img_url }} style={{ width: "100%", height: 300 }} />
