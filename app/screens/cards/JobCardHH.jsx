@@ -294,7 +294,7 @@ export default function JobCardHH({ route }) {
       </View>
     </SafeAreaView>
   );
-}
+}//
 
 const styles = StyleSheet.create({
   container: {
