@@ -7,6 +7,7 @@ import LoginScreen from "./app/screens/auth/LoginScreen";
 import RegistrationScreen from "./app/screens/auth/RegistrationScreen";
 import NavBar from "./app/navigation/NavBar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { LogBox } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const AppContent = () => {
 };
 
 export default function App() {
+  LogBox.ignoreLogs([""]);
   return (
     <UserProvider>
       <AppContent />
