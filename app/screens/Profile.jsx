@@ -19,10 +19,9 @@ import { collection, query, getDocs, where, doc, setDoc } from "firebase/firesto
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { app } from "../../FirebaseConfig";
 import { getFirestore } from "firebase/firestore";
-import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Colors from "../Util/Colors";
 import { useNavigation } from "@react-navigation/native";
-import styless from "../screens/auth/styles/LoginScreenStyles";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -168,16 +167,6 @@ export default function Profile({ handleHideModal }) {
                     onChangeText={(text) => handleChange("postcode", text)}
                   />
                 </View>
-                {/* <View style={styles.field}>
-              <Text style={styles.label}>Password:</Text>
-              <TextInput
-                style={[styles.input, isEditable && styles.editableInput]}
-                editable={isEditable}
-                value={profile.password}
-                onChangeText={(text) => handleChange('password', text)}
-                secureTextEntry={true}
-              />
-            </View> */}
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={hanldeLogout}>
@@ -198,7 +187,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   header: {
-    // marginTop: 55,
     paddingTop: 75,
     paddingRight: 30,
     padding: 20,
@@ -247,5 +235,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
   },
-  
+  buttonTitle: {
+    color: "white",
+    fontSize: 16,
+  },
 });
