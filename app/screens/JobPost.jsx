@@ -1,24 +1,32 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { app } from "../../FirebaseConfig";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import RNPickerSelect from "react-native-picker-select";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { UserContext } from "../contexts/UserContext";
 
 const db = getFirestore(app);
 
-const JobPost = () => {
+const JobPost = ({ route }) => {
   const [jobId, setJobId] = useState(null);
   const [completedAt, setcompletedAt] = useState(null);
   const [createdAt, setCreatedAt] = useState(null);
   const [jobTitle, setJobTitle] = useState(null);
-  const [jobImgUrl, setJobImgUrl] = useState('');
+  const [jobImgUrl, setJobImgUrl] = useState("");
   const [jobDescription, setJobDescription] = useState(null);
   const [jobServiceCategoryName, setJobServiceCategoryName] = useState(null);
   const [jobMaxBudget, setJobMaxBudget] = useState(null);
@@ -26,6 +34,8 @@ const JobPost = () => {
   const [serviceCategories, setServiceCategories] = useState([]);
   const { user, setUser } = useContext(UserContext);
   const navigation = useNavigation();
+
+  const { setAllJobs, allJobs } = route.params;
 
   const fetchServiceCategories = async () => {
     try {
@@ -78,13 +88,13 @@ const JobPost = () => {
   };
 
   const getFileName = (uri) => {
-    return uri.split('/').pop();
+    return uri.split("/").pop();
   };
 
   const handlePostNewJob = async () => {
     const updatedJob = {
       ...newJob,
-      job_img_url: jobImgUrl || "https://placehold.co/700x700?text=Awaiting\nImage"
+      job_img_url: jobImgUrl || "https://placehold.co/700x700?text=Awaiting\nImage",
     };
 
     const jobDocRef = await addDoc(collection(db, "jobs"), updatedJob);
@@ -95,6 +105,8 @@ const JobPost = () => {
     setJobDescription("");
     setJobImgUrl("");
     setJobMaxBudget("");
+
+    setAllJobs([...allJobs, updatedJob]);
   };
 
   const resetForm = () => {
@@ -112,29 +124,34 @@ const JobPost = () => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.container}>
-        <View style={styles.headercancel}>
+          <View style={styles.headercancel}>
             <Text style={styles.header}>Post New Job</Text>
-            <TouchableOpacity onPress={() => { resetForm(); navigation.navigate("MyStuff"); }}>
+            <TouchableOpacity
+              onPress={() => {
+                resetForm();
+                navigation.navigate("MyStuff");
+              }}
+            >
               <Text style={styles.cancel}>Cancel</Text>
             </TouchableOpacity>
           </View>
-          
-            <RNPickerSelect
+
+          <RNPickerSelect
             onValueChange={(value) => setJobServiceCategoryName(value)}
             items={serviceCategories}
             placeholder={{ label: "Select service type", value: null }}
             value={jobServiceCategoryName}
             style={{
-                ...pickerSelectStyles,
-                iconContainer: {
-                  top: 14,
-                  right: -3,
-                  justifyContent: 'center',
-                },
-              }}
-              Icon={() => {
-                return <Icon name="arrow-drop-down" size={33} color="gray" />;
-              }}
+              ...pickerSelectStyles,
+              iconContainer: {
+                top: 14,
+                right: -3,
+                justifyContent: "center",
+              },
+            }}
+            Icon={() => {
+              return <Icon name="arrow-drop-down" size={33} color="gray" />;
+            }}
           />
 
           <TextInput
@@ -158,7 +175,7 @@ const JobPost = () => {
 
           <TouchableOpacity style={[styles.input, styles.imagePicker]} onPress={pickImage}>
             <Text style={jobImgUrl ? styles.jobImgUrlPlaceholder : styles.imagePickerPlaceholder}>
-              {jobImgUrl ? getFileName(jobImgUrl) : 'Upload Job Image'}
+              {jobImgUrl ? getFileName(jobImgUrl) : "Upload Job Image"}
             </Text>
           </TouchableOpacity>
 
@@ -172,10 +189,7 @@ const JobPost = () => {
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handlePostNewJob()}
-          >
+          <TouchableOpacity style={styles.button} onPress={() => handlePostNewJob()}>
             <Text style={styles.buttonTitle}>Submit</Text>
           </TouchableOpacity>
         </View>
