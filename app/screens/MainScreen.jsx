@@ -6,7 +6,7 @@ import Map from "../screens/Map";
 import Profile from "./Profile";
 import JobCardHH from "./cards/JobCardHH";
 import JobCardSPJobs from "./cards/JobCardSPJobs";
-import JobCardSPMyStuff from "./cards/JobCardSPJobs";
+import JobCardSPMyStuff from "./cards/JobCardSPMyStuff";
 import ProviderCardHH from "./cards/ProviderCardHH";
 import ProviderCardSP from "./cards/ProviderCardSP";
 import JobPost from "./JobPost";

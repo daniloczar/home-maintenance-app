@@ -1,14 +1,31 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { collection, getDocs, getFirestore, where, query } from "@firebase/firestore";
+import { app } from "../../../FirebaseConfig";
+const db = getFirestore(app);
 
 export default function ProviderCardSP({route}) {
   const navigation = useNavigation();
-    const { item } = route.params;
+  const { userId } = route.params;
+  const [item, setItem] = useState({});
   
+  useEffect(() => {
+    getServiceByUserId()
+  }, []);
+
+  const getServiceByUserId = async() => {
+    try {
+      const serviceRef = collection(db, "services")
+      const q = query(serviceRef, where('user_id', '==', userId))
+      const serviceSnapShot = await getDocs(q)
+      setItem(serviceSnapShot.docs[0].data())
+    } catch (error) {
+    }
+  }
 
   return (
     <View>
@@ -22,7 +39,7 @@ export default function ProviderCardSP({route}) {
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
             <Image
-              source={{ uri: item.user_img_url }}
+              source={{ uri: item.service_img_url }}
               style={{ width: "100%", height: 300 }}
             />
           </View>
@@ -70,7 +87,7 @@ export default function ProviderCardSP({route}) {
               >
                 <Image
                   source={{
-                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
+                    uri: item.service_img_url_before,
                   }}
                   style={{
                     width: 200,
@@ -82,7 +99,7 @@ export default function ProviderCardSP({route}) {
                 />
                 <Image
                   source={{
-                    uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
+                    uri: item.service_img_url_after,
                   }}
                   style={{
                     width: 200,

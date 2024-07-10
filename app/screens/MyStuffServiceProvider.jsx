@@ -111,8 +111,8 @@ const MyStuffServiceProvider = () => {
                 <View>
                     <View style={styles.jobs_edit_service}>
                         <Text style={styles.header}>My Jobs</Text>
-                        <Pressable style={styles.btnContainer} onPress={()=>{navigation.navigate("ProviderCardSP")}}>
-                            <Text style={styles.btn}>Edit My Service</Text>
+                        <Pressable style={styles.btnContainer} onPress={()=>{navigation.navigate("ProviderCardSP", {userId: user.user_id})}}>
+                            <Text style={styles.btn}>View My Service</Text>
                         </Pressable>
                     </View>
                     {bids.map((bid, index) => (
