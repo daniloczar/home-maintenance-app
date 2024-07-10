@@ -32,7 +32,7 @@ export default function RegistrationScreen() {
   const handleServiceButton = () => {
     setServiceButton(!serviceButton);
     setHouseButton(false);
-    setUserType("service");
+    setUserType("service_provider");
   };
 
   const handleHouseButton = () => {
@@ -240,7 +240,7 @@ export default function RegistrationScreen() {
         </KeyboardAwareScrollView>
       </View>
     );
-  } else if (userType === "service") {
+  } else if (userType === "service_provider") {
     return (
       <View style={styles.container}>
         <Modal visible={isModalVisible}>
