@@ -38,7 +38,7 @@ export default function NavBar() {
           }}
         />
         <Tab.Screen
-          name="MyStuffs"
+          name="MyStuff"
           component={MyStuff}
           options={{
             tabBarLabel: ({ color }) => (
