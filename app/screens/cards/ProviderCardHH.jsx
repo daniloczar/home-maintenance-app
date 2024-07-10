@@ -240,7 +240,7 @@ export default function ProviderCardHH({ route }) {
       <View style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}>
         <TouchableOpacity
           style={{
-            backgroundColor: "blue",
+            backgroundColor: Colors.primary,
             padding: 13,
             alignItems: "center",
             borderRadius: 5,
@@ -251,7 +251,7 @@ export default function ProviderCardHH({ route }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{
-            backgroundColor: "blue",
+            backgroundColor: Colors.primary,
             padding: 13,
             alignItems: "center",
             borderRadius: 5,

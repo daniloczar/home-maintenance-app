@@ -5,6 +5,7 @@ import CalendarPicker from "react-native-calendar-picker";
 import {addDoc, collection, getFirestore, serverTimestamp} from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
 import { useNavigation } from "@react-navigation/native";
+import Colors from '../Util/Colors';
 
 
 export default function BookingModal({ handleHideModal}) {
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     height:100
   },
   confirmBnt: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.primary,
     textAlign:'center',
     color:'white',
     padding:10,
