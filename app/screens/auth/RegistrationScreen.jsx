@@ -252,18 +252,14 @@ export default function RegistrationScreen() {
               <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
               <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("householder");
-                  }}
+                  style={[styles.buttonChoice, houseButton ? styles.selected : null]}
+                  onPress={handleHouseButton}
                 >
                   <Text style={styles.buttonTitle}>Householder</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("service");
-                  }}
+                  style={[styles.buttonChoice, serviceButton ? styles.selected : null]}
+                  onPress={handleServiceButton}
                 >
                   <Text style={styles.buttonTitle}>Service</Text>
                 </TouchableOpacity>
