@@ -22,15 +22,7 @@ const MainScreen = () => {
       <Stack.Screen name="JobPage" component={JobPage} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="JobCardHH" component={JobCardHH} />
-      <Stack.Screen name="JobCardSPJobs" component={JobCardSPJobs} />
-      <Stack.Screen name="JobCardSPMyStuff" component={JobCardSPMyStuff} />
       <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
-      <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
-      <Stack.Screen name="MyStuff" component={MyStuff} />
-      <Stack.Screen name="Chats" component={Chats} />
-      <Stack.Screen name="Messages" component={Messages} />
-      <Stack.Screen name="JobPost" component={JobPost} />
     </Stack.Navigator>
   );
 };
