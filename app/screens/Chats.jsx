@@ -47,10 +47,14 @@ const Chats = ({ navigation, route }) => {
           let sentToUserImgUrl = ''
           let sentByUserImgUrl = ''
           let sentToUserName = ''
+          let sentToUserId = ''
           if (!userSnapshot.empty) {
             sentToUserImgUrl = userSnapshot.docs[0].data().user_img_url
             sentToUserName = userSnapshot.docs[0].data().full_name
+            sentToUserId = userSnapshot.docs[0].data().user_id
           }
+
+          
 
           const msgRef = collection(db, 'messages')
           const msgQuery = query(msgRef, where('chat_id', '==', chat.chat_id), orderBy('created_at', 'desc'), limit(1))
@@ -74,6 +78,7 @@ const Chats = ({ navigation, route }) => {
             sent_to_user_name: sentToUserName,
             last_msg_sent_by_user_id: lastMsgSentByUserId,
             sentByUserImgUrl:user.user_img_url,
+            sentToUserId : sentToUserId,
           }
         }))
 
@@ -139,14 +144,12 @@ const Chats = ({ navigation, route }) => {
                   onLongPress={() => setClickedChat(null)}
                   onPress={() => {
                     setClickedChat(chat.chat_id);
-                    // console.log(chat.sentByUserImgUrl)
-                    // console.log(chat.sentToUserImgUrl)
-                    console.log(chat)
                     navigation.navigate('Messages', {
                       chatId : chat.chat_id, 
                       sentTo : chat.sent_to_user_name, 
-                      sent_by_user_id : chat.sent_by_user_id, 
-                      sent_to_user_id : chat.sent_to_user_id,
+                      //sent_by_user_id : chat.sent_by_user_id, 
+                      sent_by_user_id : user.user_id, 
+                      sent_to_user_id : chat.sentToUserId,
                       sentByUserImgUrl:chat.sentByUserImgUrl,
                       sentToUserImgUrl:chat.sentToUserImgUrl,
                       })

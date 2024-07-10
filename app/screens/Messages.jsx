@@ -1,18 +1,19 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useLayoutEffect, useCallback, useContext } from 'react';
 import { GiftedChat, Send, Bubble } from 'react-native-gifted-chat';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { addDoc, getFirestore, onSnapshot, query, collection, where, orderBy } from "firebase/firestore";
 import { app } from '../../FirebaseConfig';
 import { IconButton } from 'react-native-paper';
 import { Ionicons } from "@expo/vector-icons";
+import { UserContext } from "../contexts/UserContext";
 
 const db = getFirestore(app);
 
 const Messages = ({ route, navigation }) => {
+
+  const { user } = useContext(UserContext);
+
   const { chatId, sentTo, sent_by_user_id, sent_to_user_id, sentByUserImgUrl, sentToUserImgUrl } = route.params;
-  // console.log()
-  // console.log(route.params.sentToUserImgUrl)
-  // console.log(route.params.sentByUserImgUrl)
 
   const [messages, setMessages] = useState([]);
 
@@ -35,7 +36,7 @@ const Messages = ({ route, navigation }) => {
             text: data.message_text,
             message_id: data.message_id,
             sent_by_user_id: data.sent_by_user_id,
-            sent_to_user_id: data.sent_to_user_id,
+            sent_to_user_id: data.sent_by_user_id,
             user: {
               _id: data.sent_by_user_id,
               avatar: data.sent_by_user_id===sent_by_user_id?sentByUserImgUrl:sentToUserImgUrl,
@@ -52,6 +53,7 @@ const Messages = ({ route, navigation }) => {
   }, [chatId]);
 
   const renderBubble = (props) => {
+
     const isSentByUser = props.currentMessage.user._id === sent_by_user_id;
 
     return (
@@ -59,12 +61,12 @@ const Messages = ({ route, navigation }) => {
         <Bubble
           {...props}
           wrapperStyle={{
-            left: styles.receivedBubble,
-            right: styles.sentBubble,
+            left: user.user_id === sent_by_user_id ? styles.receivedBubble : styles.sentBubble,
+            right: user.user_id === sent_by_user_id ? styles.sentBubble : styles.receivedBubble,
           }}
           textStyle={{
-            left: styles.receivedMessageText,
-            right: styles.sentMessageText,
+            left: user.user_id === sent_by_user_id ? styles.receivedMessageText : styles.sentMessageText,
+            right: user.user_id === sent_by_user_id ? styles.sentMessageText : styles.receivedMessageText,
           }}
         />
       </View>
@@ -77,11 +79,12 @@ const Messages = ({ route, navigation }) => {
     const newMessage = messages[0]; 
 
     const messagesRef = collection(db, 'messages');
+
     addDoc(messagesRef, {
       chat_id: chatId,
       created_at: newMessage.createdAt,
       message_text: newMessage.text,
-      sent_by_user_id: newMessage.user._id,
+      sent_by_user_id: user.user_id,
       sent_to_user_id: sent_to_user_id,
     }).catch(error => {
       console.error("Error adding message: ", error);
