@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View, Modal, Pressable } from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View, Modal } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import styles from "./styles/RegistrationScreenStyles";
 import { app } from "../../../FirebaseConfig";
@@ -8,7 +8,6 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { UserContext } from "../../contexts/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { onBackgroundMessage } from "firebase/messaging/sw";
 
 export default function RegistrationScreen() {
   const [fullName, setFullName] = useState("");
@@ -26,6 +25,20 @@ export default function RegistrationScreen() {
   const [serviceDescription, setServiceDescription] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { setUser } = useContext(UserContext);
+  const [houseButtonColor, setHouseButtonColor] = useState(false);
+  const [serviceButtonColor, setServiceButtonColor] = useState(false);
+
+  const handleHouseButtonColor = () => {
+    setHouseButtonColor(!houseButtonColor);
+    setUserType("householder");
+    setServiceButtonColor(false);
+  };
+
+  const handleServiceButtonColor = () => {
+    setServiceButtonColor(!serviceButtonColor);
+    setUserType("service");
+    setHouseButtonColor(false);
+  };
 
   const clearService = () => {
     setServiceCategory("");
@@ -107,18 +120,14 @@ export default function RegistrationScreen() {
               <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
               <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("householder");
-                  }}
+                  style={[styles.buttonChoice, houseButtonColor ? styles.selected : null]}
+                  onPress={handleHouseButtonColor}
                 >
                   <Text style={styles.buttonTitle}>Householder</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("service");
-                  }}
+                  style={[styles.buttonChoice, serviceButtonColor ? styles.selected : null]}
+                  onPress={handleServiceButtonColor}
                 >
                   <Text style={styles.buttonTitle}>Service</Text>
                 </TouchableOpacity>
@@ -242,18 +251,14 @@ export default function RegistrationScreen() {
               <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
               <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("householder");
-                  }}
+                  style={[styles.buttonChoice, houseButtonColor ? styles.selected : null]}
+                  onPress={handleHouseButtonColor}
                 >
                   <Text style={styles.buttonTitle}>Householder</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={() => {
-                    setUserType("service");
-                  }}
+                  style={[styles.buttonChoice, serviceButtonColor ? styles.selected : null]}
+                  onPress={handleServiceButtonColor}
                 >
                   <Text style={styles.buttonTitle}>Service</Text>
                 </TouchableOpacity>
