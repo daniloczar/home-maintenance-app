@@ -15,7 +15,7 @@ export default function RegistrationScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState("householder");
   const [telephone, setTelephone] = useState();
   const [address, setAddress] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
@@ -24,8 +24,7 @@ export default function RegistrationScreen() {
   const [serviceCategory, setServiceCategory] = useState("");
   const [serviceTitle, setServiceTitle] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
-  const [isFirstModalVisible, setIsFirstModalVisible] = useState(false);
-  const [isSecondModalVisible, setIsSecondModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const clearService = () => {
@@ -47,8 +46,7 @@ export default function RegistrationScreen() {
     clearService();
   };
 
-  const handleFirstModal = () => setIsFirstModalVisible(() => !isFirstModalVisible);
-  const handleSecondModal = () => setIsSecondModalVisible(() => !isSecondModalVisible);
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
   const navigation = useNavigation();
   const onFooterLinkPress = () => {
@@ -95,248 +93,304 @@ export default function RegistrationScreen() {
         console.log("ERROR", error);
       });
   };
-
-  return (
-    <View style={styles.container}>
-      <Modal visible={isSecondModalVisible}>
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={{ flex: 1, width: "100%" }}
-            keyboardShouldPersistTaps="always"
-          >
-            <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-              <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={() => {
-                  setUserType("householder");
-                  clearService();
-                  handleSecondModal();
-                }}
-              >
-                <Text style={styles.buttonTitle}>Householder</Text>
+  {
+  }
+  if (userType === "householder") {
+    return (
+      <View style={styles.container}>
+        <Modal visible={isModalVisible}>
+          <View style={styles.container}>
+            <KeyboardAwareScrollView
+              style={{ flex: 1, width: "100%" }}
+              keyboardShouldPersistTaps="always"
+            >
+              <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={() => {
+                    setUserType("householder");
+                  }}
+                >
+                  <Text style={styles.buttonTitle}>Householder</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={() => {
+                    setUserType("service");
+                  }}
+                >
+                  <Text style={styles.buttonTitle}>Service</Text>
+                </TouchableOpacity>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Telephone number"
+                placeholderTextColor="#aaaaaa"
+                keyboardType="numeric"
+                onChangeText={(text) => setTelephone(text)}
+                value={telephone}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Street"
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setAddress(text)}
+                value={address}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="House number"
+                onChangeText={(text) => setHouseNumber(text)}
+                value={houseNumber}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Town"
+                onChangeText={(text) => setTown(text)}
+                value={town}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Postcode"
+                onChangeText={(text) => setPostcode(text)}
+                value={postcode}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TouchableOpacity style={styles.buttonFinal} onPress={() => onRegisterPress()}>
+                <Text style={styles.buttonTitle}>Complete registration</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={() => {
-                  setUserType("service");
-                }}
-              >
-                <Text style={styles.buttonTitle}>Service</Text>
-              </TouchableOpacity>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Telephone number"
-              placeholderTextColor="#aaaaaa"
-              keyboardType="numeric"
-              onChangeText={(text) => setTelephone(text)}
-              value={telephone}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Street"
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setAddress(text)}
-              value={address}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="House number"
-              onChangeText={(text) => setHouseNumber(text)}
-              value={houseNumber}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Town"
-              onChangeText={(text) => setTown(text)}
-              value={town}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Postcode"
-              onChangeText={(text) => setPostcode(text)}
-              value={postcode}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Service provided"
-              onChangeText={(text) => setServiceCategory(text)}
-              value={serviceCategory}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Service title"
-              onChangeText={(text) => setServiceTitle(text)}
-              value={serviceTitle}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Service description"
-              onChangeText={(text) => setServiceDescription(text)}
-              value={serviceDescription}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TouchableOpacity style={styles.buttonFinal} onPress={() => onRegisterPress()}>
-              <Text style={styles.buttonTitle}>Complete registration</Text>
-            </TouchableOpacity>
-          </KeyboardAwareScrollView>
-        </View>
-      </Modal>
-      <Modal visible={isFirstModalVisible}>
-        <View style={styles.container}>
-          <KeyboardAwareScrollView
-            style={{ flex: 1, width: "100%" }}
-            keyboardShouldPersistTaps="always"
-          >
-            <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-              <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={() => {
-                  setUserType("householder");
-                }}
-              >
-                <Text style={styles.buttonTitle}>Householder</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={() => {
-                  setUserType("service");
-                  handleSecondModal();
-                }}
-              >
-                <Text style={styles.buttonTitle}>Service</Text>
-              </TouchableOpacity>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Telephone number"
-              placeholderTextColor="#aaaaaa"
-              keyboardType="numeric"
-              onChangeText={(text) => setTelephone(text)}
-              value={telephone}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Street"
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setAddress(text)}
-              value={address}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="House number"
-              onChangeText={(text) => setHouseNumber(text)}
-              value={houseNumber}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Town"
-              onChangeText={(text) => setTown(text)}
-              value={town}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Postcode"
-              onChangeText={(text) => setPostcode(text)}
-              value={postcode}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TouchableOpacity style={styles.buttonFinal} onPress={() => onRegisterPress()}>
-              <Text style={styles.buttonTitle}>Complete registration</Text>
-            </TouchableOpacity>
-          </KeyboardAwareScrollView>
-        </View>
-      </Modal>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: "100%" }}
-        keyboardShouldPersistTaps="always"
-      >
-        <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
-        <TextInput
-          style={styles.input}
-          placeholder="Full Name"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setFullName(text)}
-          value={fullName}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
-          secureTextEntry
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
-          secureTextEntry
-          placeholder="Confirm Password"
-          onChangeText={(text) => setConfirmPassword(text)}
-          value={confirmPassword}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TouchableOpacity style={styles.button} onPress={() => handleFirstModal()}>
-          <Text style={styles.buttonTitle}>Next</Text>
-        </TouchableOpacity>
-        <View style={styles.footerView}>
-          <Text style={styles.footerText}>
-            Already got an account?
-          </Text>
+            </KeyboardAwareScrollView>
+          </View>
+        </Modal>
+        <KeyboardAwareScrollView
+          style={{ flex: 1, width: "100%" }}
+          keyboardShouldPersistTaps="always"
+        >
+          <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
+          <TextInput
+            style={styles.input}
+            placeholder="Full Name"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setFullName(text)}
+            value={fullName}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="E-mail"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaaaaa"
+            secureTextEntry
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaaaaa"
+            secureTextEntry
+            placeholder="Confirm Password"
+            onChangeText={(text) => setConfirmPassword(text)}
+            value={confirmPassword}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TouchableOpacity style={styles.button} onPress={() => handleModal()}>
+            <Text style={styles.buttonTitle}>Next</Text>
+          </TouchableOpacity>
+          <View style={styles.footerView}>
+            <Text style={styles.footerText}>Already got an account?</Text>
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
               Log in
             </Text>
-        </View>
-      </KeyboardAwareScrollView>
-    </View>
-  );
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    );
+  } else if (userType === "service") {
+    return (
+      <View style={styles.container}>
+        <Modal visible={isModalVisible}>
+          <View style={styles.container}>
+            <KeyboardAwareScrollView
+              style={{ flex: 1, width: "100%" }}
+              keyboardShouldPersistTaps="always"
+            >
+              <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={() => {
+                    setUserType("householder");
+                  }}
+                >
+                  <Text style={styles.buttonTitle}>Householder</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={() => {
+                    setUserType("service");
+                  }}
+                >
+                  <Text style={styles.buttonTitle}>Service</Text>
+                </TouchableOpacity>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Telephone number"
+                placeholderTextColor="#aaaaaa"
+                keyboardType="numeric"
+                onChangeText={(text) => setTelephone(text)}
+                value={telephone}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Street"
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setAddress(text)}
+                value={address}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="House number"
+                onChangeText={(text) => setHouseNumber(text)}
+                value={houseNumber}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Town"
+                onChangeText={(text) => setTown(text)}
+                value={town}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Postcode"
+                onChangeText={(text) => setPostcode(text)}
+                value={postcode}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Service provided"
+                onChangeText={(text) => setServiceCategory(text)}
+                value={serviceCategory}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Service title"
+                onChangeText={(text) => setServiceTitle(text)}
+                value={serviceTitle}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#aaaaaa"
+                placeholder="Service description"
+                onChangeText={(text) => setServiceDescription(text)}
+                value={serviceDescription}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <TouchableOpacity style={styles.buttonFinal} onPress={() => onRegisterPress()}>
+                <Text style={styles.buttonTitle}>Complete registration</Text>
+              </TouchableOpacity>
+            </KeyboardAwareScrollView>
+          </View>
+        </Modal>
+        <KeyboardAwareScrollView
+          style={{ flex: 1, width: "100%" }}
+          keyboardShouldPersistTaps="always"
+        >
+          <Image style={styles.logo} source={require("../../../assets/Images/logo.png")} />
+          <TextInput
+            style={styles.input}
+            placeholder="Full Name"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setFullName(text)}
+            value={fullName}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="E-mail"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaaaaa"
+            secureTextEntry
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaaaaa"
+            secureTextEntry
+            placeholder="Confirm Password"
+            onChangeText={(text) => setConfirmPassword(text)}
+            value={confirmPassword}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TouchableOpacity style={styles.button} onPress={() => handleModal()}>
+            <Text style={styles.buttonTitle}>Next</Text>
+          </TouchableOpacity>
+          <View style={styles.footerView}>
+            <Text style={styles.footerText}>Already got an account?</Text>
+            <Text onPress={onFooterLinkPress} style={styles.footerLink}>
+              Log in
+            </Text>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    );
+  }
 }
