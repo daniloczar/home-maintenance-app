@@ -42,14 +42,10 @@ export default function NavBar() {
           component={MyStuff}
           options={{
             tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12 }}>MyStuffs</Text>
+              <Text style={{ color: color, fontSize: 12 }}>My Stuff</Text>
             ),
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="toolbox-outline"
-                size={size}
-                color={color}
-              />
+              <MaterialCommunityIcons name="toolbox-outline" size={size} color={color} />
             ),
           }}
         />
@@ -57,15 +53,9 @@ export default function NavBar() {
           name="Chats"
           component={Chats}
           options={{
-            tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12 }}>Chats</Text>
-            ),
+            tabBarLabel: ({ color }) => <Text style={{ color: color, fontSize: 12 }}>Chats</Text>,
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="message-text-outline"
-                size={size}
-                color={color}
-              />
+              <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
             ),
           }}
         />
