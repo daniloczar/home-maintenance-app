@@ -97,81 +97,100 @@ export default function Profile({ handleHideModal }) {
     <>
       {user ? (
         <ScrollView>
-          <KeyboardAwareScrollView
-            style={{ flex: 1, width: "100%" }}
-            keyboardShouldPersistTaps="always"
-          >
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <SafeAreaProvider>
-              <View style={styles.container}>
-                <View style={styles.header}>
-                  <Ionicons name="arrow-back" size={25} color="white" onPress={handleHideModal} />
-                  <Text style={styles.title}>Profile</Text>
-                  <Ionicons
-                    name={isEditable ? "checkmark" : "pencil"}
-                    size={25}
-                    color="white"
-                    borderBottomColor="black"
-                    onPress={handleEditToggle}
-                  />
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  gap:'100%',
+                }}
+              >
+                <View style={styles.container}>
+                  <View style={styles.header}>
+                    <Ionicons
+                      name="arrow-back"
+                      size={25}
+                      color="white"
+                      onPress={handleHideModal}
+                    />
+                    <Text style={styles.title}>Profile</Text>
+                    <Ionicons
+                      name={isEditable ? "checkmark" : "pencil"}
+                      size={25}
+                      color="white"
+                      borderBottomColor="black"
+                      onPress={handleEditToggle}
+                    />
+                  </View>
+                  <View style={styles.avatarContainer}>
+                    <Avatar.Image
+                      size={200}
+                      source={{ uri: profile.user_img_url }}
+                    />
+                    {isEditable && (
+                      <TouchableOpacity onPress={pickImage}>
+                        <Text style={styles.changePhotoText}>Change Photo</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  <View style={styles.field}>
+                    <Text style={styles.label}>Name:</Text>
+                    <TextInput
+                      style={[styles.input, isEditable && styles.editableInput]}
+                      editable={isEditable}
+                      value={profile.full_name}
+                      onChangeText={(text) => handleChange("full_name", text)}
+                    />
+                  </View>
+                  <View style={styles.field}>
+                    <Text style={styles.label}>Phone:</Text>
+                    <TextInput
+                      style={[styles.input, isEditable && styles.editableInput]}
+                      editable={isEditable}
+                      value={profile.telephone}
+                      onChangeText={(text) => handleChange("telephone", text)}
+                    />
+                  </View>
+                  <View style={styles.field}>
+                    <Text style={styles.label}>House No:</Text>
+                    <TextInput
+                      style={[styles.input, isEditable && styles.editableInput]}
+                      editable={isEditable}
+                      value={profile.house_number}
+                      onChangeText={(text) =>
+                        handleChange("house_number", text)
+                      }
+                    />
+                  </View>
+                  <View style={styles.field}>
+                    <Text style={styles.label}>Street Name:</Text>
+                    <TextInput
+                      style={[styles.input, isEditable && styles.editableInput]}
+                      editable={isEditable}
+                      value={profile.street_name}
+                      onChangeText={(text) => handleChange("street_name", text)}
+                    />
+                  </View>
+                  <View style={styles.field}>
+                    <Text style={styles.label}>Post Code:</Text>
+                    <TextInput
+                      style={[styles.input, isEditable && styles.editableInput]}
+                      editable={isEditable}
+                      value={profile.postcode}
+                      onChangeText={(text) => handleChange("postcode", text)}
+                    />
+                  </View>
                 </View>
-                <View style={styles.avatarContainer}>
-                  <Avatar.Image size={200} source={{ uri: profile.user_img_url }} />
-                  {isEditable && (
-                    <TouchableOpacity onPress={pickImage}>
-                      <Text style={styles.changePhotoText}>Change Photo</Text>
-                    </TouchableOpacity>
-                  )}
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={hanldeLogout}
+                  >
+                    <Text style={styles.buttonTitle}>Sign Out</Text>
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.field}>
-                  <Text style={styles.label}>Name:</Text>
-                  <TextInput
-                    style={[styles.input, isEditable && styles.editableInput]}
-                    editable={isEditable}
-                    value={profile.full_name}
-                    onChangeText={(text) => handleChange("full_name", text)}
-                  />
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.label}>Phone:</Text>
-                  <TextInput
-                    style={[styles.input, isEditable && styles.editableInput]}
-                    editable={isEditable}
-                    value={profile.telephone}
-                    onChangeText={(text) => handleChange("telephone", text)}
-                  />
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.label}>House No:</Text>
-                  <TextInput
-                    style={[styles.input, isEditable && styles.editableInput]}
-                    editable={isEditable}
-                    value={profile.house_number}
-                    onChangeText={(text) => handleChange("house_number", text)}
-                  />
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.label}>Street Name:</Text>
-                  <TextInput
-                    style={[styles.input, isEditable && styles.editableInput]}
-                    editable={isEditable}
-                    value={profile.street_name}
-                    onChangeText={(text) => handleChange("street_name", text)}
-                  />
-                </View>
-                <View style={styles.field}>
-                  <Text style={styles.label}>Post Code:</Text>
-                  <TextInput
-                    style={[styles.input, isEditable && styles.editableInput]}
-                    editable={isEditable}
-                    value={profile.postcode}
-                    onChangeText={(text) => handleChange("postcode", text)}
-                  />
-                </View>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={hanldeLogout}>
-                  <Text style={styles.buttonTitle}>Sign Out</Text>
-                </TouchableOpacity>
               </View>
             </SafeAreaProvider>
           </KeyboardAwareScrollView>
@@ -182,10 +201,7 @@ export default function Profile({ handleHideModal }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: "100%",
-  },
+
   header: {
     paddingTop: 75,
     paddingRight: 30,
@@ -234,9 +250,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+    marginTop: 15,
   },
   buttonTitle: {
     color: "white",
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

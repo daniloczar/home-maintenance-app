@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Modal } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Modal, FlatList } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Colors from "../Util/Colors";
 import { FontAwesome } from "@expo/vector-icons";
@@ -16,12 +16,38 @@ export default function Header() {
   const [search, setSearch] = useState("");
   const [profile, setProfile] = useState({});
   const [docId,setDocId] = useState(null)
-
   const { user } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
   const handleHideModal = () => setModalVisible(false);
-  
+  const [results, setResults] = useState([]);
 
+  
+const handleSearch = async (text) => {
+  setSearch(text);
+  if (text) {
+    let aggregatedResults = [];
+    for (const collectionName of collections) {
+      const collectionRef = collection(db, collectionName);
+      const q = query(
+        collectionRef,
+        where("service_category_name", ">=", text),
+        where("service_category_name", "<=", text + "\uf8ff")
+        );
+        const querySnapshot = await getDocs(q);
+        
+        const documents = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          collectionName,
+        }));
+        aggregatedResults = [...aggregatedResults, ...documents];
+      }
+    
+    setResults(aggregatedResults);
+  } else {
+    setResults([]);
+  }
+};
 
   useEffect(()=>{
     getUser()
@@ -75,11 +101,19 @@ export default function Header() {
           <TextInput
             placeholder="Search"
             value={search}
-            onChangeText={(value) => {
-              setSearch(value);
-            }}
+            onChangeText={handleSearch}
             placeholderTextColor="#909090"
             style={styles.searchBar}
+          />
+          <FlatList
+            data={results}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <Text>{item.yourField}</Text>
+                <Text style={styles.collection}>{item.collectionName}</Text>
+              </View>
+            )}
           />
           <TouchableOpacity
             style={styles.searchButtonContainer}
@@ -144,5 +178,14 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 10,
+  },
+  item: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  collection: {
+    fontSize: 10,
+    color: "gray",
   },
 });

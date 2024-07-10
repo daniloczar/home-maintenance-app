@@ -11,7 +11,6 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
@@ -123,7 +122,6 @@ export default function JobCardHH({ route }) {
   };
 
   return (
-    <SafeAreaView>
       <ScrollView>
         <View style={{ height: "100%" }}>
           <View style={styles.imageContainer}>
@@ -173,8 +171,8 @@ export default function JobCardHH({ route }) {
                     <Text style={{ fontSize: 22, fontWeight: "bold" }}>
                       {title}
                     </Text>
-                    <Text style={{ fontSize: 18 }}>{categoryName}</Text>
-                    <Text style={{ fontSize: 18 }}>
+                    <Text style={{ fontSize: 16 }}>{categoryName}</Text>
+                    <Text style={{ fontSize: 16 }}>
                       Max Budget: £{maxBudget}
                     </Text>
                   </>
@@ -203,7 +201,7 @@ export default function JobCardHH({ route }) {
                   multiline
                 />
               ) : (
-                <Text style={{ fontSize: 13 }}>{description}</Text>
+                <Text style={{ fontSize: 14 }}>{description}</Text>
               )}
               {editable && (
                 <TouchableOpacity
@@ -214,14 +212,14 @@ export default function JobCardHH({ route }) {
                 </TouchableOpacity>
               )}
             </View>
+            <View
+              style={{
+                borderWidth: 0.6,
+                borderColor: "grey",
+                marginTop: 5,
+              }}
+            ></View>
           </View>
-          <View
-            style={{
-              borderWidth: 0.6,
-              borderColor: "grey",
-              marginBottom: 15,
-            }}
-          ></View>
           <Text style={styles.bid}>Bids</Text>
           <FlatList
             data={serviceTitle}
@@ -276,7 +274,6 @@ export default function JobCardHH({ route }) {
           <BookingModal handleHideModal={handleHideModal} />
         </Modal>
       </ScrollView>
-    </SafeAreaView>
   );
 } //
 
@@ -350,6 +347,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 5,
     backgroundColor: "#ddd",
+    marginBottom:10,
   },
   bidBox: {
     backgroundColor: "#F2F2F2",

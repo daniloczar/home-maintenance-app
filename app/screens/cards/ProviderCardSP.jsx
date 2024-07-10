@@ -36,7 +36,7 @@ export default function ProviderCardSP({ route }) {
 useEffect(() => {
     getServiceByUserId();
   }, []);
-  console.log(item)
+
   const handleSave = async () => {
     const updatedItem = {
       ...item,
