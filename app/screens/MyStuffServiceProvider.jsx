@@ -125,7 +125,7 @@ const MyStuffServiceProvider = () => {
                                 onPressOut={() => {setClickedBid(null)}}
                                 onPressIn={() => {
                                     setClickedBid(index)
-                                    navigation.navigate("JobCardSP",{
+                                    navigation.navigate("JobCardSPMyStuff",{
                                         jobDetails:bid
                                     })
                                 }}

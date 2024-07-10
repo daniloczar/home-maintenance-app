@@ -5,7 +5,8 @@ import JobPage from "../screens/JobPage";
 import Map from "../screens/Map";
 import Profile from "./Profile";
 import JobCardHH from "./cards/JobCardHH";
-import JobCardSP from "./cards/JobCardSP";
+import JobCardSPJobs from "./cards/JobCardSPJobs";
+import JobCardSPMyStuff from "./cards/JobCardSPJobs";
 import ProviderCardHH from "./cards/ProviderCardHH";
 import ProviderCardSP from "./cards/ProviderCardSP";
 import JobPost from "./JobPost";
@@ -22,7 +23,8 @@ const MainScreen = () => {
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="JobCardHH" component={JobCardHH} />
-      <Stack.Screen name="JobCardSP" component={JobCardSP} />
+      <Stack.Screen name="JobCardSPJobs" component={JobCardSPJobs} />
+      <Stack.Screen name="JobCardSPMyStuff" component={JobCardSPMyStuff} />
       <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
       <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
       <Stack.Screen name="MyStuff" component={MyStuff} />
