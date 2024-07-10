@@ -23,6 +23,7 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { app } from "../../../FirebaseConfig";
 import { UserContext } from "../../contexts/UserContext";
@@ -80,6 +81,39 @@ export default function ProviderCardHH({ route }) {
     reviewList.sort((a, b) => b.created_at - a.created_at);
     setReviews(reviewList);
   };
+
+  const handleMessageClick = async () => {
+
+    const db = getFirestore(app);  
+    const chatRef = await collection(db,"chats");
+
+    const chatIdQuery = query(
+      chatRef, 
+      where("sent_by_user_id", "==", user.user_id),
+      where("sent_to_user_id", "==", item.user_id),
+    );
+
+    const chatIdQueryData = await getDocs(chatIdQuery);
+    const chatIdData = chatIdQueryData.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+  
+    if(!chatIdData.length) {
+
+      const docRef = await addDoc(chatRef, {
+        chat_id: "",
+        created_at: new Date(),
+        service_id: item.service_id,
+        sent_by_user_id: user.user_id,
+        sent_to_user_id: item.user_id
+      });
+
+      updateDoc(docRef, { chat_id: docRef.id });
+    } 
+    navigation.navigate('ChatScreen')
+  }
 
   useEffect(() => {
     getReviews();
@@ -234,6 +268,7 @@ export default function ProviderCardHH({ route }) {
             borderRadius: 5,
             flex: 1,
           }}
+          onPress={handleMessageClick}
         >
           <Text style={{ color: "white", fontSize: 20 }}>Message</Text>
         </TouchableOpacity>
