@@ -25,7 +25,7 @@ import { UserContext } from "../../contexts/UserContext";
 const db = getFirestore(app);
 
 export default function JobCardHH({ route }) {
-  const { job } = route.par
+  const { job } = route.params
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const handleHideModal = () => setShowModal(false);
@@ -124,13 +124,19 @@ export default function JobCardHH({ route }) {
 
   return (
     <SafeAreaView>
-      <View>
+      <ScrollView>
         <View style={{ height: "100%" }}>
           <View style={styles.imageContainer}>
-            <TouchableOpacity style={styles.backBnt} onPress={() => navigation.navigate("MyStuff")}>
+            <TouchableOpacity
+              style={styles.backBnt}
+              onPress={() => navigation.navigate("MyStuff")}
+            >
               <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
             </TouchableOpacity>
-            <Image source={{ uri: job.job_img_url }} style={{ width: "100%", height: 300 }} />
+            <Image
+              source={{ uri: job.job_img_url }}
+              style={{ width: "100%", height: 300 }}
+            />
           </View>
           <View style={styles.container}>
             <View style={styles.headerCard}>
@@ -139,7 +145,11 @@ export default function JobCardHH({ route }) {
                   <>
                     <View>
                       <Text>Title:</Text>
-                      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
+                      <TextInput
+                        style={styles.input}
+                        value={title}
+                        onChangeText={setTitle}
+                      />
                     </View>
                     <View>
                       <Text>Service Type: </Text>
@@ -160,9 +170,13 @@ export default function JobCardHH({ route }) {
                   </>
                 ) : (
                   <>
-                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>{title}</Text>
+                    <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                      {title}
+                    </Text>
                     <Text style={{ fontSize: 18 }}>{categoryName}</Text>
-                    <Text style={{ fontSize: 18 }}>Max Budget: £{maxBudget}</Text>
+                    <Text style={{ fontSize: 18 }}>
+                      Max Budget: £{maxBudget}
+                    </Text>
                   </>
                 )}
               </View>
@@ -178,7 +192,9 @@ export default function JobCardHH({ route }) {
               }}
             ></View>
             <View style={styles.descriptionBox}>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Description</Text>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                Description
+              </Text>
               {editable ? (
                 <TextInput
                   style={[styles.input, { height: 100 }]}
@@ -190,7 +206,10 @@ export default function JobCardHH({ route }) {
                 <Text style={{ fontSize: 13 }}>{description}</Text>
               )}
               {editable && (
-                <TouchableOpacity style={styless.buttonChoice} onPress={handleSave}>
+                <TouchableOpacity
+                  style={styless.buttonChoice}
+                  onPress={handleSave}
+                >
                   <Text style={styless.buttonTitle}>Save</Text>
                 </TouchableOpacity>
               )}
@@ -215,10 +234,17 @@ export default function JobCardHH({ route }) {
                 }}
               >
                 <View style={styles.bidBox}>
-                  <Image source={{ uri: item.serviceImgUrl }} style={styles.jobImage} />
+                  <Image
+                    source={{ uri: item.serviceImgUrl }}
+                    style={styles.jobImage}
+                  />
                   <Text style={styles.jobTitle}>{item.serviceTitle}</Text>
-                  <Text style={styles.bidText}>Bid Amount: £{item.bidAmount}</Text>
-                  <Text style={styles.bidText}>Bid Status: {item.bidStatus}</Text>
+                  <Text style={styles.bidText}>
+                    Bid Amount: £{item.bidAmount}
+                  </Text>
+                  <Text style={styles.bidText}>
+                    Bid Status: {item.bidStatus}
+                  </Text>
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
                       style={[styles.button, styles.acceptButton]}
@@ -243,11 +269,13 @@ export default function JobCardHH({ route }) {
             }
           />
         </View>
-        <View style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}></View>
+        <View
+          style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
+        ></View>
         <Modal animationType="slide" visible={showModal}>
           <BookingModal handleHideModal={handleHideModal} />
         </Modal>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 } //

@@ -2,11 +2,10 @@ import { StyleSheet, Text, Image } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import MainScreen from "../screens/MainScreen";
 import Header from "../screens/Header";
 import ChatScreen from "../screens/ChatScreen";
-import MyStuffsScreen from "../screens/MyStuffScreen";
+import MyStuffScreen from "../screens/MyStuffScreen";
 
 const Tab = createBottomTabNavigator();
 export default function NavBar() {
@@ -39,7 +38,7 @@ export default function NavBar() {
         />
         <Tab.Screen
           name="MyStuffScreen"
-          component={MyStuffsScreen}
+          component={MyStuffScreen}
           options={{
             tabBarLabel: ({ color }) => (
               <Text style={{ color: color, fontSize: 12 }}>My Stuff</Text>

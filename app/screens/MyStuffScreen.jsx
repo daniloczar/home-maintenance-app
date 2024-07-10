@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MyStuff from "./MyStuff";
 import JobCardSPMyStuff from "./cards/JobCardSPMyStuff";
 import ProviderCardSP from "./cards/ProviderCardSP";
-import JobCardSPJobs from "./cards/JobCardSPJobs";
 import JobPost from "./JobPost";
 import JobCardHH from "./cards/JobCardHH";
 const Stack = createStackNavigator();
@@ -14,7 +13,6 @@ export default function MyStuffsScreen() {
       <Stack.Screen name="MyStuff" component={MyStuff} />
       <Stack.Screen name="JobCardSPMyStuff" component={JobCardSPMyStuff} />
       <Stack.Screen name="ProviderCardSP" component={ProviderCardSP} />
-      <Stack.Screen name="JobCardSPJobs" component={JobCardSPJobs} />
       <Stack.Screen name="JobPost" component={JobPost} />
       <Stack.Screen name="JobCardHH" component={JobCardHH} />
     </Stack.Navigator>
