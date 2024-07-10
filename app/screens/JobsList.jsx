@@ -49,9 +49,14 @@ const JobsList = ({ item }) => {
               ? navigation.navigate("ProviderCardHH", {
                   item,
                 })
-              : navigation.navigate("ProviderCardSP", {
-                  item: item,
-                });
+              : navigation.navigate("JobCardSPJobs", {jobDetails: {
+                  jobDescription: item.job_description,
+                  jobCreatedAt: item.created_at,
+                  jobImgURL: item.job_img_url,
+                  jobBudget: item.job_max_budget,
+                  jobStatus: item.job_status,
+                  jobTitle: item.job_title
+                }});
           }}
         >
           <Text

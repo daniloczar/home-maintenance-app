@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function JobCardSP({ route }) {
+export default function JobCardSPMyStuff({ route }) {
   const { jobDetails } = route.params;
   const navigation = useNavigation();
 
@@ -64,6 +64,11 @@ if (!jobDetails) {
                 <Text style={{ fontSize: 13 }}>{jobDetails.jobDescription}</Text>
             </View>
           </View>
+          <view>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                HELLO UMER
+              </Text>
+          </view>
           <View style={{ borderWidth: 0.6, borderColor: "grey", marginBottom: 15, width:390, marginLeft:20 }}></View>
           <View style={styles.bidBox}>
             <Text style={styles.bidTitle}>My Bid Status</Text>
