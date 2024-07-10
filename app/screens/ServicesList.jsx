@@ -1,14 +1,38 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Foundation } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import Colors from "../Util/Colors";
+import {
+  collection,
+  getFirestore,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { app } from "../../FirebaseConfig";
 
 const SevicesList = ({item}) => {
    const navigation = useNavigation();
    const {user} = useContext(UserContext)
+    const [services, setServices] = useState([]);
    
+
+    const fetchServices = async () => {
+      const db = getFirestore(app);
+      const servicesRef = collection(db, "services");
+      const service = query(servicesRef, where("user_id", "==", item.user_id));
+      const serviceData = await getDocs(service);
+      const servicesList = serviceData.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setServices(servicesList);
+    }
+    useEffect(()=>{
+      fetchServices()
+    },[item])
   return (
     <View style={styles.container}>
       <Image
@@ -31,10 +55,10 @@ const SevicesList = ({item}) => {
           onPress={() => {
             user.user_type === "householder"
               ? navigation.navigate("ProviderCardHH", {
-                  item,
+                  item, services,
                 })
               : navigation.navigate("ProviderCardSP", {
-                  item: item,
+                  item,
                 });
           }}
         >

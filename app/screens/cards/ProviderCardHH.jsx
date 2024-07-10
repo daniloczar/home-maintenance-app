@@ -45,9 +45,8 @@ export default function ProviderCardHH({ route }) {
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const navigation = useNavigation();
-  const { item } = route.params;
+  const { item, services } = route.params;
   const { user } = useContext(UserContext);
-  console.log(user)
 
   const handleConfirmRating = async () => {
     const db = getFirestore(app);
@@ -91,23 +90,34 @@ export default function ProviderCardHH({ route }) {
     setReviews(reviewList);
   };
 
+ 
+  
+
   useEffect(() => {
     getReviews();
-  }, []);
+  }, [item]);
 
   return (
     <View style={styles.mainContainer}>
       <ScrollView style={{ height: "89%" }}>
         <View style={styles.imageContainer}>
-          <TouchableOpacity style={styles.backBnt} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backBnt}
+            onPress={() => navigation.goBack()}
+          >
             <Ionicons name="arrow-undo-sharp" size={24} color="#474747" />
           </TouchableOpacity>
-          <Image source={{ uri: item.user_img_url }} style={{ width: "100%", height: 300 }} />
+          <Image
+            source={{ uri: item.user_img_url }}
+            style={{ width: "100%", height: 300 }}
+          />
         </View>
         <View style={styles.container}>
           <View style={styles.headerCard}>
             <View style={styles.textHeader}>
-              <Text style={{ fontSize: 22, fontWeight: "bold" }}>{item.full_name}</Text>
+              <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                {item.full_name}
+              </Text>
               <Text style={{ fontSize: 18 }}>{item.service_title}</Text>
             </View>
           </View>
@@ -119,7 +129,9 @@ export default function ProviderCardHH({ route }) {
             }}
           ></View>
           <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>Description</Text>
+            <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+              Description
+            </Text>
             <Text style={{ fontSize: 13 }}>{item.service_description}</Text>
           </View>
           <View
@@ -130,11 +142,16 @@ export default function ProviderCardHH({ route }) {
             }}
           ></View>
           <View>
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}>Gallery</Text>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 5 }}>
+              Gallery
+            </Text>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
               <Image
                 source={{
-                  uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e293ecf44_1600350680652.jpg",
+                  uri: services[0].service_img_url_after,
                 }}
                 style={{
                   width: 200,
@@ -145,9 +162,7 @@ export default function ProviderCardHH({ route }) {
                 }}
               />
               <Image
-                source={{
-                  uri: "https://cdn.treehouseinternetgroup.com/uploads/before_after/5351/medium/5f64e291c1b50_1600350688006.jpg",
-                }}
+                source={{ uri: services[0].service_img_url_before}}
                 style={{
                   width: 200,
                   height: 200,
@@ -165,7 +180,9 @@ export default function ProviderCardHH({ route }) {
             }}
           ></View>
           <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>Review</Text>
+            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>
+              Review
+            </Text>
             <View>
               <FlatList
                 data={reviews}
@@ -187,7 +204,9 @@ export default function ProviderCardHH({ route }) {
                       <StarRating item={item} />
                       <Text>{item.created_at.toDateString()}</Text>
                     </View>
-                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.fullName}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+                      {item.fullName}
+                    </Text>
                     <Text>{item.review_description}</Text>
                     <View
                       style={{
@@ -237,7 +256,9 @@ export default function ProviderCardHH({ route }) {
           </View>
         </View>
       </ScrollView>
-      <View style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}>
+      <View
+        style={{ display: "flex", flexDirection: "row", margin: 8, gap: 8 }}
+      >
         <TouchableOpacity
           style={{
             backgroundColor: Colors.primary,

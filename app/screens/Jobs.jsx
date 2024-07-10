@@ -35,6 +35,7 @@ const Jobs = () => {
       ...doc.data(),
     }));
     setAllServicesProviders(servicesProviderList);
+    
   };
 
   const CategoriesData = async () => {
@@ -58,6 +59,7 @@ const Jobs = () => {
       ...doc.data(),
     }));
     setAllJobsProviders(jobsProviderList);
+    
   };
 
   useEffect(() => {
