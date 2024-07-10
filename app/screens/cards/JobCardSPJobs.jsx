@@ -5,8 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function JobCardSPJobs({ route }) {
   const { jobDetails } = route.params;
-  console.log(jobDetails, "<<<<");
-  console.log(route.params, "????");
   const navigation = useNavigation();
 
   if (!jobDetails) {
