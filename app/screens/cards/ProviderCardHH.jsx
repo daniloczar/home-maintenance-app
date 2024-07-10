@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   Modal,
@@ -54,7 +55,7 @@ export default function ProviderCardHH({ route }) {
       try {
         const reviews = await collection(db, "reviews");
         await addDoc(reviews, review);
-        alert("Review confirmed!");
+        Alert.alert("Review confirmed!");
       } catch (error) {
         console.error("Error adding document: ", error);
         alert("Error confirming review. Please try again.");
@@ -209,7 +210,7 @@ export default function ProviderCardHH({ route }) {
           />
           <View>
             <TextInput
-              placeholder="Review"
+              placeholder="Enter your review"
               numberOfLines={4}
               maxLength={40}
               multiline={true}

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { app } from "../../FirebaseConfig";
@@ -98,7 +99,7 @@ const JobPost = ({ route }) => {
     };
 
     const jobDocRef = await addDoc(collection(db, "jobs"), updatedJob);
-    alert("Job posted successfully");
+    Alert.alert("Job posted successfully");
     navigation.navigate("MyStuff");
     setJobServiceCategoryName(null);
     setJobTitle("");
