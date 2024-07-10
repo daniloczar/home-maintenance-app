@@ -25,7 +25,7 @@ import { UserContext } from "../../contexts/UserContext";
 const db = getFirestore(app);
 
 export default function JobCardHH({ route }) {
-  const { job } = route.params;
+  const { job } = route.par
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
   const handleHideModal = () => setShowModal(false);
