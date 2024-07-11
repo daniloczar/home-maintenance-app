@@ -1,11 +1,29 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import { collection, getFirestore, query, where, getDocs } from "firebase/firestore";
+import { app } from "../../FirebaseConfig";
 
 const MapServiceCard = ({ service, job }) => {
   const { user } = useContext(UserContext);
+  const [services, setServices] = useState([]);
   const navigation = useNavigation();
+
+  const fetchServices = async () => {
+    const db = getFirestore(app);
+    const servicesRef = collection(db, "services");
+    const serviceQuery = query(servicesRef, where("user_id", "==", service.user_id));
+    const serviceData = await getDocs(serviceQuery);
+    const servicesList = serviceData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setServices(servicesList);
+  };
+  useEffect(() => {
+    fetchServices();
+  }, [service]);
 
   if (user.user_type === "householder") {
     return (
@@ -18,7 +36,7 @@ const MapServiceCard = ({ service, job }) => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("ProviderCardHH", { item: service })}
+                onPress={() => navigation.navigate("ProviderCardHH", { item: service, services })}
               >
                 <Text style={styles.buttonTitle}>Book now</Text>
               </TouchableOpacity>

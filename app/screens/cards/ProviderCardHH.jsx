@@ -83,37 +83,34 @@ export default function ProviderCardHH({ route }) {
   };
 
   const handleMessageClick = async () => {
-
-    const db = getFirestore(app);  
-    const chatRef = await collection(db,"chats");
+    const db = getFirestore(app);
+    const chatRef = await collection(db, "chats");
 
     const chatIdQuery = query(
-      chatRef, 
+      chatRef,
       where("sent_by_user_id", "==", user.user_id),
-      where("sent_to_user_id", "==", item.user_id),
+      where("sent_to_user_id", "==", item.user_id)
     );
 
     const chatIdQueryData = await getDocs(chatIdQuery);
-    const chatIdData = chatIdQueryData.docs.map(doc => ({
+    const chatIdData = chatIdQueryData.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
     }));
 
-  
-    if(!chatIdData.length) {
-
+    if (!chatIdData.length) {
       const docRef = await addDoc(chatRef, {
         chat_id: "",
         created_at: new Date(),
         service_id: item.service_id,
         sent_by_user_id: user.user_id,
-        sent_to_user_id: item.user_id
+        sent_to_user_id: item.user_id,
       });
 
       updateDoc(docRef, { chat_id: docRef.id });
-    } 
-    navigation.navigate('ChatScreen')
-  }
+    }
+    navigation.navigate("ChatScreen");
+  };
 
   useEffect(() => {
     getReviews();
