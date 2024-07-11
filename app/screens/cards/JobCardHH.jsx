@@ -157,7 +157,7 @@ export default function JobCardHH({ route }) {
                         onChangeText={setCategoryName}
                       />
                     </View>
-                    <View style={styles.inputContainer}>
+                    <View >
                       <Text>Max Budget:</Text>
                       <TextInput
                         style={styles.input}
@@ -205,7 +205,7 @@ export default function JobCardHH({ route }) {
               )}
               {editable && (
                 <TouchableOpacity
-                  style={styless.buttonChoice}
+                  style={[styless.buttonChoice,{marginLeft: 1}]}
                   onPress={handleSave}
                 >
                   <Text style={styless.buttonTitle}>Save</Text>
