@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is built using React Native and Firebase to facilitate services availibility for House Holders. Users will be of 2 types; Service Providers and House Holders, who can create and edit profiles. 
+This project is built using React Native and Firebase to facilitate services availability for House Holders. Users will be of 2 types; Service Providers and House Holders, who can create and edit profiles. 
 
 Householders can post jobs, accept & delete bids, leave reviews for a service, book/message a Service Provider through an integrated chat system, view the jobs posted and the service providers available.
 
