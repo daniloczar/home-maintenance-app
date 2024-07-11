@@ -98,8 +98,10 @@ export default function ProviderCardHH({ route }) {
       ...doc.data(),
     }));
 
+    let docRef;
+
     if (!chatIdData.length) {
-      const docRef = await addDoc(chatRef, {
+        docRef = await addDoc(chatRef, {
         chat_id: "",
         created_at: new Date(),
         service_id: item.service_id,
@@ -107,9 +109,37 @@ export default function ProviderCardHH({ route }) {
         sent_to_user_id: item.user_id,
       });
 
-      updateDoc(docRef, { chat_id: docRef.id });
+      await updateDoc(docRef, { chat_id: docRef.id });
+      const chatobj = {
+        chatId: docRef.id,
+        sentTo: user.full_name,
+        sent_by_user_id: user.user_id,
+        sent_to_user_id: item.user_id,
+        sentByUserImgUrl: user.user_img_url,
+        sentToUserImgUrl: item.user_img_url,
+      };
+  
+      navigation.navigate('Messages', chatobj)
+    } else {
+      docRef = chatIdData[0]
+      console.log("docRef", docRef)
+      const chatobj = {
+        chatId: docRef.chat_id,
+        sentTo: user.full_name,
+        sent_by_user_id: user.user_id,
+        sent_to_user_id: item.user_id,
+        sentByUserImgUrl: user.user_img_url,
+        sentToUserImgUrl: item.user_img_url,
+      };
+  
+      navigation.navigate('Messages', chatobj)
+
     }
-    navigation.navigate("ChatScreen");
+    //navigation.navigate("ChatScreen");
+
+ 
+
+
   };
 
   useEffect(() => {
