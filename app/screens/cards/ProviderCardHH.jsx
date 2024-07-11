@@ -11,6 +11,8 @@ import {
   View,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
+import { Avatar } from "react-native-paper";
+import { format } from "date-fns";
 import { Ionicons } from "@expo/vector-icons";
 import BookingModal from "../BookingModal";
 import { useNavigation } from "@react-navigation/native";
@@ -29,6 +31,7 @@ import { app } from "../../../FirebaseConfig";
 import { UserContext } from "../../contexts/UserContext";
 import StarRating from "./StarRating";
 import Colors from "../../Util/Colors";
+const db = getFirestore(app);
 
 export default function ProviderCardHH({ route }) {
   const [showModal, setShowModal] = useState(false);
@@ -39,9 +42,9 @@ export default function ProviderCardHH({ route }) {
   const navigation = useNavigation();
   const { item, services } = route.params;
   const { user } = useContext(UserContext);
-
+  const [avgRating,setAvgRating]=useState(0)
+  console.log(">>>>",item)
   const handleConfirmRating = async () => {
-    const db = getFirestore(app);
 
     if (note) {
       const review = {
@@ -69,17 +72,34 @@ export default function ProviderCardHH({ route }) {
   };
 
   const getReviews = async () => {
-    const db = getFirestore(app);
-    const reviewRef = collection(db, "reviews");
-    const reviewsQuery = query(reviewRef, where("service_id", "==", item.service_id));
-    const reviewData = await getDocs(reviewsQuery);
-    const reviewList = reviewData.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      created_at: doc.data().created_at.toDate(),
-    }));
-    reviewList.sort((a, b) => b.created_at - a.created_at);
-    setReviews(reviewList);
+    try {
+      const reviewRef = collection(db, "reviews")
+      const reviewsQuery = query(reviewRef, where("service_id", "==", item.service_id))
+      const reviewData = await getDocs(reviewsQuery)
+      const reviewList = await Promise.all(
+        reviewData.docs.map(async (doc) => {
+          const review = { id: doc.id, ...doc.data(), created_at: doc.data().created_at.toDate() };
+
+          // Fetch user data based on user_id
+          const userSnapshot = await getDocs(query(collection(db, "users"), where("user_id", "==", review.user_id)));
+          const userData = userSnapshot.docs[0] ? userSnapshot.docs[0].data() : null;
+
+          return {
+            ...review,
+            fullName: userData ? userData.full_name : 'Anonymous',
+            avatar: userData ? userData.user_img_url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRadJ-YmNxJTg6v9iO22fzR_65KenYJHFB5zg&s',
+          };
+        })
+      );
+      const ratingsArray = reviewList.map((review) => Number(review.review_rating))
+      reviewList.sort((a, b) => b.created_at - a.created_at)
+      setReviews(reviewList)
+      setAvgRating(ratingsArray.reduce((acc, val) => acc + val, 0) / ratingsArray.length)
+      console.log(avgRating)
+      console.log(ratingsArray)
+    } catch (err) {
+      console.log('Error getting reviews: ', err);
+    }
   };
 
   const handleMessageClick = async () => {
@@ -118,7 +138,6 @@ export default function ProviderCardHH({ route }) {
   useEffect(() => {
     getReviews();
   }, []);
-
   return (
     <View style={styles.mainContainer}>
       <ScrollView style={{ height: "89%" }}>
@@ -187,42 +206,32 @@ export default function ProviderCardHH({ route }) {
             }}
           ></View>
           <View style={styles.descriptionBox}>
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>Review</Text>
+            <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>Rating</Text>
+              <View style={styles.averageRatingContainer}>
+                <Text style={styles.averageRatingText}>{avgRating?avgRating.toFixed(1):0}</Text>
+                <StarRating item={{ review_rating: avgRating }} />
+                <Text style={styles.reviewCountText}>  {reviews.length} Reviews</Text>
+              </View>
             <View>
-              <FlatList
-                data={reviews}
-                renderItem={({ item }) => (
-                  <View
-                    style={{
-                      marginTop: 13,
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <StarRating item={item} />
-                      <Text>{item.created_at.toDateString()}</Text>
+            {reviews.map(review=>(
+                <View key={review.review_id} style={styles.reviewCard}>
+                  <View style={styles.reviewHeader}>
+                    <Avatar.Image
+                      style={styles.avatar}
+                      size={50}
+                      source={{ uri: review.avatar }}
+                    />
+                    <View style={styles.reviewInfo}>
+                      <Text style={styles.userName}>{review.fullName}</Text>
+                      <Text style={styles.reviewDate}>
+                        {format(review.created_at, 'MMM dd, yyyy')}
+                      </Text>
                     </View>
-                    <Text style={{ fontSize: 14, fontWeight: "bold" }}>{item.fullName}</Text>
-                    <Text>{item.review_description}</Text>
-                    <View
-                      style={{
-                        borderWidth: 0.7,
-                        borderColor: "#cecece",
-                        marginBottom: 2,
-                        marginTop: 10,
-                      }}
-                    ></View>
                   </View>
-                )}
-                keyExtractor={(item) => item.id}
-              />
+                  <StarRating item={review} />
+                  <Text style={styles.reviewText}>{review.review_description}</Text>
+                </View>
+              ))}
             </View>
           </View>
           <Text
@@ -336,5 +345,62 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 17,
     elevation: 2,
+  },
+  averageRatingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom:5,
+  },
+  averageRatingText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginRight: 5,
+  },
+  reviewCountText: {
+    fontSize: 15,
+    color: "blue",
+    marginLeft: 5,
+  },
+  reviewCard: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  reviewHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  avatar: {
+    marginRight: 10,
+  },
+  reviewInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  reviewText: {
+    fontSize: 14,
+    marginTop: 5,
+  },
+  ratingDateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
+  },
+  reviewDate: {
+    fontSize: 12,
+    color: "grey",
   },
 });
