@@ -49,18 +49,21 @@ export default function ProviderCardSP({ route }) {
   const getReviews = async (serviceId) => {
     try {
       const reviewsSnapshot = await getDocs(query(collection(db, "reviews"), where("service_id", "==", serviceId)))
-      const reviewsData = reviewsSnapshot.docs.map(async (doc) => {
+      const reviewsData = reviewsSnapshot.docs.map(async (doc,index) => {
         const review = doc.data()
+        console.log(`REVIEW-${index}`,review)
         
         const userSnapshot = await getDocs(query(collection(db, "users"), where("user_id", "==", review.user_id)))
         if(!userSnapshot.empty){
-          const userData = userSnapshot.empty ? {} : userSnapshot.docs[0].data()
-          return { ...review, fullName: userData.full_name || "Anonymous" , avatar: userData.user_img_url }
+          const userData = userSnapshot.docs[0].data()
+          console.log('USER=====   ',userData)
+          return { ...review, fullName: userData.full_name || "Anonymous" , avatar: userData.user_img_url?userData.user_img_url:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRadJ-YmNxJTg6v9iO22fzR_65KenYJHFB5zg&s' }
         }
         
       })
       const ratingsArray = reviewsSnapshot.docs.map(doc=>Number(doc.data().review_rating))
       const resolvedPromise = await Promise.all(reviewsData)
+      resolvedPromise.forEach(promise=>console.log('\n\n_-_-_-_',promise))
       setReviews(resolvedPromise)
       setAvgRating(ratingsArray.reduce((acc, val) => acc + val, 0))
     } catch (error) {
@@ -211,16 +214,14 @@ export default function ProviderCardSP({ route }) {
               <Text
                 style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}
               >
-                Reviews:
+                Rating:
               </Text>
-              <TouchableOpacity onPress={() => setShowReviews(!showReviews)}>
-                <View style={styles.averageRatingContainer}>
-                  <Text style={styles.averageRatingText}>{avgRating/reviews.length}</Text>
-                  <StarRating item={{ review_rating: avgRating }} />
-                  <Text style={styles.reviewCountText}>  {reviews.length} Reviews</Text>
-                </View>
-              </TouchableOpacity>
-              {showReviews && reviews.map(review=>(
+              <View style={styles.averageRatingContainer}>
+                <Text style={styles.averageRatingText}>{(avgRating/reviews.length).toFixed(1)}</Text>
+                <StarRating item={{ review_rating: avgRating }} />
+                <Text style={styles.reviewCountText}>  {reviews.length} Reviews</Text>
+              </View>
+              {reviews.map(review=>(
                 <View key={review.review_id} style={styles.reviewCard}>
                   <View style={styles.reviewHeader}>
                     <Avatar.Image
@@ -347,7 +348,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   reviewDate: {
-    marginLeft: 10,
     fontSize: 12,
     color: "grey",
   },

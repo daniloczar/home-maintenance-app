@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   noBidText: {
     textAlign: 'center',
-    color: 'red',
+    color: 'black',
     fontSize: 16,
     marginVertical: 5,
   },
