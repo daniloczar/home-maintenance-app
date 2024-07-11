@@ -7,6 +7,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { addDoc, collection, doc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, where } from "firebase/firestore";
 import { app } from "../../../FirebaseConfig";
 import { format } from "date-fns";
+import Colors from "../../Util/Colors";
 const db = getFirestore(app)
 export default function JobCardSPJobs({ route }) {
   const {user}=useContext(UserContext)
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   makeBidButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.primary,
     padding: 15,
     margin: 10,
     borderRadius: 10,
