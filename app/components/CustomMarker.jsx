@@ -26,19 +26,22 @@ const CustomMarker = ({ serviceProvider, jobProvider, onPress }) => {
             style={{
               backgroundColor: "#fff",
               borderWidth: 1,
-              borderColor: "#ccc",
+              borderColor: "##022930",
               padding: 3,
               paddingHorizontal: 5,
               borderRadius: 20,
-              shadowColor: "#171717",
-              shadowOffset: { width: -2, height: 4 },
-              shadowOpacity: 0.2,
-              shadowRadius: 3,
-              elevation: 20,
-              shadowColor: "#52006A",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 12,
+              },
+              shadowOpacity: 0.58,
+              shadowRadius: 16.0,
+
+              elevation: 24,
             }}
           >
-            <Text>{serviceProvider.service_title}</Text>
+            <Text style={{ fontWeight: "600" }}>{serviceProvider.service_title}</Text>
           </View>
         </Marker>
       </View>
