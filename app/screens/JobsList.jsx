@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/UserContext";
 import Colors from '../Util/Colors'
@@ -7,7 +7,7 @@ import Colors from '../Util/Colors'
 const JobsList = ({ item }) => {
   const navigation = useNavigation();
   const { user } = useContext(UserContext);
-
+  
   return (
     <View style={styles.container}>
       <Image
@@ -50,6 +50,7 @@ const JobsList = ({ item }) => {
                   item,
                 })
               : navigation.navigate("JobCardSPJobs", {jobDetails: {
+                  jobId : item.job_id,
                   jobDescription: item.job_description,
                   jobCreatedAt: item.created_at,
                   jobImgURL: item.job_img_url,

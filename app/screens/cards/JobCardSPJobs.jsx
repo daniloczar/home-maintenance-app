@@ -1,18 +1,114 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { addDoc, collection, doc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, where } from "firebase/firestore";
+import { app } from "../../../FirebaseConfig";
+import { format } from "date-fns";
+const db = getFirestore(app)
 export default function JobCardSPJobs({ route }) {
+  const {user}=useContext(UserContext)
   const { jobDetails } = route.params;
-  const navigation = useNavigation();
+  const [bids,setBids] = useState([])
+  const [bidAmount,setBidAmount] = useState('')
+  const [hasBid,setHasBid] = useState(false)
+  const [hasClickedMakeBid,setHasClickedMakeBid] = useState(false)
+  const [wrongInput, setWrongInput] = useState(false)
+  const [inputMsg,setInputMsg] = useState('')
 
+  const navigation = useNavigation();
+  useEffect(()=>{
+    getUserBidOnJob()
+  },[])
+  const getUserBidOnJob = async () => {
+    try{
+      const bidSnapshot = await getDocs(query(collection(db,'bids'),where('job_id','==',jobDetails.jobId),where('user_id','==',user.user_id)))
+      if(!bidSnapshot.empty){
+        setHasBid(true)
+        setBids([bidSnapshot.docs[0].data()])
+      }
+    }
+    catch(err){
+      console.log('error getting bid document!')
+    }
+  }
   if (!jobDetails) {
     return (
       <SafeAreaView style={styles.errorContainer}>
         <Text style={styles.errorText}>No job details available</Text>
       </SafeAreaView>
     );
+  }
+  const handleMakeBid = () => {
+    if (hasBid){
+      Alert.alert('1 bid allowed per job.\nYou already have a Bid!','Click OK to visit & edit/delete your bid',[
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'OK', 
+          onPress: ()=>navigation.navigate('MyStuffScreen'),
+        },
+      ])
+    }
+    else{
+      setHasClickedMakeBid(true)
+    }
+  }
+  const handleChange = (input) => {
+    setBidAmount(input)
+    if(Number(input)<=0){
+      setInputMsg('Amount should be greater than 0!')
+      setWrongInput(true)
+    }
+    else if(!/^\d+$/.test(input)){
+      setInputMsg('Only Numbers Allowed!')
+      setWrongInput(true)
+    }
+    else{
+      setWrongInput(false)
+      setInputMsg('')
+    }
+  }
+
+  const getNextBidId = async () => {
+      const bidSnapshot = await getDocs(collection(db, 'bids'))
+    let maxBidId = 0
+    bidSnapshot.docs.forEach(doc => {
+      const bidId = Number(doc.id)
+      if (bidId > maxBidId) {
+        maxBidId = bidId
+      }
+    })
+    return (maxBidId + 1).toString()
+  }
+  const handlePlaceBid = async () => {
+    if(!wrongInput){
+      try {
+        const newBidId = await getNextBidId()
+        const newBidDocRef = doc(db, "bids", newBidId)
+        const newBid = {
+          job_id: jobDetails.jobId,
+          user_id: user.user_id,
+          bid_amount: Number(bidAmount),
+          bid_status: 'Pending',
+          created_at: Timestamp.now(),
+          bid_id: newBidId
+        }
+        await setDoc(newBidDocRef, newBid)
+        setBids([newBid])
+        setHasBid(true)
+        setHasClickedMakeBid(false)
+        Alert.alert('Bid placed successfully', `Bid Amount: £${bidAmount}`)
+      }
+      catch (err) {
+        console.error("Error updating bid:", err)
+      }
+    }
   }
   return (
     <ScrollView style={{ height: "100%" }}>
@@ -54,12 +150,48 @@ export default function JobCardSPJobs({ route }) {
           marginLeft: 20,
         }}
       ></View>
-      {/* <View style={styles.bidBox}>
-            <Text style={styles.bidTitle}>My Bid Status</Text>
-            <Text style={styles.bidText}>Bid Status:     {jobDetails.bidStatus}</Text>
-            <Text style={styles.bidText}>Bid Amount:  £{jobDetails.bidAmount}</Text>
-            <Text style={styles.bidText}>Bid Date:       {jobDetails.bidCreatedAt.toDate().toLocaleDateString()}</Text>
-          </View> */}
+      {
+        bids.length>0 
+        ? 
+        <View style={styles.bidBox}>
+          <Text style={styles.bidTitle}>Your Bid</Text>
+          <Text style={styles.bidText}>Bid Status:     {bids[0].bid_status}</Text>
+          <Text style={styles.bidText}>Bid Amount:  £{bids[0].bid_amount}</Text>
+          <Text style={styles.bidText}>Bid Date:       {bids[0].created_at.toDate().toLocaleDateString()}</Text>
+        </View>
+        :
+        !hasClickedMakeBid && !hasBid ? <Text style={styles.noBidText}>You have not made any bid yet.</Text> : null
+      }
+      {
+        hasClickedMakeBid && !hasBid 
+        ?
+        <>
+        <Text style={styles.inputBidText}>Your Bid</Text>
+          <TextInput
+            style={styles.bidInput}
+            placeholder="Enter Bid Amount"
+            keyboardType="numeric"
+            value={bidAmount}
+            onChangeText={handleChange}
+          />
+          <View>
+            {wrongInput?<Text style={styles.inputInfo}>{wrongInput?`${inputMsg}`:null}</Text>:null}
+          </View>
+        </>
+        :
+        null
+      }
+      {
+        !hasClickedMakeBid
+        ?
+        <TouchableOpacity style={styles.makeBidButton} onPress={handleMakeBid}>
+          <Text style={styles.makeBidButtonText}>Make a Bid</Text>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity style={styles.makeBidButton} onPress={handlePlaceBid}>
+          <Text style={styles.makeBidButtonText}>Place Bid</Text>
+        </TouchableOpacity>
+      }
     </ScrollView>
   );
 }
@@ -75,6 +207,12 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 20,
+  },
+  bidAmountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'flex-start',
+    marginHorizontal:20,
   },
   backBnt: {
     position: "absolute",
@@ -105,8 +243,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    backgroundColor: "#fff",
+    borderBottomColor: "pink",
+    backgroundColor: "white",
     borderRadius: 10,
     marginVertical: 5,
   },
@@ -144,4 +282,42 @@ const styles = StyleSheet.create({
   bidText: {
     fontSize: 14,
   },
+  makeBidButton: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    margin: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  makeBidButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  noBidText: {
+    textAlign: 'center',
+    color: 'red',
+    fontSize: 16,
+    marginVertical: 5,
+  },
+  bidInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 6,
+    marginHorizontal: 20,
+    fontSize: 16,
+  },
+  inputBidText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 5,
+    marginHorizontal:20,
+  },
+  inputInfo:{
+    marginHorizontal:20,
+    marginVertical:5,
+    color:'red',
+  },
+
 });

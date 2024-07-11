@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { UserContext } from "../contexts/UserContext";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
@@ -15,9 +15,11 @@ const MyStuffServiceProvider = () => {
     const [clickedBid,setClickedBid] = useState(null)
     const navigation = useNavigation()
     
-    useFocusEffect(()=>{
-        getJobsBiddedBySP()
-    },[])
+    useFocusEffect(
+        React.useCallback(() => {
+          getJobsBiddedBySP()
+        }, [])
+      );
     
     const getJobsBiddedBySP = async () => {
         try {
