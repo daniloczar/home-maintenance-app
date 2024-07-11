@@ -6,6 +6,9 @@ import { app } from '../../FirebaseConfig';
 import { IconButton } from 'react-native-paper';
 import { Ionicons } from "@expo/vector-icons";
 import { UserContext } from "../contexts/UserContext";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../Util/Colors';
+
 
 const db = getFirestore(app);
 
@@ -91,8 +94,10 @@ const Messages = ({ route, navigation }) => {
     });
   
   }, [chatId, sent_to_user_id]);
+  const scrollToBottomComponent = () => {
+    return <Ionicons name="chevron-down-circle" size={40} color={Colors.primary} />
+  };
   
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.chatHeader}>
@@ -115,6 +120,8 @@ const Messages = ({ route, navigation }) => {
         renderBubble={renderBubble}
         alwaysShowSend
         showUserAvatar
+        scrollToBottom
+        scrollToBottomComponent={scrollToBottomComponent}
         renderSend={(props) => (
           <Send {...props}>
             <View style={styles.sendingContainer}>
@@ -144,7 +151,7 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   messageContainer: {
-    marginBottom: 8,
+    margin:2,
   },
   sentMessageContainer: {
     alignSelf: 'flex-end',
