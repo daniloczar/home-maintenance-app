@@ -21,34 +21,6 @@ export default function Header() {
   const handleHideModal = () => setModalVisible(false);
   const [results, setResults] = useState([]);
 
-  
-const handleSearch = async (text) => {
-  setSearch(text);
-  if (text) {
-    let aggregatedResults = [];
-    for (const collectionName of collections) {
-      const collectionRef = collection(db, collectionName);
-      const q = query(
-        collectionRef,
-        where("service_category_name", ">=", text),
-        where("service_category_name", "<=", text + "\uf8ff")
-        );
-        const querySnapshot = await getDocs(q);
-        
-        const documents = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          collectionName,
-        }));
-        aggregatedResults = [...aggregatedResults, ...documents];
-      }
-    
-    setResults(aggregatedResults);
-  } else {
-    setResults([]);
-  }
-};
-
   useEffect(()=>{
     getUser()
   },[])
@@ -72,10 +44,6 @@ const handleSearch = async (text) => {
     }
   }
 
-  const onSubmit = () => {
-    console.log(search);
-  };
-
   return (
     <SafeAreaView edges={["top"]}>
       <View style={styles.container}>
@@ -95,31 +63,6 @@ const handleSearch = async (text) => {
           </View>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Avatar.Image size={40} source={{ uri: profile.user_img_url }} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.searchBarContainer}>
-          <TextInput
-            placeholder="Search"
-            value={search}
-            onChangeText={handleSearch}
-            placeholderTextColor="#909090"
-            style={styles.searchBar}
-          />
-          <FlatList
-            data={results}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <Text>{item.yourField}</Text>
-                <Text style={styles.collection}>{item.collectionName}</Text>
-              </View>
-            )}
-          />
-          <TouchableOpacity
-            style={styles.searchButtonContainer}
-            onPress={() => onSubmit()}
-          >
-            <FontAwesome name="search" size={21} color="white" />
           </TouchableOpacity>
         </View>
       </View>
