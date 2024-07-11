@@ -93,7 +93,7 @@ export default function RegistrationScreen() {
           user_img_url: "",
           service_title: serviceTitle,
           service_description: serviceDescription,
-          service_category: serviceCategory,
+          service_category_name: serviceCategory,
         };
         const users = collection(db, "users");
         await addDoc(users, newUser);
