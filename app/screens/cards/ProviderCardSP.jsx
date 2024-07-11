@@ -71,7 +71,7 @@ export default function ProviderCardSP({ route }) {
   const handleSave = async () => {
     const updatedItem = {
       ...item,
-      full_name: fullName,
+      user_id: user.user_id,
       service_title: serviceTitle,
       service_description: serviceDescription,
     };
@@ -106,14 +106,6 @@ export default function ProviderCardSP({ route }) {
               <View style={styles.textHeader}>
                 {editable ? (
                   <>
-                    <View>
-                      <Text>Full Name:</Text>
-                      <TextInput
-                        style={styles.input}
-                        value={fullName}
-                        onChangeText={setFullName}
-                      />
-                    </View>
                     <View>
                       <Text>Service Title:</Text>
                       <TextInput
