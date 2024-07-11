@@ -18,7 +18,7 @@ import { app } from "../../../FirebaseConfig";
 
 const db = getFirestore(app)
 
-export default function JobCardSP({ route }) {
+export default function JobCardSPMyStuff({ route }) {
   const { jobDetails } = route.params
   const navigation = useNavigation()
   const [editing, setEditing] = useState(false)
@@ -61,7 +61,6 @@ export default function JobCardSP({ route }) {
       },
     ]);
   }
-
   const handleSave = async () => {
     if(!wrongInput){
       try {
@@ -87,15 +86,12 @@ export default function JobCardSP({ route }) {
   }
 
   const handleChange = (input) => {
-    console.log(input)
     setBidAmount(input)
     if(Number(input)<=0){
-      console.log("LESSSS")
       setInputMsg('Amount should be greater than 0!')
       setWrongInput(true)
     }
     else if(!/^\d+$/.test(input)){
-      console.log("WRONGGGss")
       setInputMsg('Only Numbers Allowed!')
       setWrongInput(true)
     }
@@ -190,7 +186,7 @@ export default function JobCardSP({ route }) {
           ) : (
             <Text style={styles.bidText}>{bidAmount} </Text>
           )}
-            <Text style={styles.inputInfo}>{wrongInput?`${inputMsg}`:null}</Text>
+          <Text style={styles.inputInfo}>{wrongInput?`${inputMsg}`:null}</Text>
         </View>
         <Text style={styles.bidText}>Bid Date: {jobDetails.bidCreatedAt.toDate().toLocaleDateString()}</Text>
       </View>
