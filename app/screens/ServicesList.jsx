@@ -6,14 +6,15 @@ import { UserContext } from "../contexts/UserContext";
 import Colors from "../Util/Colors";
 import { collection, getFirestore, query, where, getDocs } from "firebase/firestore";
 import { app } from "../../FirebaseConfig";
+const db = getFirestore(app);
 
 const SevicesList = ({ item }) => {
   const navigation = useNavigation();
   const { user } = useContext(UserContext);
   const [services, setServices] = useState([]);
+  const [avgRating, setAvgRating] = useState(0)
 
   const fetchServices = async () => {
-    const db = getFirestore(app);
     const servicesRef = collection(db, "services");
     const service = query(servicesRef, where("user_id", "==", item.user_id));
     const serviceData = await getDocs(service);
@@ -22,7 +23,27 @@ const SevicesList = ({ item }) => {
       ...doc.data(),
     }));
     setServices(servicesList);
+    fetchAvgReviews(servicesList)
   };
+  
+  const fetchAvgReviews = async (servicesList) => {
+    const reviewsRef = collection(db, "reviews");
+    const avgRatings = {};
+
+    for (const service of servicesList) {
+      const reviewsQuery = query(reviewsRef, where("service_id", "==", service.service_id));
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      const reviewsData = reviewsSnapshot.docs.map((doc) => doc.data());
+
+      const ratingsArray = reviewsData.map((review) => Number(review.review_rating));
+      const averageRating = ratingsArray.length > 0 ? (ratingsArray.reduce((acc, val) => acc + val, 0) / ratingsArray.length).toFixed(1) : "No reviews";
+
+      avgRatings[service.service_id] = averageRating;
+    }
+
+    setAvgRating(avgRatings);
+  };
+  
   useEffect(() => {
     fetchServices();
   }, []);
@@ -34,7 +55,9 @@ const SevicesList = ({ item }) => {
       <View style={styles.ratingButton}>
         <View style={styles.ratingButton}>
           <Foundation name="star" size={10} color="#6759FF" />
-          <Text style={{ fontSize: 10, color: "#6759FF", fontWeight: "bold" }}>4.3</Text>
+          <Text style={{ fontSize: 10, color: "#6759FF", fontWeight: "bold" }}>
+            {avgRating[item.service_id] || "No reviews"}
+          </Text>
         </View>
         <TouchableOpacity
           style={styles.detailsButton}

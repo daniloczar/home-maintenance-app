@@ -22,7 +22,6 @@ export default function ProviderCardSP({ route }) {
   const [serviceDescription, setServiceDescription] = useState("");
   const [reviews,setReviews]=useState([])
   const [avgRating,setAvgRating]=useState(0)
-  const [showReviews, setShowReviews] = useState(false)
 
   useEffect(() => {
     getServiceByUserId();
@@ -49,21 +48,18 @@ export default function ProviderCardSP({ route }) {
   const getReviews = async (serviceId) => {
     try {
       const reviewsSnapshot = await getDocs(query(collection(db, "reviews"), where("service_id", "==", serviceId)))
-      const reviewsData = reviewsSnapshot.docs.map(async (doc,index) => {
+      const reviewsData = reviewsSnapshot.docs.map(async (doc) => {
         const review = doc.data()
-        console.log(`REVIEW-${index}`,review)
         
         const userSnapshot = await getDocs(query(collection(db, "users"), where("user_id", "==", review.user_id)))
         if(!userSnapshot.empty){
           const userData = userSnapshot.docs[0].data()
-          console.log('USER=====   ',userData)
           return { ...review, fullName: userData.full_name || "Anonymous" , avatar: userData.user_img_url?userData.user_img_url:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRadJ-YmNxJTg6v9iO22fzR_65KenYJHFB5zg&s' }
         }
         
       })
       const ratingsArray = reviewsSnapshot.docs.map(doc=>Number(doc.data().review_rating))
       const resolvedPromise = await Promise.all(reviewsData)
-      resolvedPromise.forEach(promise=>console.log('\n\n_-_-_-_',promise))
       setReviews(resolvedPromise)
       setAvgRating(ratingsArray.reduce((acc, val) => acc + val, 0))
     } catch (error) {
