@@ -7,7 +7,8 @@ import Profile from "./Profile";
 
 import ProviderCardHH from "./cards/ProviderCardHH";
 import JobCardSPJobs from "./cards/JobCardSPJobs";
-
+import Messages from "./Messages"
+import Chats from "./Chats"
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,8 @@ const MainScreen = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="ProviderCardHH" component={ProviderCardHH} />
       <Stack.Screen name="JobCardSPJobs" component={JobCardSPJobs} />
+      <Stack.Screen name="Messages" component={Messages} />
+      <Stack.Screen name="Chats" component={Chats} />
     </Stack.Navigator>
   );
 };
